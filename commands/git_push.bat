@@ -1,5 +1,8 @@
 @echo off
 
+REM chanfe directory into the parent directory
+cd ..
+
 REM Add the file to the Git repository
 git add .
 

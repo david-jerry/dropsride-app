@@ -1,0 +1,23 @@
+import 'package:dropsride/src/constants/size.dart';
+import 'package:flutter/material.dart';
+
+class AppBarTitle extends StatelessWidget {
+  const AppBarTitle({
+    super.key,
+    required this.pageTitle,
+  });
+
+  final String pageTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      pageTitle,
+      style: Theme.of(context).textTheme.displayMedium!.copyWith(
+            fontSize: AppSizes.p18,
+            fontWeight: FontWeight.w800,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+    );
+  }
+}
