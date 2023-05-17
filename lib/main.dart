@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       darkTheme: DropsrideTheme.dropsrideDarkTheme,
       themeMode: themeController.theme, //ThemeMode.dark,
       debugShowCheckedModeBanner: false,
-      home: SafeArea(child: SplashScreen()),
+      home: SplashScreen(),
     );
   }
 }
