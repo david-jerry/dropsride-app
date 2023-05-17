@@ -1,40 +1,50 @@
+import 'package:dropsride/src/features/splash/view/screen.dart';
+import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
 import 'package:dropsride/src/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-void main() {
+void main() async {
+  // ensure all app bindings have been initialized successfully
   WidgetsFlutterBinding.ensureInitialized();
 
+  // set default phone orientation to portrait
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
+  // initialize the shared storage
+  await GetStorage.init();
+
+  // initialize the themecontroller
+  Get.put(ThemeModeController());
+
+  // run the main app here
   runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
+    MyApp(),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  // warning: initialize theme controller
+  final themeController = Get.find<ThemeModeController>();
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Dropsride',
+      initialBinding: ThemeBinding(),
       theme: DropsrideTheme.dropsrideLightTheme,
       darkTheme: DropsrideTheme.dropsrideDarkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeController.theme, //ThemeMode.dark,
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: Center(
-          child: Text('Flutter Demo Home Page'),
-        ),
-      ),
+      home: SafeArea(child: SplashScreen()),
     );
   }
 }
