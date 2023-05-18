@@ -19,7 +19,7 @@ void main() async {
   // initialize the shared storage
   await GetStorage.init();
 
-  // initialize the themecontroller
+  // initialize the themeController
   Get.put(ThemeModeController());
 
   // run the main app here

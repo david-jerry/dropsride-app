@@ -45,15 +45,10 @@ dependencies:
   get_storage: ^2.1.1
   google_fonts: ^4.0.4
   http: ^0.13.6
+  lottie: ^2.3.2
   shared_preferences: ^2.1.1
 
 dev_dependencies:
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^2.0.0
   flutter_native_splash: ^2.2.19
   flutter_test:
@@ -96,6 +91,7 @@ flutter:
     - assets/images/onboard/onboard_2.png
     - assets/images/onboard/onboard_3.png
     - assets/videos/searching_for_locations_of_drivers.gif
+    - assets/videos/cs.gif
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see
