@@ -1,7 +1,6 @@
 import 'package:dropsride/src/constants/assets.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/splash/controller/animation_controller.dart';
-import 'package:dropsride/src/features/splash/view/intro.dart';
 import 'package:dropsride/src/utils/size_config.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
 import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
@@ -92,7 +91,7 @@ class SplashScreen extends StatelessWidget {
                       visible: sController.animateHello.value ? true : false,
                       child: AnimatedTextKit(
                         totalRepeatCount: 8,
-                        repeatForever: false,
+                        repeatForever: true,
                         isRepeatingAnimation:
                             sController.animateHello.value ? true : false,
                         animatedTexts: [
@@ -159,7 +158,7 @@ class SplashScreen extends StatelessWidget {
             // animated button
             Obx(
               () => AnimatedPositioned(
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 800),
                 bottom: sController.animateHello.value
                     ? AppSizes.padding * 3
                     : -(AppSizes.padding * 3),
@@ -178,13 +177,13 @@ class SplashScreen extends StatelessWidget {
                         ),
                         elevation: AppSizes.p8,
                         padding: const EdgeInsets.symmetric(
-                          vertical: AppSizes.buttonHeight / 2.7,
+                          vertical: AppSizes.buttonHeight / 2.9,
                         ),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: ((context) => const IntroScreen())));
-                        // sController.goToIntro();
+                        // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        // builder: ((context) => const IntroScreen())));
+                        sController.goToIntro();
                         // if (controller.isDarkMode.value) {
                         //   controller.changeTheme(DropsrideTheme.dropsrideLightTheme);
                         //   controller.saveTheme(false);
