@@ -1,28 +1,52 @@
 bool validateAlphabetsOnly(String value) {
   // Define the regex pattern for alphabets only
-  final RegExp alphabetsOnlyRegex = RegExp(r'^[a-zA-Z]+$');
+  final RegExp alphabetsOnlyRegex = RegExp(r'^[a-zA-Z ]+$');
 
   // Check if the value matches the regex pattern
-  return alphabetsOnlyRegex.hasMatch(value);
+  return alphabetsOnlyRegex.hasMatch(value.trim());
 }
 
 bool passwordHasUppercaseLetter(String value) {
   // Iterate through each character in the value
-  for (int i = 0; i < value.length; i++) {
-    // Check if the character is an uppercase letter
-    if (value[i].toUpperCase() == value[i]) {
-      return true; // Found an uppercase letter, return true
-    }
-  }
-  return false; // No uppercase letter found
+  final RegExp uppercase = RegExp(r'[A-Z]');
+  return value.contains(uppercase); // No uppercase letter found
 }
 
 bool passwordHasSpecialCharacter(String value) {
   // Define a list of special characters
   List<String> specialCharacters = [
-    '!', '@', '#', '\$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '[', ']', '{', '}', '|', '\\', ';', ':', "'", '"', ',', '.', '<', '>', '/', '?'
+    '!',
+    '@',
+    '#',
+    '\$',
+    '%',
+    '^',
+    '&',
+    '*',
+    '(',
+    ')',
+    '-',
+    '_',
+    '+',
+    '=',
+    '[',
+    ']',
+    '{',
+    '}',
+    '|',
+    '\\',
+    ';',
+    ':',
+    "'",
+    '"',
+    ',',
+    '.',
+    '<',
+    '>',
+    '/',
+    '?'
   ];
-  
+
   // Iterate through each character in the value
   for (int i = 0; i < value.length; i++) {
     // Check if the character is a special character
@@ -43,7 +67,6 @@ bool passwordHasNumber(String value) {
   }
   return false; // No number found
 }
-
 
 bool validateMinimumLength(String value, int minLength) {
   // check if value is greater than or equal to minimum length
@@ -72,7 +95,8 @@ bool validateRequired(String value) {
 
 bool validateNumeric(String value) {
   // check if the value is made of numbers and not double or decimals
-  return double.tryParse(value.trim()) != null;
+  return (double.tryParse(value.trim()) != null) ==
+      (double.tryParse(value.trim()) != null);
 }
 
 bool validateEmail(String value) {

@@ -55,7 +55,7 @@ class SplashScreenController extends GetxController {
 
   void goToSignUp() {
     Get.off(
-      () => const SignUpScreen(),
+      () => SignUpScreen(),
       transition: Transition.rightToLeft,
       duration: const Duration(milliseconds: 800),
     );
