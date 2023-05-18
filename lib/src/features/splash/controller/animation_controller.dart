@@ -16,14 +16,11 @@ class SplashScreenController extends GetxController {
     animateLogo.value = false;
     await Future.delayed(const Duration(milliseconds: 1500));
     animateHello.value = true;
-
-    // await few seconds then switch to the intro screen
-    // await Future.delayed(const Duration(milliseconds: 5500));
-    // TODO: Get.to(IntroScreen());
-    // Get.to(() => const IntroScreen());
   }
 
-  void goToIntro() {
+  void goToIntro() async {
+    animateHello.value = false;
+    await Future.delayed(const Duration(milliseconds: 1500));
     Get.to(() => const IntroScreen());
   }
 }

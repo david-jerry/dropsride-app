@@ -21,6 +21,8 @@ class DropsrideTheme {
       brightness: Brightness.light,
       seedColor: AppColors.primaryColor,
     ).copyWith(background: AppColors.white300),
+
+    // general input decoration style
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.whiteColor,
@@ -40,6 +42,20 @@ class DropsrideTheme {
       ),
       focusColor: AppColors.grey200,
     ),
+
+    // elevated button style
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.white300,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizes.p12),
+        ),
+        elevation: AppSizes.p8,
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSizes.buttonHeight / 2.7,
+        ),
+      ),
+    ),
   );
 
   static final dropsrideDarkTheme = ThemeData.dark().copyWith(
@@ -58,6 +74,8 @@ class DropsrideTheme {
       brightness: Brightness.dark,
       seedColor: AppColors.primaryColor,
     ).copyWith(background: AppColors.secondaryColor),
+
+    // general input decoration theme style
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.grey400,
@@ -76,6 +94,20 @@ class DropsrideTheme {
         ),
       ),
       focusColor: AppColors.white300,
+    ),
+
+    // elevated button style
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.white300,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizes.p12),
+        ),
+        elevation: AppSizes.p8,
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSizes.buttonHeight / 2.7,
+        ),
+      ),
     ),
   );
 }

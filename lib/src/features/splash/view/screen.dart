@@ -1,6 +1,7 @@
 import 'package:dropsride/src/constants/assets.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/splash/controller/animation_controller.dart';
+import 'package:dropsride/src/features/splash/view/intro.dart';
 import 'package:dropsride/src/utils/size_config.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
 import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
@@ -87,62 +88,68 @@ class SplashScreen extends StatelessWidget {
                   duration: const Duration(milliseconds: 2500),
                   opacity: sController.animateHello.value ? 1 : 0,
                   child: Center(
-                    child: AnimatedTextKit(
-                      repeatForever: true,
-                      animatedTexts: [
-                        FadeAnimatedText(
-                          'Hello!',
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                                fontSize: SizeConfig.screenHeight * 0.12,
-                                fontWeight: FontWeight.w900,
-                                color: controller.isDarkMode.value
-                                    ? AppColors.backgroundColorLight
-                                    : AppColors.backgroundColorDark,
-                              ),
-                        ),
-                        FadeAnimatedText(
-                          'Bawo!',
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                                fontSize: SizeConfig.screenHeight * 0.12,
-                                fontWeight: FontWeight.w900,
-                                color: controller.isDarkMode.value
-                                    ? AppColors.backgroundColorLight
-                                    : AppColors.backgroundColorDark,
-                              ),
-                        ),
-                        FadeAnimatedText(
-                          'Sannu!',
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                                fontSize: SizeConfig.screenHeight * 0.12,
-                                fontWeight: FontWeight.w900,
-                                color: controller.isDarkMode.value
-                                    ? AppColors.backgroundColorLight
-                                    : AppColors.backgroundColorDark,
-                              ),
-                        ),
-                        FadeAnimatedText(
-                          'Nnọọ!',
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                                fontSize: SizeConfig.screenHeight * 0.12,
-                                fontWeight: FontWeight.w900,
-                                color: controller.isDarkMode.value
-                                    ? AppColors.backgroundColorLight
-                                    : AppColors.backgroundColorDark,
-                              ),
-                        ),
-                      ],
+                    child: Visibility(
+                      visible: sController.animateHello.value ? true : false,
+                      child: AnimatedTextKit(
+                        totalRepeatCount: 8,
+                        repeatForever: false,
+                        isRepeatingAnimation:
+                            sController.animateHello.value ? true : false,
+                        animatedTexts: [
+                          FadeAnimatedText(
+                            'Hello!',
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(
+                                  fontSize: SizeConfig.screenHeight * 0.09,
+                                  fontWeight: FontWeight.w900,
+                                  color: controller.isDarkMode.value
+                                      ? AppColors.backgroundColorLight
+                                      : AppColors.backgroundColorDark,
+                                ),
+                          ),
+                          FadeAnimatedText(
+                            'Bawo!',
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(
+                                  fontSize: SizeConfig.screenHeight * 0.09,
+                                  fontWeight: FontWeight.w900,
+                                  color: controller.isDarkMode.value
+                                      ? AppColors.backgroundColorLight
+                                      : AppColors.backgroundColorDark,
+                                ),
+                          ),
+                          FadeAnimatedText(
+                            'Sannu!',
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(
+                                  fontSize: SizeConfig.screenHeight * 0.09,
+                                  fontWeight: FontWeight.w900,
+                                  color: controller.isDarkMode.value
+                                      ? AppColors.backgroundColorLight
+                                      : AppColors.backgroundColorDark,
+                                ),
+                          ),
+                          FadeAnimatedText(
+                            'Nnọọ!',
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(
+                                  fontSize: SizeConfig.screenHeight * 0.09,
+                                  fontWeight: FontWeight.w900,
+                                  color: controller.isDarkMode.value
+                                      ? AppColors.backgroundColorLight
+                                      : AppColors.backgroundColorDark,
+                                ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -160,44 +167,43 @@ class SplashScreen extends StatelessWidget {
                 child: AnimatedOpacity(
                   opacity: sController.animateHello.value ? 1 : 0,
                   duration: const Duration(milliseconds: 1700),
-                  child: Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.padding * 4),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.white300,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSizes.p14),
-                          ),
-                          elevation: AppSizes.p8,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppSizes.p8,
-                          ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSizes.padding * 4),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.white300,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppSizes.p12),
                         ),
-                        onPressed: () {
-                          sController.goToIntro();
-                          // if (controller.isDarkMode.value) {
-                          //   controller.changeTheme(DropsrideTheme.dropsrideLightTheme);
-                          //   controller.saveTheme(false);
-                          //   controller.updateMode();
-                          // } else {
-                          //   controller.changeTheme(DropsrideTheme.dropsrideDarkTheme);
-                          //   controller.saveTheme(true);
-                          //   controller.updateMode();
-                          // }
-                        },
-                        child: Text('Get Started',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .copyWith(
-                                  fontSize: SizeConfig.screenHeight * 0.026,
-                                  fontWeight: FontWeight.w900,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                )),
+                        elevation: AppSizes.p8,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSizes.buttonHeight / 2.7,
+                        ),
                       ),
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: ((context) => const IntroScreen())));
+                        // sController.goToIntro();
+                        // if (controller.isDarkMode.value) {
+                        //   controller.changeTheme(DropsrideTheme.dropsrideLightTheme);
+                        //   controller.saveTheme(false);
+                        //   controller.updateMode();
+                        // } else {
+                        //   controller.changeTheme(DropsrideTheme.dropsrideDarkTheme);
+                        //   controller.saveTheme(true);
+                        //   controller.updateMode();
+                        // }
+                      },
+                      child: Text('Get Started',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(
+                                fontSize: SizeConfig.screenHeight * 0.026,
+                                fontWeight: FontWeight.w900,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              )),
                     ),
                   ),
                 ),
