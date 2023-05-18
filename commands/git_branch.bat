@@ -2,6 +2,8 @@
 TITLE New Git Branch
 
 
+REM TODO: Ensure this script first creates a new merge directory, checkout to the new directory, add files to the new directory and then commit to it before pushing to the repository. Once these has been done, either merge and delete the fila or merge the file alone
+
 REM change directory into the parent directory
 cd ..
 
