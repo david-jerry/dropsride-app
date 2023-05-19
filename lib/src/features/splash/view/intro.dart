@@ -41,6 +41,11 @@ class IntroScreen extends StatelessWidget {
             // Page Swipe
             LiquidSwipe(
               liquidController: sController.liquidController,
+              // disableUserGesture: true,
+              // ignoreUserGestureWhileAnimating: true,
+              onPageChangeCallback: (activePageIndex) {
+                sController.activeIndex.value = activePageIndex;
+              },
               // enableSideReveal: true,
               // slideIconWidget: const Icon(Icons.arrow_back_ios_new),
               pages: pages,
@@ -70,7 +75,7 @@ class IntroScreen extends StatelessWidget {
                 top: AppSizes.padding,
                 right: AppSizes.padding,
                 child: Visibility(
-                  visible: sController.lastIntro.value ? false : true,
+                  visible: sController.activeIndex.value >= 1 ? false : true,
                   child: TextButton(
                     onPressed: () {
                       sController.skip();
@@ -127,12 +132,12 @@ class IntroScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      sController.lastIntro.value
+                      sController.activeIndex.value == 2
                           ? sController.goToSignUp()
                           : sController.nextSlide();
                     },
                     child: Text(
-                      sController.lastIntro.value ? 'Signup' : 'Next',
+                      sController.activeIndex.value == 2 ? 'Signup' : 'Next',
                       style: Theme.of(context).textTheme.labelMedium!.copyWith(
                             fontSize: SizeConfig.screenHeight * 0.026,
                             fontWeight: FontWeight.w900,

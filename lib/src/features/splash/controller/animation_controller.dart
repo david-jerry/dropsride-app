@@ -24,6 +24,8 @@ class SplashScreenController extends GetxController {
     animateLogo.value = false;
     await Future.delayed(const Duration(milliseconds: 1500));
     animateHello.value = true;
+    await Future.delayed(const Duration(milliseconds: 10000));
+    goToIntro();
   }
 
   void goToIntro() {
@@ -32,7 +34,7 @@ class SplashScreenController extends GetxController {
     Get.off(
       () => IntroScreen(),
       transition: Transition.upToDown,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1000),
     );
   }
 
@@ -49,7 +51,7 @@ class SplashScreenController extends GetxController {
     Get.off(
       () => SplashScreen(),
       transition: Transition.leftToRight,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1000),
     );
   }
 
@@ -57,7 +59,7 @@ class SplashScreenController extends GetxController {
     Get.off(
       () => SignUpScreen(),
       transition: Transition.rightToLeft,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1600),
     );
   }
 

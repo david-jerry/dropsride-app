@@ -1,3 +1,4 @@
+import 'package:dropsride/src/features/legals/view/legal_page.dart';
 import 'package:dropsride/src/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ class AuthController extends GetxController {
 
   final formKey = GlobalKey<FormState>();
 
+  RxBool check = false.obs;
   String nameInput = '';
   String emailInput = '';
   String passwordInput = '';
@@ -20,6 +22,10 @@ class AuthController extends GetxController {
   void passwordStrength(int score) => passwordScore.value = score;
 
   void validateFields() => formKey.currentState!.validate();
+
+  void goToTerm() => Get.to(() => const LegalPage(),
+      duration: const Duration(milliseconds: 800),
+      transition: Transition.fadeIn);
 
   void checkPasswordStrength(value) {
     if (!validateRequired(value)) {
@@ -42,13 +48,5 @@ class AuthController extends GetxController {
     } else if (validateMinimumLength(value, 6)) {
       passwordStrength(1);
     }
-
-    print(validateRequired(value));
-    print(validateMinimumLength(value, 6));
-    print(validateMinimumLength(value, 8));
-    print(passwordHasSpecialCharacter(value));
-    print(passwordHasNumber(value));
-    print(passwordHasUppercaseLetter(value));
-    print(passwordScore.value);
   }
 }

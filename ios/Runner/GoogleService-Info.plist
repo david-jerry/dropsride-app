@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>919391878723-01bcjk353n7gofpv4u7g9mvhqb7om4c0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.919391878723-01bcjk353n7gofpv4u7g9mvhqb7om4c0</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDTIIO86Wh4KWfoVR0YOviek6c5zKMqhnY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>919391878723</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.dropsride</string>
+	<key>PROJECT_ID</key>
+	<string>still-chassis-382314</string>
+	<key>STORAGE_BUCKET</key>
+	<string>still-chassis-382314.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:919391878723:ios:d5baa828206ab9ed8b1ef6</string>
+	<key>DATABASE_URL</key>
+	<string>https://still-chassis-382314-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

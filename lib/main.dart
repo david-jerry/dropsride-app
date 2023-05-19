@@ -1,6 +1,11 @@
+import 'package:dropsride/firebase_options.dart';
+import 'package:dropsride/src/features/legals/view/legal_page.dart';
 import 'package:dropsride/src/features/splash/view/screen.dart';
+import 'package:dropsride/src/utils/alert.dart';
 import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
 import 'package:dropsride/src/utils/theme/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -15,6 +20,11 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  // initialize firebase authentication
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // initialize the shared storage
   await GetStorage.init();
@@ -44,7 +54,32 @@ class MyApp extends StatelessWidget {
       darkTheme: DropsrideTheme.dropsrideDarkTheme,
       themeMode: themeController.theme, //ThemeMode.dark,
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SplashScreen();
+          }
+
+          if (snapshot.connectionState == ConnectionState.done &&
+              !snapshot.hasData) {
+            return SplashScreen();
+          }
+
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            return const LegalPage();
+          }
+
+          if (snapshot.connectionState == ConnectionState.none &&
+              snapshot.hasError) {
+            showErrorMessage(
+                context, "There was an error connecting to the server");
+          }
+
+          return SplashScreen();
+        },
+      ),
     );
   }
 }

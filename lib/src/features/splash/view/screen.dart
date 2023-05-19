@@ -1,5 +1,4 @@
 import 'package:dropsride/src/constants/assets.dart';
-import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/splash/controller/animation_controller.dart';
 import 'package:dropsride/src/utils/size_config.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
@@ -156,58 +155,58 @@ class SplashScreen extends StatelessWidget {
             ),
 
             // animated button
-            Obx(
-              () => AnimatedPositioned(
-                duration: const Duration(milliseconds: 800),
-                bottom: sController.animateHello.value
-                    ? AppSizes.padding * 3
-                    : -(AppSizes.padding * 3),
-                width: SizeConfig.screenWidth,
-                child: AnimatedOpacity(
-                  opacity: sController.animateHello.value ? 1 : 0,
-                  duration: const Duration(milliseconds: 1700),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizes.padding * 4),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.white300,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSizes.p12),
-                        ),
-                        elevation: AppSizes.p8,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: AppSizes.buttonHeight / 2.9,
-                        ),
-                      ),
-                      onPressed: () {
-                        // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        // builder: ((context) => const IntroScreen())));
-                        sController.goToIntro();
-                        // if (controller.isDarkMode.value) {
-                        //   controller.changeTheme(DropsrideTheme.dropsrideLightTheme);
-                        //   controller.saveTheme(false);
-                        //   controller.updateMode();
-                        // } else {
-                        //   controller.changeTheme(DropsrideTheme.dropsrideDarkTheme);
-                        //   controller.saveTheme(true);
-                        //   controller.updateMode();
-                        // }
-                      },
-                      child: Text('Get Started',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                fontSize: SizeConfig.screenHeight * 0.026,
-                                fontWeight: FontWeight.w900,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              )),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Obx(
+            //   () => AnimatedPositioned(
+            //     duration: const Duration(milliseconds: 800),
+            //     bottom: sController.animateHello.value
+            //         ? AppSizes.padding * 3
+            //         : -(AppSizes.padding * 3),
+            //     width: SizeConfig.screenWidth,
+            //     child: AnimatedOpacity(
+            //       opacity: sController.animateHello.value ? 1 : 0,
+            //       duration: const Duration(milliseconds: 1700),
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(
+            //             horizontal: AppSizes.padding * 4),
+            //         child: ElevatedButton(
+            //           style: ElevatedButton.styleFrom(
+            //             backgroundColor: AppColors.white300,
+            //             shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(AppSizes.p12),
+            //             ),
+            //             elevation: AppSizes.p8,
+            //             padding: const EdgeInsets.symmetric(
+            //               vertical: AppSizes.buttonHeight / 2.9,
+            //             ),
+            //           ),
+            //           onPressed: () {
+            //             // Navigator.of(context).pushReplacement(MaterialPageRoute(
+            //             // builder: ((context) => const IntroScreen())));
+            //             sController.goToIntro();
+            //             // if (controller.isDarkMode.value) {
+            //             //   controller.changeTheme(DropsrideTheme.dropsrideLightTheme);
+            //             //   controller.saveTheme(false);
+            //             //   controller.updateMode();
+            //             // } else {
+            //             //   controller.changeTheme(DropsrideTheme.dropsrideDarkTheme);
+            //             //   controller.saveTheme(true);
+            //             //   controller.updateMode();
+            //             // }
+            //           },
+            //           child: Text('Get Started',
+            //               style: Theme.of(context)
+            //                   .textTheme
+            //                   .labelMedium!
+            //                   .copyWith(
+            //                     fontSize: SizeConfig.screenHeight * 0.026,
+            //                     fontWeight: FontWeight.w900,
+            //                     color: Theme.of(context).colorScheme.onPrimary,
+            //                   )),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

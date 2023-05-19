@@ -1,6 +1,7 @@
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
+import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
 import 'package:dropsride/src/utils/validators.dart';
 import 'package:flutter/material.dart';
 

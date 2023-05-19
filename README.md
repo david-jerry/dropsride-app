@@ -4,6 +4,8 @@
 
 Drops Ride is a technology company that provides E-Ride hailing taxi services via the Drops App. Our vision is to create safe, convenient and affordable rides.
 
+******
+
 ## Dropsride Contributors
 
 DROPSRIDE started development in October 2022, inspired by the Drops Technology Team:
@@ -14,11 +16,13 @@ DROPSRIDE started development in October 2022, inspired by the Drops Technology 
 
 They would like to thank the following people for their contributions to this project:
 
-- [Jeremiah E. David](https://www.jeremiahedavid.space) Backend Architecture and Design, Dashboard and API Endpoint.
+- [Jeremiah E. David](https://www.jeremiahedavid.space) Backend Architecture and Design, Dashboard, Mobile App and API Endpoint.
 
 - [Emeyak Boma](sodboma022@gmail.com): Resource Agent and Tester who Provided valuable feedback and suggestions.
 
 ## Getting Started
+
+******
 
 ### Prerequisites
 

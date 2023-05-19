@@ -27,9 +27,9 @@ class SignUpScreen extends StatelessWidget {
               Obx(
                 () => Padding(
                   padding: const EdgeInsets.fromLTRB(
-                    AppSizes.padding,
                     AppSizes.padding * 2,
-                    AppSizes.padding,
+                    AppSizes.padding * 3,
+                    AppSizes.padding * 2,
                     0,
                   ),
                   child: Column(
@@ -48,7 +48,16 @@ class SignUpScreen extends StatelessWidget {
                             ),
                       ),
                       hSizedBox2,
-                      const Text('Please enter your details'),
+                      Text(
+                        'Please enter your details',
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 1.3,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
+                      ),
                       hSizedBox8,
 
                       // form body with switching for sign up and login
@@ -138,6 +147,58 @@ class SignUpScreen extends StatelessWidget {
                                   ]),
                                 )
                               ],
+                            ),
+
+                            // privacy and submit button
+                            hSizedBox2,
+                            Obx(
+                              () => Row(
+                                children: [
+                                  Expanded(
+                                    child: CheckboxListTile(
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        checkColor: AppColors.secondaryColor,
+                                        activeColor: AppColors.primaryColor,
+                                        selectedTileColor: Colors.transparent,
+                                        tileColor: Colors.transparent,
+                                        dense: true,
+                                        tristate: false,
+                                        contentPadding: EdgeInsets.zero,
+                                        visualDensity: VisualDensity
+                                            .adaptivePlatformDensity,
+                                        value: aController.check.value,
+                                        title: Text(
+                                          'I agree with',
+                                          softWrap: true,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSecondaryContainer),
+                                        ),
+                                        onChanged: (value) =>
+                                            aController.check.value = value!),
+                                  ),
+                                  Expanded(
+                                    child: TextButton(
+                                      onPressed: () => aController.goToTerm(),
+                                      child: Text(
+                                        'Terms',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium!
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             )
                           ],
                         ),
