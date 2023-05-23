@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:919391878723:android:3ba2edf03004878f8b1ef6",
+        "mobilesdk_app_id": "1:919391878723:android:f4db0b8672867e7b8b1ef6",
         "android_client_info": {
-          "package_name": "com.example.dropsride"
+          "package_name": "com.dropsride.android"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "919391878723-maktt4idgj0acn2ftq69d3lk07rotjds.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dropsride.android",
+            "certificate_hash": "65181c3bd8570f162a2ac81d6192f5abd1872564"
+          }
+        },
         {
           "client_id": "919391878723-go95copkd2tigivhjgg9tchuhkis2rlc.apps.googleusercontent.com",
           "client_type": 3

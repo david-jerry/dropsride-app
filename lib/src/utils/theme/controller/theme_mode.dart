@@ -1,3 +1,4 @@
+import 'package:dropsride/src/utils/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,14 @@ import 'package:get_storage/get_storage.dart';
 ///
 /// - [**controller.changeThemeMode(ThemeMode)**] can be called to change the theme's mode from dark to light, with the initial setup set to the system mode. Accepts only a [ThemeMode] data type argument.
 ///---------------------------------------------------------------------------
+
+enum AlertType {
+  info,
+  error,
+  success,
+  warning,
+}
+
 class ThemeModeController extends GetxController {
   final _box = GetStorage();
   final _key = 'isDarkMode';
@@ -23,6 +32,21 @@ class ThemeModeController extends GetxController {
   // RxBool get mode => isDarkMode.value ? true.obs : false.obs;
 
   RxBool isDarkMode = false.obs;
+  String message = '';
+  String title = '';
+  AlertType type = AlertType.warning;
+
+  void showMessage() {
+    if (type == AlertType.info) {
+      showInfoMessage(title, message, Icons.info_outline);
+    } else if (type == AlertType.error) {
+      showErrorMessage(title, message, Icons.error_outline);
+    } else if (type == AlertType.success) {
+      showSuccessMessage(title, message, Icons.mark_chat_read);
+    } else {
+      showWarningMessage(title, message, Icons.warning_outlined);
+    }
+  }
 
   bool _loadTheme() {
     /// Function to load the theme preference and if there is none, it checks the system's theme mode and sets it to the app theme mode

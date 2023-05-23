@@ -1,4 +1,4 @@
-import 'package:dropsride/src/features/auth/view/sign_up.dart';
+import 'package:dropsride/src/features/auth/view/sign_up_and_login_screen.dart';
 import 'package:dropsride/src/features/splash/view/intro.dart';
 import 'package:dropsride/src/features/splash/view/screen.dart';
 import 'package:get/get.dart';
@@ -12,8 +12,11 @@ class SplashScreenController extends GetxController {
   RxBool lastIntro = false.obs;
   RxBool secondIntro = false.obs;
   RxInt activeIndex = 0.obs;
-
+  
   LiquidController liquidController = LiquidController();
+  
+
+  void fireSnackbar(snackBar) => snackBar();
 
   Future startLogoAnimation() async {
     await Future.delayed(const Duration(milliseconds: 1500));

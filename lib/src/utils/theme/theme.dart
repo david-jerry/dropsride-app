@@ -25,7 +25,8 @@ class DropsrideTheme {
     // general input decoration style
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.whiteColor,
+      isDense: true,
+      fillColor: AppColors.white300,
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppSizes.p12),
         borderSide: const BorderSide(
@@ -40,13 +41,21 @@ class DropsrideTheme {
           width: AppSizes.p2,
         ),
       ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(
+          AppSizes.margin,
+        ),
+        borderSide: const BorderSide(width: AppSizes.p2, color: AppColors.red),
+      ),
       focusColor: AppColors.grey200,
     ),
 
     // elevated button style
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.white300,
+        foregroundColor: AppColors.secondaryColor,
+        backgroundColor: AppColors.primaryColor,
+        fixedSize: const Size.fromWidth(double.infinity),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSizes.p12),
         ),
@@ -56,6 +65,22 @@ class DropsrideTheme {
         ),
       ),
     ),
+
+    // outlines button
+    // outlinedButtonTheme: OutlinedButtonThemeData(
+    //   style: OutlinedButton.styleFrom(
+    //     foregroundColor: AppColors.primaryColor,
+    //     backgroundColor: AppColors.white300,
+    //     fixedSize: const Size.fromWidth(double.infinity),
+    //     shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.circular(AppSizes.p12),
+    //     ),
+    //     elevation: AppSizes.p8,
+    //     padding: const EdgeInsets.symmetric(
+    //       vertical: AppSizes.buttonHeight / 2.7,
+    //     ),
+    //   ),
+    // ),
   );
 
   static final dropsrideDarkTheme = ThemeData.dark().copyWith(
@@ -86,12 +111,19 @@ class DropsrideTheme {
           width: AppSizes.p2,
         ),
       ),
+      isDense: true,
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppSizes.p16),
         borderSide: const BorderSide(
-          color: AppColors.grey200,
+          color: AppColors.grey300,
           width: AppSizes.p2,
         ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(
+          AppSizes.margin,
+        ),
+        borderSide: const BorderSide(width: AppSizes.p2, color: AppColors.red),
       ),
       focusColor: AppColors.white300,
     ),
@@ -99,7 +131,9 @@ class DropsrideTheme {
     // elevated button style
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.white300,
+        foregroundColor: AppColors.secondaryColor,
+        backgroundColor: AppColors.primaryColor,
+        fixedSize: const Size.fromWidth(double.infinity),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSizes.p12),
         ),
@@ -109,5 +143,21 @@ class DropsrideTheme {
         ),
       ),
     ),
+
+    // outlined button
+    // outlinedButtonTheme: OutlinedButtonThemeData(
+    //   style: OutlinedButton.styleFrom(
+    //     foregroundColor: AppColors.primaryColor,
+    //     backgroundColor: AppColors.secondaryColor,
+    //     fixedSize: const Size.fromWidth(double.infinity),
+    //     shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.circular(AppSizes.p12),
+    //     ),
+    //     elevation: AppSizes.p8,
+    //     padding: const EdgeInsets.symmetric(
+    //       vertical: AppSizes.buttonHeight / 2.7,
+    //     ),
+    //   ),
+    // ),
   );
 }

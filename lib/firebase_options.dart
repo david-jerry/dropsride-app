@@ -45,7 +45,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDkWYlsvlC0gpITUFGrSWgkaHwlKFZdBKY',
-    appId: '1:919391878723:web:9b5e1311086bee658b1ef6',
+    appId: '1:919391878723:web:7ce6e586112a1d0a8b1ef6',
     messagingSenderId: '919391878723',
     projectId: 'still-chassis-382314',
     authDomain: 'still-chassis-382314.firebaseapp.com',
@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD-9iKf_Lvn8Qpz_Ikv9t-MPiLUvR6EoDw',
-    appId: '1:919391878723:android:3ba2edf03004878f8b1ef6',
+    appId: '1:919391878723:android:f4db0b8672867e7b8b1ef6',
     messagingSenderId: '919391878723',
     projectId: 'still-chassis-382314',
     databaseURL: 'https://still-chassis-382314-default-rtdb.firebaseio.com',
@@ -64,23 +64,25 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDTIIO86Wh4KWfoVR0YOviek6c5zKMqhnY',
-    appId: '1:919391878723:ios:d5baa828206ab9ed8b1ef6',
+    appId: '1:919391878723:ios:7fabebc515d4959a8b1ef6',
     messagingSenderId: '919391878723',
     projectId: 'still-chassis-382314',
     databaseURL: 'https://still-chassis-382314-default-rtdb.firebaseio.com',
     storageBucket: 'still-chassis-382314.appspot.com',
-    iosClientId: '919391878723-01bcjk353n7gofpv4u7g9mvhqb7om4c0.apps.googleusercontent.com',
-    iosBundleId: 'com.example.dropsride',
+    androidClientId: '919391878723-maktt4idgj0acn2ftq69d3lk07rotjds.apps.googleusercontent.com',
+    iosClientId: '919391878723-i7qfqdha9tdkuf6kd05m2t7qd316eaio.apps.googleusercontent.com',
+    iosBundleId: 'com.dropsride.apple',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDTIIO86Wh4KWfoVR0YOviek6c5zKMqhnY',
-    appId: '1:919391878723:ios:d5baa828206ab9ed8b1ef6',
+    appId: '1:919391878723:ios:7fabebc515d4959a8b1ef6',
     messagingSenderId: '919391878723',
     projectId: 'still-chassis-382314',
     databaseURL: 'https://still-chassis-382314-default-rtdb.firebaseio.com',
     storageBucket: 'still-chassis-382314.appspot.com',
-    iosClientId: '919391878723-01bcjk353n7gofpv4u7g9mvhqb7om4c0.apps.googleusercontent.com',
-    iosBundleId: 'com.example.dropsride',
+    androidClientId: '919391878723-maktt4idgj0acn2ftq69d3lk07rotjds.apps.googleusercontent.com',
+    iosClientId: '919391878723-i7qfqdha9tdkuf6kd05m2t7qd316eaio.apps.googleusercontent.com',
+    iosBundleId: 'com.dropsride.apple',
   );
 }

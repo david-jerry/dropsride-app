@@ -33,25 +33,36 @@ dependencies:
   animated_text_kit: ^4.2.2
   cloud_firestore: ^4.7.1
   connectivity_plus: ^4.0.0
+  crypto: ^3.0.3
   cupertino_icons: ^1.0.2
   custom_clippers: ^2.0.0
   device_info_plus: ^9.0.0
   firebase_auth: ^4.6.0
   firebase_core: ^2.12.0
+  firebase_dynamic_links: ^5.3.1
   firebase_storage: ^11.2.1
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.0.2
+  flutter_facebook_auth: ^5.0.11
+  flutter_multi_formatter: ^2.11.0
+  flutter_otp_text_field: ^1.1.1
+  flutter_pin_code_fields: ^2.2.0
   flutter_rating_bar: ^4.0.1
   flutter_riverpod: ^2.3.6
+  flutter_sms: ^2.3.3
   flutter_svg: ^2.0.5
   get: ^4.6.5
   get_storage: ^2.1.1
   google_fonts: ^4.0.4
+  google_sign_in: ^6.1.0
   http: ^0.13.6
   image_picker: ^0.8.7+5
+  intl_phone_field: ^3.1.0
   liquid_swipe: ^3.1.0
   lottie: ^2.3.2
   shared_preferences: ^2.1.1
+  sign_in_with_apple: ^4.3.0
   smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
@@ -83,16 +94,24 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - .env
+    - assets/flags/
+    - assets/images/svg/forgot_password_svg.svg
     - assets/images/enable_location_illustration.png
     - assets/images/lighter_city_background.png
     - assets/images/splash/icon_dark.png
     - assets/images/splash/icon_yellow.png
     - assets/images/splash/light_bg.png
     - assets/images/splash/dark_bg.png
+    - assets/images/icons/google.svg
+    - assets/images/icons/apple.svg
+    - assets/images/icons/facebook.svg
+    - assets/images/icons/fb_social.svg
     - assets/images/icons/car_top.svg
     - assets/images/icons/driver_switch_icon.svg
     - assets/images/logo/logo_light.png
     - assets/images/logo/logo.png
+    - assets/images/svg/forgot_password_svg.svg
     - assets/images/onboard/onboard_1.png
     - assets/images/onboard/onboard_2.png
     - assets/images/onboard/onboard_3.png

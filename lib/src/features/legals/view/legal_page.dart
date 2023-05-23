@@ -6,7 +6,10 @@ class LegalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 4, title: Text("Legal Page"),),
+      appBar: AppBar(
+        elevation: 4,
+        title: const Text("Legal Page"),
+      ),
     );
   }
 }

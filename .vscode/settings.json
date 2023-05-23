@@ -1,4 +1,5 @@
 {
     "cmake.sourceDirectory": "C:/Users/pc/www/flutter/mobile_projects/dropsride/windows/flutter",
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

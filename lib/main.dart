@@ -1,15 +1,18 @@
-import 'package:dropsride/firebase_options.dart';
-import 'package:dropsride/src/features/legals/view/legal_page.dart';
-import 'package:dropsride/src/features/splash/view/screen.dart';
-import 'package:dropsride/src/utils/alert.dart';
-import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
-import 'package:dropsride/src/utils/theme/theme.dart';
+import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
+import 'package:dropsride/src/features/splash/view/error.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+
+import 'package:dropsride/firebase_options.dart';
+import 'package:dropsride/src/features/legals/view/legal_page.dart';
+import 'package:dropsride/src/features/splash/view/screen.dart';
+import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
+import 'package:dropsride/src/utils/theme/theme.dart';
 
 void main() async {
   // ensure all app bindings have been initialized successfully
@@ -21,9 +24,15 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  await dotenv.load(fileName: '.env');
+
   // initialize firebase authentication
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  ).then(
+    (value) => Get.put(
+      AuthController(),
+    ),
   );
 
   // initialize the shared storage
@@ -49,34 +58,114 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Dropsride',
+      locale: Get.deviceLocale,
+      fallbackLocale: const Locale('en', 'UK'),
       initialBinding: ThemeBinding(),
       theme: DropsrideTheme.dropsrideLightTheme,
       darkTheme: DropsrideTheme.dropsrideDarkTheme,
       themeMode: themeController.theme, //ThemeMode.dark,
+      defaultTransition: Transition.leftToRightWithFade,
+      transitionDuration: const Duration(milliseconds: 700),
       debugShowCheckedModeBanner: false,
       home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
+        stream: FirebaseAuth.instance.authStateChanges(), // idTokenChanges(),
         builder: (context, snapshot) {
+          if (Get.isSnackbarOpen) {
+            Get.back(closeOverlays: false);
+          }
+
           if (snapshot.connectionState == ConnectionState.waiting) {
+            // Get.snackbar(
+            //   isDismissible: true,
+            //   borderRadius: AppSizes.p4,
+            //   dismissDirection: DismissDirection.down,
+            //   animationDuration: const Duration(milliseconds: 1000),
+            //   icon: const Icon(Icons.error_outline_rounded),
+            //   duration: const Duration(milliseconds: 1200),
+            //   "Authentication Info",
+            //   "Please Sign up or Login to use the Drops Application!",
+            //   backgroundColor: Colors.blueAccent,
+            //   padding: const EdgeInsets.all(AppSizes.padding),
+            //   showProgressIndicator: true,
+            //   snackStyle: SnackStyle.FLOATING,
+            // );
+            // FirebaseAuth.instance.signOut();
             return SplashScreen();
           }
 
           if (snapshot.connectionState == ConnectionState.done &&
               !snapshot.hasData) {
+            // Get.snackbar(
+            //   isDismissible: true,
+            //   borderRadius: AppSizes.p4,
+            //   dismissDirection: DismissDirection.down,
+            //   animationDuration: const Duration(milliseconds: 1000),
+            //   icon: const Icon(Icons.error_outline_rounded),
+            //   duration: const Duration(milliseconds: 1200),
+            //   "Authentication Info",
+            //   "Please Sign up or Login to use the Drops Application!",
+            //   backgroundColor: Colors.blueAccent,
+            //   padding: const EdgeInsets.all(AppSizes.padding),
+            //   showProgressIndicator: true,
+            //   snackStyle: SnackStyle.FLOATING,
+            // );
+            FirebaseAuth.instance.signOut();
             return SplashScreen();
           }
 
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
+            // Get.snackbar(
+            //   isDismissible: true,
+            //   borderRadius: AppSizes.p4,
+            //   dismissDirection: DismissDirection.down,
+            //   animationDuration: const Duration(milliseconds: 1000),
+            //   icon: const Icon(Icons.error_outline_rounded),
+            //   duration: const Duration(milliseconds: 1200),
+            //   "Authentication Success",
+            //   "Hello! It feels so good to have you back.",
+            //   backgroundColor: Colors.blueAccent,
+            //   padding: const EdgeInsets.all(AppSizes.padding),
+            //   showProgressIndicator: true,
+            //   snackStyle: SnackStyle.FLOATING,
+            // );
             return const LegalPage();
           }
 
           if (snapshot.connectionState == ConnectionState.none &&
               snapshot.hasError) {
-            showErrorMessage(
-                context, "There was an error connecting to the server");
+            // Get.snackbar(
+            //   isDismissible: true,
+            //   borderRadius: AppSizes.p4,
+            //   dismissDirection: DismissDirection.down,
+            //   animationDuration: const Duration(milliseconds: 1000),
+            //   icon: const Icon(Icons.error_outline_rounded),
+            //   duration: const Duration(milliseconds: 1200),
+            //   "Authentication Error",
+            //   "There was an error connecting to the server",
+            //   backgroundColor: Colors.blueAccent,
+            //   padding: const EdgeInsets.all(AppSizes.padding),
+            //   showProgressIndicator: true,
+            //   snackStyle: SnackStyle.FLOATING,
+            // );
+            return const ErrorScreen();
           }
 
+          // Get.snackbar(
+          //   isDismissible: true,
+          //   borderRadius: AppSizes.p4,
+          //   dismissDirection: DismissDirection.down,
+          //   animationDuration: const Duration(milliseconds: 1000),
+          //   icon: const Icon(Icons.error_outline_rounded),
+          //   duration: const Duration(milliseconds: 1200),
+          //   "Authentication Info",
+          //   "Please Sign up or Login to use the Drops Application!",
+          //   backgroundColor: Colors.blueAccent,
+          //   padding: const EdgeInsets.all(AppSizes.padding),
+          //   showProgressIndicator: true,
+          //   snackStyle: SnackStyle.FLOATING,
+          // );
+          // FirebaseAuth.instance.signOut();
           return SplashScreen();
         },
       ),

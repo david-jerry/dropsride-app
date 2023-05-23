@@ -1,4 +1,4 @@
-package com.example.dropsride
+package com.dropsride.android
 
 import io.flutter.embedding.android.FlutterActivity
 
