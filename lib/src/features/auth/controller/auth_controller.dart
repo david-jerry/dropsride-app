@@ -25,17 +25,18 @@ class AuthController extends GetxController {
   RxString confirmPasswordInput = ''.obs;
   RxString emailInput = ''.obs;
   RxBool forgotPasswordEmail = false.obs;
-  final formKey = GlobalKey<FormState>();
+  late final formKey = GlobalKey<FormState>();
   RxBool isDriver = false.obs;
   RxBool isEmailVerified = false.obs;
   RxBool isLoading = false.obs;
-  RxBool login = false.obs;
+  RxBool login = true.obs;
   RxString nameInput = ''.obs;
   RxString otp = ''.obs;
   RxString passwordInput = ''.obs;
   RxInt passwordScore = 0.obs;
-  PhoneNumber? phoneInput =
-      PhoneNumber(countryISOCode: 'NG', countryCode: '+1', number: '551234567');
+  Rx<PhoneNumber?> phoneInput = PhoneNumber(
+          countryISOCode: 'NG', countryCode: '+234', number: '555 123 4567')
+      .obs;
 
   late Rx<User?> user = Rx<User?>(null);
   late Rx<Timer?> verificationTimer = Rx<Timer?>(null);
@@ -54,14 +55,15 @@ class AuthController extends GetxController {
           await _firestore.collection('users').doc(user.value!.uid).get();
       if (userSnapshot.exists) {
         isDriver.value = userSnapshot.get('isDriver') ?? false;
+        nameInput.value = userSnapshot.get('name') ?? '';
       }
     }
   }
 
   static AuthController get find => Get.find();
 
-  static AuthController get instance => Get
-      .find(); // to be used like this AuthController.instance.functionOrVariable
+  static AuthController get instance => Get.put(
+      AuthController()); // to be used like this AuthController.instance.functionOrVariable
 
   void toggleForm() => login.value = !login.value;
 
@@ -69,10 +71,13 @@ class AuthController extends GetxController {
 
   void validateFields() {
     FocusScope.of(Get.context!).unfocus();
+    if (formKey.currentState == null) {
+      return;
+    }
     formKey.currentState!.validate();
   }
 
-  void goToTerm() => Get.offAll(
+  void goToTerm() => Get.to(
         () => const LegalPage(),
         duration: const Duration(milliseconds: 800),
         transition: Transition.fadeIn,
@@ -117,8 +122,10 @@ class AuthController extends GetxController {
 
   Future<void> resetPasswordWithPhone() async {
     isLoading.value = true;
+    Get.back(closeOverlays: true);
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '${phoneInput!.countryCode}${phoneInput!.number.trim()}',
+      phoneNumber:
+          '${phoneInput.value!.countryCode}${phoneInput.value!.number.trim()}',
       verificationCompleted: (PhoneAuthCredential credential) async {
         await FirebaseAuth.instance.signInWithCredential(credential).then(
               (value) => value.user != null ? Get.to(() => OTPScreen()) : null,
@@ -164,7 +171,7 @@ class AuthController extends GetxController {
         );
 
         login.value = true;
-        Get.offAll(() => SignUpScreen());
+        Get.off(() => SignUpScreen());
       },
     ).catchError(
       (e) {
@@ -191,13 +198,13 @@ class AuthController extends GetxController {
           try {
             await _firestore.collection('users').doc(user.value!.uid).set({
               'phoneNumber':
-                  '${phoneInput!.countryCode}${phoneInput!.number.trim()}'
+                  '${phoneInput.value!.countryCode}${phoneInput.value!.number.trim()}'
             });
 
             refresh();
 
             // TODO: Chnage this to the main map screen
-            Get.offAll(() => const LegalPage());
+            Get.off(() => const LegalPage());
           } catch (e) {
             showErrorMessage('Phone Verification',
                 "Failed to add your number: $e", Icons.lock_person);
@@ -207,13 +214,13 @@ class AuthController extends GetxController {
           // show a notification that the user's phone number has been added
           showSuccessMessage(
             'Phone Verification',
-            'You have successfully verified your phone number: **${phoneInput!.countryCode}${phoneInput!.number.trim()}**',
+            'You have successfully verified your phone number: **${phoneInput.value!.countryCode}${phoneInput.value!.number.trim()}**',
             Icons.phone_android_sharp,
           );
 
           // then redirect to the login page
           isLoading.value = false;
-          return Get.offAll(() => const LegalPage());
+          return Get.off(() => const LegalPage());
         } else {
           isLoading.value = false;
           return Get.back();
@@ -275,17 +282,12 @@ class AuthController extends GetxController {
   }
 
   Future<void> checkEmailVerificationStatus(Rx<User?> user) async {
-    user.value!.reload();
-
     if (user.value!.emailVerified) {
       isEmailVerified.value = true;
+      user.value!.reload();
       // Email is verified, navigate to the new page
       verificationTimer.value!.cancel(); // Stop the timer
-      Get.offAll(
-        const LegalPage(),
-        duration: const Duration(milliseconds: 800),
-        transition: Transition.rightToLeftWithFade,
-      );
+      Get.off(() => const LegalPage());
     }
   }
 
@@ -327,70 +329,70 @@ class AuthController extends GetxController {
               );
 
           // Start the timer to periodically check email verification status
-          verificationTimer.value =
-              Timer.periodic(const Duration(seconds: 1), (timer) {
-            checkEmailVerificationStatus(user);
-          });
+          // verificationTimer.value =
+          //     Timer.periodic(const Duration(seconds: 1), (timer) {
+          //   checkEmailVerificationStatus(user);
+          // });
 
-          if (!isEmailVerified.value) {
-            Get.bottomSheet(
-              backgroundColor:
-                  Theme.of(Get.context!).colorScheme.secondaryContainer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.padding),
-              ),
-              Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.padding * 2,
-                      vertical: AppSizes.padding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      hSizedBox4,
-                      Text(
-                        'Verification Processing?',
-                        style: Theme.of(Get.context!)
-                            .textTheme
-                            .headlineMedium!
-                            .copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: Theme.of(Get.context!)
-                                  .colorScheme
-                                  .onBackground,
-                            ),
-                      ),
-                      hSizedBox2,
-                      Text(
-                        'Please wait for the verification process to complete. Once completed we will redirect you automatically.',
-                        style: Theme.of(Get.context!)
-                            .textTheme
-                            .labelLarge!
-                            .copyWith(
-                              letterSpacing: 1,
-                            ),
-                      ),
-                      const SizedBox(height: 16.0),
-                      Visibility(
-                        visible: !user.value!.emailVerified ? true : false,
-                        child: const CircularProgressIndicator(),
-                      ),
-                      const SizedBox(height: 16.0),
-                      // Divider(
-                      //   height: AppSizes.p18 * 2.8,
-                      //   color: Theme.of(Get.context!).colorScheme.onBackground,
-                      // ),
-                      // CustomButtons(
-                      //     ontap: () {
-                      //       Get.back();
-                      //     },
-                      //     icon: Icons.email_rounded,
-                      //     title: "Cancel",
-                      //     description: "Reset via email verification"),
-                    ],
-                  )),
-            );
-          }
+          // if (!isEmailVerified.value) {
+          //   Get.bottomSheet(
+          //     backgroundColor:
+          //         Theme.of(Get.context!).colorScheme.secondaryContainer,
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(AppSizes.padding),
+          //     ),
+          //     Container(
+          //         padding: const EdgeInsets.symmetric(
+          //             horizontal: AppSizes.padding * 2,
+          //             vertical: AppSizes.padding),
+          //         child: Column(
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           mainAxisSize: MainAxisSize.min,
+          //           children: [
+          //             hSizedBox4,
+          //             Text(
+          //               'Verification Processing?',
+          //               style: Theme.of(Get.context!)
+          //                   .textTheme
+          //                   .headlineMedium!
+          //                   .copyWith(
+          //                     fontWeight: FontWeight.w900,
+          //                     color: Theme.of(Get.context!)
+          //                         .colorScheme
+          //                         .onBackground,
+          //                   ),
+          //             ),
+          //             hSizedBox2,
+          //             Text(
+          //               'Please wait for the verification process to complete. Once completed we will redirect you automatically.',
+          //               style: Theme.of(Get.context!)
+          //                   .textTheme
+          //                   .labelLarge!
+          //                   .copyWith(
+          //                     letterSpacing: 1,
+          //                   ),
+          //             ),
+          //             const SizedBox(height: 16.0),
+          //             Visibility(
+          //               visible: !user.value!.emailVerified ? true : false,
+          //               child: const CircularProgressIndicator(),
+          //             ),
+          //             const SizedBox(height: 16.0),
+          //             // Divider(
+          //             //   height: AppSizes.p18 * 2.8,
+          //             //   color: Theme.of(Get.context!).colorScheme.onBackground,
+          //             // ),
+          //             // CustomButtons(
+          //             //     ontap: () {
+          //             //       Get.back();
+          //             //     },
+          //             //     icon: Icons.email_rounded,
+          //             //     title: "Cancel",
+          //             //     description: "Reset via email verification"),
+          //           ],
+          //         )),
+          //   );
+          // }
 
           showInfoMessage(
             'Email Verification Sent',
@@ -405,11 +407,7 @@ class AuthController extends GetxController {
             Icons.face_unlock_sharp);
 
         isLoading.value = false;
-        Get.offAll(
-          () {
-            const LegalPage();
-          },
-        );
+        Get.off(() => const LegalPage());
       }
       return;
     } on FirebaseAuthException catch (e) {
@@ -424,6 +422,15 @@ class AuthController extends GetxController {
 
     isLoading.value = false;
     return;
+  }
+
+  Future<void> signOutUser() async {
+    Get.delete<AuthController>();
+    Get.put(AuthController());
+    AuthController.instance.user.value = null;
+    AuthController.instance.login.value = true;
+    FirebaseAuth.instance.signOut();
+    Get.off(() => SignUpScreen());
   }
 
   Future<void> createNewUser() async {
@@ -484,10 +491,10 @@ class AuthController extends GetxController {
             );
 
         // Start the timer to periodically check email verification status
-        verificationTimer.value =
-            Timer.periodic(const Duration(seconds: 1), (timer) {
-          checkEmailVerificationStatus(user);
-        });
+        // verificationTimer.value =
+        //     Timer.periodic(const Duration(seconds: 1), (timer) {
+        //   checkEmailVerificationStatus(user);
+        // });
 
         showInfoMessage(
           'Email Verification Sent',
@@ -495,55 +502,57 @@ class AuthController extends GetxController {
           Icons.email_rounded,
         );
 
-        if (!isEmailVerified.value) {
-          Get.bottomSheet(
-            backgroundColor:
-                Theme.of(Get.context!).colorScheme.secondaryContainer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppSizes.padding),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppSizes.padding * 2, vertical: AppSizes.padding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  hSizedBox4,
-                  Text(
-                    'Verification Processing?',
-                    style: Theme.of(Get.context!)
-                        .textTheme
-                        .headlineMedium!
-                        .copyWith(
-                          fontWeight: FontWeight.w900,
-                          color:
-                              Theme.of(Get.context!).colorScheme.onBackground,
-                        ),
-                  ),
-                  hSizedBox2,
-                  Text(
-                    'Please wait for the verification process to complete. Once completed we will redirect you automatically.',
-                    style:
-                        Theme.of(Get.context!).textTheme.labelLarge!.copyWith(
-                              letterSpacing: 1,
-                            ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  Visibility(
-                    visible: !user.value!.emailVerified ? true : false,
-                    child: const CircularProgressIndicator(),
-                  ),
-                  const SizedBox(height: 16.0),
-                  Divider(
-                    height: AppSizes.p18 * 2.8,
-                    color: Theme.of(Get.context!).colorScheme.onBackground,
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
+        // if (!isEmailVerified.value) {
+        //   Get.bottomSheet(
+        //     backgroundColor:
+        //         Theme.of(Get.context!).colorScheme.secondaryContainer,
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(AppSizes.padding),
+        //     ),
+        //     Container(
+        //       padding: const EdgeInsets.symmetric(
+        //           horizontal: AppSizes.padding * 2, vertical: AppSizes.padding),
+        //       child: Column(
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         mainAxisSize: MainAxisSize.min,
+        //         children: [
+        //           hSizedBox4,
+        //           Text(
+        //             'Verification Processing?',
+        //             style: Theme.of(Get.context!)
+        //                 .textTheme
+        //                 .headlineMedium!
+        //                 .copyWith(
+        //                   fontWeight: FontWeight.w900,
+        //                   color:
+        //                       Theme.of(Get.context!).colorScheme.onBackground,
+        //                 ),
+        //           ),
+        //           hSizedBox2,
+        //           Text(
+        //             'Please wait for the verification process to complete. Once completed we will redirect you automatically.',
+        //             style:
+        //                 Theme.of(Get.context!).textTheme.labelLarge!.copyWith(
+        //                       letterSpacing: 1,
+        //                     ),
+        //           ),
+        //           const SizedBox(height: 16.0),
+        //           Visibility(
+        //             visible: !user.value!.emailVerified ? true : false,
+        //             child: const CircularProgressIndicator(),
+        //           ),
+        //           const SizedBox(height: 16.0),
+        //           Divider(
+        //             height: AppSizes.p18 * 2.8,
+        //             color: Theme.of(Get.context!).colorScheme.onBackground,
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   );
+        // }
+
+        Get.off(() => const LegalPage());
 
         return;
       }

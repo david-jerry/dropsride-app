@@ -1,4 +1,5 @@
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
+import 'package:dropsride/src/features/splash/controller/animation_controller.dart';
 import 'package:dropsride/src/features/splash/view/error.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,6 +41,7 @@ void main() async {
 
   // initialize the themeController
   Get.put(ThemeModeController());
+  Get.put(SplashScreenController());
 
   // run the main app here
   runApp(
@@ -71,7 +73,7 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(), // idTokenChanges(),
         builder: (context, snapshot) {
           if (Get.isSnackbarOpen) {
-            Get.back(closeOverlays: false);
+            Get.back(closeOverlays: true);
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -90,10 +92,11 @@ class MyApp extends StatelessWidget {
             //   snackStyle: SnackStyle.FLOATING,
             // );
             // FirebaseAuth.instance.signOut();
+            SplashScreenController.find.animateLogo.value = true;
             return SplashScreen();
           }
 
-          if (snapshot.connectionState == ConnectionState.done &&
+          if (snapshot.connectionState == ConnectionState.active &&
               !snapshot.hasData) {
             // Get.snackbar(
             //   isDismissible: true,
@@ -110,10 +113,33 @@ class MyApp extends StatelessWidget {
             //   snackStyle: SnackStyle.FLOATING,
             // );
             FirebaseAuth.instance.signOut();
+            SplashScreenController.find.runAnimation.value = true;
+            SplashScreenController.find.animateLogo.value = false;
+            SplashScreenController.find.startLogoAnimation();
             return SplashScreen();
           }
 
-          if (snapshot.connectionState == ConnectionState.done &&
+          if (snapshot.connectionState == ConnectionState.none) {
+            // Get.snackbar(
+            //   isDismissible: true,
+            //   borderRadius: AppSizes.p4,
+            //   dismissDirection: DismissDirection.down,
+            //   animationDuration: const Duration(milliseconds: 1000),
+            //   icon: const Icon(Icons.error_outline_rounded),
+            //   duration: const Duration(milliseconds: 1200),
+            //   "Authentication Error",
+            //   "There was an error connecting to the server",
+            //   backgroundColor: Colors.blueAccent,
+            //   padding: const EdgeInsets.all(AppSizes.padding),
+            //   showProgressIndicator: true,
+            //   snackStyle: SnackStyle.FLOATING,
+            // );
+            SplashScreenController.find.animateLogo.value = false;
+            SplashScreenController.find.runAnimation.value = false;
+            return const ErrorScreen();
+          }
+
+          if (snapshot.connectionState == ConnectionState.active &&
               snapshot.hasData) {
             // Get.snackbar(
             //   isDismissible: true,
@@ -129,26 +155,9 @@ class MyApp extends StatelessWidget {
             //   showProgressIndicator: true,
             //   snackStyle: SnackStyle.FLOATING,
             // );
+            SplashScreenController.find.animateLogo.value = false;
+            SplashScreenController.find.runAnimation.value = false;
             return const LegalPage();
-          }
-
-          if (snapshot.connectionState == ConnectionState.none &&
-              snapshot.hasError) {
-            // Get.snackbar(
-            //   isDismissible: true,
-            //   borderRadius: AppSizes.p4,
-            //   dismissDirection: DismissDirection.down,
-            //   animationDuration: const Duration(milliseconds: 1000),
-            //   icon: const Icon(Icons.error_outline_rounded),
-            //   duration: const Duration(milliseconds: 1200),
-            //   "Authentication Error",
-            //   "There was an error connecting to the server",
-            //   backgroundColor: Colors.blueAccent,
-            //   padding: const EdgeInsets.all(AppSizes.padding),
-            //   showProgressIndicator: true,
-            //   snackStyle: SnackStyle.FLOATING,
-            // );
-            return const ErrorScreen();
           }
 
           // Get.snackbar(
@@ -166,6 +175,9 @@ class MyApp extends StatelessWidget {
           //   snackStyle: SnackStyle.FLOATING,
           // );
           // FirebaseAuth.instance.signOut();
+          SplashScreenController.find.animateLogo.value = false;
+          SplashScreenController.find.runAnimation.value = true;
+          SplashScreenController.find.startLogoAnimation();
           return SplashScreen();
         },
       ),

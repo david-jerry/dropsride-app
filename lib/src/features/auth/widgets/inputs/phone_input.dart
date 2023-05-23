@@ -23,7 +23,7 @@ class PhoneInputField extends StatelessWidget {
           : null,
       inputFormatters: [MaskedInputFormatter('000 000 0000')],
       onChanged: (value) {
-        aController.phoneInput = value;
+        aController.phoneInput.value = value;
       },
       flagsButtonMargin: const EdgeInsets.all(12),
       keyboardType:
@@ -36,6 +36,7 @@ class PhoneInputField extends StatelessWidget {
       countries: const [
         'NG',
         'GH',
+        'US',
       ],
       decoration: InputDecoration(
         labelText: 'Phone',

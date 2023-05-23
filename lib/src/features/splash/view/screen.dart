@@ -25,9 +25,6 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // start animation
-    sController.startLogoAnimation();
-
     // size config initialization
     SizeConfig.init(context);
 

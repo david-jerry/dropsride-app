@@ -49,5 +49,19 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSAppTransportSecurity</key>
+		<true/>
+		<key>NSLocationWhenInUsageDescription</key>
+		<string>Dropsride need's your location access when in use</string>
+		<key>NSLocationAlwaysAndWhenInUsageDescription</key>
+		<string>Dropsride need's your location access always and when in use</string>
+		<key>NSLocationUsageDescription</key>
+		<string>Dropsride need's location access on older devices</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>Dropsride need's your location access always</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Dropsride need's access to photo library for profile images</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Dropsride need's camera permission to capture profile photos</string>
 	</dict>
 </plist>

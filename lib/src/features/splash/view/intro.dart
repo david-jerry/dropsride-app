@@ -137,7 +137,9 @@ class IntroScreen extends StatelessWidget {
                           : sController.nextSlide();
                     },
                     child: Text(
-                      sController.activeIndex.value == 2 ? 'Signup' : 'Next',
+                      sController.activeIndex.value == 2
+                          ? 'Get Started'
+                          : 'Next',
                       style: Theme.of(context).textTheme.labelMedium!.copyWith(
                             fontSize: SizeConfig.screenHeight * 0.026,
                             fontWeight: FontWeight.w900,

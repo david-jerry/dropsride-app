@@ -117,7 +117,10 @@ class SignUpScreen extends StatelessWidget {
                                   inputType: TextInputType.visiblePassword,
                                   name: 'New Password',
                                 ),
-                                hSizedBox2,
+                                Visibility(
+                                    visible:
+                                        aController.login.value ? false : true,
+                                    child: hSizedBox2),
                                 Visibility(
                                   visible:
                                       aController.login.value ? false : true,
@@ -128,8 +131,15 @@ class SignUpScreen extends StatelessWidget {
                                     name: 'Confirm New Password',
                                   ),
                                 ),
-                                hSizedBox6,
-                                PasswordStrength(aController: aController)
+                                Visibility(
+                                    visible:
+                                        aController.login.value ? false : true,
+                                    child: hSizedBox6),
+                                Visibility(
+                                    visible:
+                                        aController.login.value ? false : true,
+                                    child: PasswordStrength(
+                                        aController: aController))
                               ],
                             ),
 
@@ -144,7 +154,7 @@ class SignUpScreen extends StatelessWidget {
                                 ? ForgotPasswordButton(
                                     aController: aController,
                                   )
-                                : hSizedBox4,
+                                : hSizedBox0,
 
                             // submit button
                             hSizedBox4,

@@ -5,35 +5,38 @@ import 'package:get/get.dart';
 import 'package:liquid_swipe/PageHelpers/LiquidController.dart';
 
 class SplashScreenController extends GetxController {
-  static SplashScreenController get find => Get.find();
+  static SplashScreenController get find => Get.put(SplashScreenController());
 
   RxBool animateLogo = false.obs;
   RxBool animateHello = false.obs;
   RxBool lastIntro = false.obs;
   RxBool secondIntro = false.obs;
   RxInt activeIndex = 0.obs;
-  
+  RxBool runAnimation = true.obs;
+
   LiquidController liquidController = LiquidController();
-  
 
   void fireSnackbar(snackBar) => snackBar();
 
   Future startLogoAnimation() async {
-    await Future.delayed(const Duration(milliseconds: 1500));
-    animateLogo.value = true;
+    if (runAnimation.value) {
+      await Future.delayed(const Duration(milliseconds: 700));
+      animateLogo.value = true;
 
-    // wait 1500 microseconds to start the animatedLogo
-    await Future.delayed(const Duration(milliseconds: 5500));
-    animateLogo.value = false;
-    await Future.delayed(const Duration(milliseconds: 1500));
-    animateHello.value = true;
-    await Future.delayed(const Duration(milliseconds: 10000));
-    goToIntro();
+      // wait 1500 microseconds to start the animatedLogo
+      await Future.delayed(const Duration(milliseconds: 5500));
+      animateLogo.value = false;
+      await Future.delayed(const Duration(milliseconds: 1500));
+      animateHello.value = true;
+      await Future.delayed(const Duration(milliseconds: 10000));
+      goToIntro();
+    }
   }
 
   void goToIntro() {
     animateLogo.value = false;
     animateHello.value = false;
+    Get.delete<SplashScreenController>();
     Get.off(
       () => IntroScreen(),
       transition: Transition.upToDown,
@@ -56,13 +59,17 @@ class SplashScreenController extends GetxController {
       transition: Transition.leftToRight,
       duration: const Duration(milliseconds: 1000),
     );
+    if (SplashScreenController.find.isClosed) {
+      SplashScreenController.find.startLogoAnimation();
+    }
   }
 
   void goToSignUp() {
+    Get.delete<SplashScreenController>();
     Get.off(
       () => SignUpScreen(),
-      transition: Transition.rightToLeft,
-      duration: const Duration(milliseconds: 1600),
+      transition: Transition.rightToLeftWithFade,
+      duration: const Duration(milliseconds: 800),
     );
   }
 

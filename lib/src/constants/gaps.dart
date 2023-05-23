@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 
 ///Height Widgets
 ///SizeConfig.blockSizeVertical *
+SizedBox hSizedBox0 = const SizedBox(
+  height: 0,
+);
+
 SizedBox hSizedBox2 = SizedBox(
   height: SizeConfig.blockSizeVertical * AppSizes.p2,
 );
@@ -35,6 +39,9 @@ SizedBox hSizedBox24 = SizedBox(
 
 /// Width Widgets
 ///  SizeConfig.blockSizeHorizontal *
+SizedBox wSizedBox0 = const SizedBox(
+  width: 0,
+);
 SizedBox wSizedBox2 = SizedBox(
   width: SizeConfig.blockSizeHorizontal * AppSizes.p2,
 );

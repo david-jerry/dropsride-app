@@ -75,8 +75,9 @@ class PasswordInputFields extends StatelessWidget {
         label: Text(name),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         floatingLabelAlignment: FloatingLabelAlignment.start,
-        helperText:
-            "Your password should contain at least: \n- one UPPERCASE letter, \n- 1 integer and \n- one special character",
+        helperText: !aController.login.value
+            ? "Your password should contain at least: \n- one UPPERCASE letter, \n- 1 integer and \n- one special character"
+            : '',
         helperMaxLines: 4,
         helperStyle: Theme.of(context)
             .textTheme
