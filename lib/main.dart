@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:dropsride/firebase_options.dart';
-import 'package:dropsride/src/features/legals/view/legal_page.dart';
+import 'package:dropsride/src/features/settings_and_legals/view/legal_page.dart';
 import 'package:dropsride/src/features/splash/view/screen.dart';
 import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
 import 'package:dropsride/src/utils/theme/theme.dart';

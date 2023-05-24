@@ -5,7 +5,7 @@ import 'package:dropsride/src/constants/gaps.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/auth/view/otp.dart';
 import 'package:dropsride/src/features/auth/view/sign_up_and_login_screen.dart';
-import 'package:dropsride/src/features/legals/view/legal_page.dart';
+import 'package:dropsride/src/features/settings_and_legals/view/legal_page.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:dropsride/src/utils/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
