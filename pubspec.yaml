@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   custom_clippers: ^2.0.0
   device_info_plus: ^9.0.0
+  dotted_border: ^2.0.0+3
   firebase_auth: ^4.6.0
   firebase_core: ^2.12.0
   firebase_dynamic_links: ^5.3.1
@@ -67,6 +68,7 @@ dependencies:
   shared_preferences: ^2.1.1
   sign_in_with_apple: ^4.3.0
   smooth_page_indicator: ^1.1.0
+  transparent_image: ^2.0.1
   url_launcher: ^6.1.11
 
 dev_dependencies:
@@ -100,27 +102,16 @@ flutter:
   assets:
     - .env
     - assets/flags/
-    - assets/images/svg/forgot_password_svg.svg
-    - assets/images/enable_location_illustration.png
-    - assets/images/lighter_city_background.png
-    - assets/images/splash/icon_dark.png
-    - assets/images/splash/icon_yellow.png
-    - assets/images/splash/light_bg.png
-    - assets/images/splash/dark_bg.png
-    - assets/images/icons/google.svg
-    - assets/images/icons/apple.svg
-    - assets/images/icons/facebook.svg
-    - assets/images/icons/fb_social.svg
-    - assets/images/icons/car_top.svg
-    - assets/images/icons/driver_switch_icon.svg
-    - assets/images/logo/logo_light.png
-    - assets/images/logo/logo.png
-    - assets/images/svg/forgot_password_svg.svg
-    - assets/images/onboard/onboard_1.png
-    - assets/images/onboard/onboard_2.png
-    - assets/images/onboard/onboard_3.png
-    - assets/videos/searching_for_locations_of_drivers.gif
-    - assets/videos/cs.gif
+    - assets/images/driver/icon/
+    - assets/images/driver/animation/
+    - assets/images/driver/camera/
+    - assets/images/icons/
+    - assets/images/svg/
+    - assets/images/
+    - assets/images/splash/
+    - assets/images/logo/
+    - assets/images/onboard/
+    - assets/videos/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

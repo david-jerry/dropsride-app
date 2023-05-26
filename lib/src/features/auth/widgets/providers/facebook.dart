@@ -38,7 +38,7 @@ class LoginWithFacebook extends StatelessWidget {
             borderRadius:
                 BorderRadius.circular(AppSizes.p12),
           ),
-          elevation: AppSizes.p8,
+          elevation:  Get.isDarkMode ? AppSizes.p8 : 0,
           padding: const EdgeInsets.symmetric(
             vertical: AppSizes.buttonHeight / 2.9,
           ),

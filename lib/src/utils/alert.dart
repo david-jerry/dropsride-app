@@ -19,7 +19,7 @@ void showInfoMessage(String title, String message, IconData icon) {
     ),
     shouldIconPulse: true,
     snackPosition: SnackPosition.BOTTOM,
-    colorText: Colors.blue,
+    colorText: AppColors.secondaryColor,
     message,
     borderRadius: AppSizes.p4,
     dismissDirection: DismissDirection.down,
@@ -27,7 +27,7 @@ void showInfoMessage(String title, String message, IconData icon) {
     duration: const Duration(milliseconds: 7500),
     backgroundColor: Colors.blueAccent[100],
     padding: const EdgeInsets.all(AppSizes.padding) * 1.7,
-    showProgressIndicator: true,
+    showProgressIndicator: false,
     snackStyle: SnackStyle.FLOATING,
     isDismissible: true,
   );
@@ -49,7 +49,7 @@ void showSuccessMessage(String title, String message, IconData icon) {
     ),
     shouldIconPulse: true,
     snackPosition: SnackPosition.BOTTOM,
-    colorText: AppColors.green,
+    colorText: AppColors.secondaryColor,
     borderRadius: AppSizes.p4,
     dismissDirection: DismissDirection.down,
     animationDuration: const Duration(milliseconds: 1000),
@@ -58,7 +58,7 @@ void showSuccessMessage(String title, String message, IconData icon) {
     message,
     backgroundColor: Colors.greenAccent[100],
     padding: const EdgeInsets.all(AppSizes.padding) * 1.7,
-    showProgressIndicator: true,
+    showProgressIndicator: false,
     snackStyle: SnackStyle.FLOATING,
   );
 }
@@ -88,7 +88,7 @@ void showWarningMessage(String title, String message, IconData icon) {
     message,
     backgroundColor: Colors.yellowAccent[100],
     padding: const EdgeInsets.all(AppSizes.padding) * 1.7,
-    showProgressIndicator: true,
+    showProgressIndicator: false,
     snackStyle: SnackStyle.FLOATING,
   );
 }
@@ -109,7 +109,7 @@ void showErrorMessage(String title, String message, IconData icon) {
     shouldIconPulse: true,
     isDismissible: true,
     snackPosition: SnackPosition.BOTTOM,
-    colorText: AppColors.red,
+    colorText: AppColors.secondaryColor,
     borderRadius: AppSizes.p4,
     dismissDirection: DismissDirection.down,
     animationDuration: const Duration(milliseconds: 1000),
@@ -118,7 +118,7 @@ void showErrorMessage(String title, String message, IconData icon) {
     message,
     backgroundColor: Colors.redAccent[100],
     padding: const EdgeInsets.all(AppSizes.padding) * 1.7,
-    showProgressIndicator: true,
+    showProgressIndicator: false,
     snackStyle: SnackStyle.FLOATING,
   );
 }

@@ -1,10 +1,10 @@
 import 'package:dropsride/src/common_widgets/appbar_title.dart';
 import 'package:dropsride/src/constants/gaps.dart';
 import 'package:dropsride/src/constants/size.dart';
-import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/settings_and_legals/view/contact_screen.dart';
 import 'package:dropsride/src/features/settings_and_legals/widgets/content.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class LegalPage extends StatelessWidget {
@@ -15,15 +15,21 @@ class LegalPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
+        leading: IconButton(
+          onPressed: () => Get.back(canPop: true, closeOverlays: false),
+          icon: Icon(
+            FontAwesomeIcons.angleLeft,
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
         titleSpacing: AppSizes.padding * 2,
-        elevation: 0,
         title: const AppBarTitle(
           pageTitle: 'Privacy Policy',
         ),
         actions: [
           InkWell(
               onTap: () async {
-                Get.to(() => ContactScreen());
+                Get.to(() => const ContactScreen());
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(

@@ -16,57 +16,55 @@ class ForgotPasswordBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.padding * 2, vertical: AppSizes.padding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          hSizedBox4,
-          Text(
-            'Forgot Password?',
-            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: Theme.of(context).colorScheme.onBackground,
-                ),
-          ),
-          hSizedBox2,
-          Text(
-            'Please select an option below to reset your password automatically.',
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                  letterSpacing: 1,
-                ),
-          ),
-          Divider(
-            height: AppSizes.p18 * 2.8,
-            color: Theme.of(context).colorScheme.onBackground,
-          ),
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.padding * 2, vertical: AppSizes.padding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            hSizedBox4,
+            Text(
+              'Forgot Password?',
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+            ),
+            hSizedBox2,
+            Text(
+              'Please select an option below to reset your password automatically.',
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    letterSpacing: 1,
+                  ),
+            ),
+            Divider(
+              height: AppSizes.p18 * 2.8,
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
 
-          // email button
-          CustomButtons(
-              ontap: () {
-                Get.delete<AuthController>();
-                Get.put(AuthController());
-                AuthController.instance.forgotPasswordEmail.value = true;
-                Get.to(() => ForgetPasswordScreen());
-              },
-              icon: Icons.email_rounded,
-              title: "Email",
-              description: "Reset via email verification"),
-          hSizedBox4,
+            // email button
+            CustomButtons(
+                ontap: () {
+                  AuthController.instance.forgotPasswordEmail.value = true;
+                  Get.to(() => ForgetPasswordScreen());
+                },
+                icon: Icons.email_rounded,
+                title: "Email",
+                description: "Reset via email verification"),
+            hSizedBox4,
 
-          // otp button
-          CustomButtons(
-              ontap: () {
-                Get.delete<AuthController>();
-                Get.put(AuthController());
-                AuthController.instance.forgotPasswordEmail.value = false;
-                Get.to(() => ForgetPasswordScreen());
-              },
-              icon: Icons.mobile_friendly_rounded,
-              title: "Phone No",
-              description: "Reset via phone verification"),
-        ],
+            // otp button
+            CustomButtons(
+                ontap: () {
+                  AuthController.instance.forgotPasswordEmail.value = false;
+                  Get.to(() => ForgetPasswordScreen());
+                },
+                icon: Icons.mobile_friendly_rounded,
+                title: "Phone No",
+                description: "Reset via phone verification"),
+          ],
+        ),
       ),
     );
   }

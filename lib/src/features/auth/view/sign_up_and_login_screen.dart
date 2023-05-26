@@ -23,6 +23,8 @@ class SignUpScreen extends StatelessWidget {
   final ThemeModeController controller = Get.find<ThemeModeController>();
   final AuthController aController = Get.put(AuthController());
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +77,7 @@ class SignUpScreen extends StatelessWidget {
 
                       // form body with switching for sign up and login
                       Form(
-                        key: aController.formKey,
+                        key: _formKey,
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -96,6 +98,7 @@ class SignUpScreen extends StatelessWidget {
                                       name: "Name",
                                       aController: aController,
                                       inputType: TextInputType.name,
+                                      formKey: _formKey,
                                     ),
                                   ),
                                 ),
@@ -109,12 +112,14 @@ class SignUpScreen extends StatelessWidget {
                                   name: "Email",
                                   aController: aController,
                                   inputType: TextInputType.emailAddress,
+                                  formKey: _formKey,
                                 ),
                                 hSizedBox4,
                                 PasswordInputFields(
                                   aController: aController,
                                   controller: controller,
                                   inputType: TextInputType.visiblePassword,
+                                  formKey: _formKey,
                                   name: 'New Password',
                                 ),
                                 Visibility(
@@ -129,6 +134,7 @@ class SignUpScreen extends StatelessWidget {
                                     controller: controller,
                                     inputType: TextInputType.visiblePassword,
                                     name: 'Confirm New Password',
+                                    formKey: _formKey,
                                   ),
                                 ),
                                 Visibility(
@@ -158,18 +164,28 @@ class SignUpScreen extends StatelessWidget {
 
                             // submit button
                             hSizedBox4,
-                            SubmitButton(
-                                aController: aController,
-                                onPressed: aController.login.value
-                                    ? aController.loginUser
-                                    : aController.createNewUser,
-                                buttonText: !aController.login.value
-                                    ? aController.isLoading.value
+                            !aController.login.value
+                                ? SubmitButton(
+                                    aController: aController,
+                                    onPressed: () {
+                                      return aController
+                                          .createNewUser(_formKey);
+                                    },
+                                    buttonText: aController.isLoading.value
                                         ? 'Loading...'
-                                        : 'Sign Up'.toUpperCase()
-                                    : aController.isLoading.value
+                                        : 'Sign Up'.toUpperCase(),
+                                  )
+                                : SubmitButton(
+                                    aController: aController,
+                                    onPressed: () {
+                                      return aController.login.value
+                                          ? aController.loginUser(_formKey)
+                                          : aController.createNewUser(_formKey);
+                                    },
+                                    buttonText: aController.isLoading.value
                                         ? 'Loading...'
-                                        : 'Login'.toUpperCase()),
+                                        : 'Login'.toUpperCase(),
+                                  ),
 
                             // switch to login or sign up
                             hSizedBox4,

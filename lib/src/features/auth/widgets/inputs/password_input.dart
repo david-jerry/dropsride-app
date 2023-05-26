@@ -11,9 +11,11 @@ class PasswordInputFields extends StatelessWidget {
     required this.aController,
     required this.controller,
     required this.inputType,
+    required this.formKey,
     required this.name,
   });
 
+  GlobalKey<FormState> formKey;
   final ThemeModeController controller;
   TextInputType inputType;
   String name;
@@ -64,7 +66,7 @@ class PasswordInputFields extends StatelessWidget {
       },
       onTapOutside: (event) {
         FocusScope.of(context).unfocus();
-        aController.validateFields();
+        aController.validateFields(formKey);
       },
       onSaved: (newValue) => aController.passwordInput.value = newValue!,
       decoration: InputDecoration(

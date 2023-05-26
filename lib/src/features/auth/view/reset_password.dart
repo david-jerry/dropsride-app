@@ -18,6 +18,8 @@ class ResetPasswordScreen extends StatelessWidget {
   final ThemeModeController controller = Get.find<ThemeModeController>();
   final TextEditingController tController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   String initialCountry = 'NG';
 
   @override
@@ -32,73 +34,78 @@ class ResetPasswordScreen extends StatelessWidget {
             AppSizes.padding,
           ),
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  Assets.assetsImagesSvgResetPasswordSvg,
-                  width: SizeConfig.screenWidth * (1 / 1.5),
-                ),
-                wSizedBox4,
-                // form heading
-                Text(
-                  "Change Password",
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
-                ),
-                hSizedBox6,
-                Text(
-                  textAlign: TextAlign.center,
-                  'Add a new password here so to improve your security.',
-                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.3,
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
-                ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    Assets.assetsImagesSvgResetPasswordSvg,
+                    width: SizeConfig.screenWidth * (1 / 1.5),
+                  ),
+                  wSizedBox4,
+                  // form heading
+                  Text(
+                    "Change Password",
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
+                  ),
+                  hSizedBox6,
+                  Text(
+                    textAlign: TextAlign.center,
+                    'Add a new password here so to improve your security.',
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.3,
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
+                  ),
 
-                Divider(
-                  height: AppSizes.p18 * 4,
-                  color: Theme.of(context).colorScheme.onBackground,
-                ),
+                  Divider(
+                    height: AppSizes.p18 * 4,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
 
-                // input for the email and phone
-                PasswordInputFields(
-                  aController: aController,
-                  controller: controller,
-                  inputType: TextInputType.visiblePassword,
-                  name: 'New Password',
-                ),
-                hSizedBox2,
-                ConfirmPasswordInputFields(
-                  aController: aController,
-                  controller: controller,
-                  inputType: TextInputType.visiblePassword,
-                  name: 'Confirm New Password',
-                ),
-
-                // Submit the verification email or otp
-                hSizedBox4,
-                SubmitButton(
+                  // input for the email and phone
+                  PasswordInputFields(
                     aController: aController,
+                    controller: controller,
+                    inputType: TextInputType.visiblePassword,
+                    name: 'New Password',
+                    formKey: _formKey,
+                  ),
+                  hSizedBox2,
+                  ConfirmPasswordInputFields(
+                    aController: aController,
+                    controller: controller,
+                    inputType: TextInputType.visiblePassword,
+                    name: 'Confirm New Password',
+                    formKey: _formKey,
+                  ),
+
+                  // Submit the verification email or otp
+                  hSizedBox4,
+                  SubmitButton(
+                      aController: aController,
+                      onPressed: () {
+                        return aController.completePasswordReset();
+                      },
+                      buttonText: 'Next'),
+
+                  hSizedBox2,
+
+                  TextButton(
                     onPressed: () {
-                      return aController.completePasswordReset();
+                      Get.back();
                     },
-                    buttonText: 'Next'),
-
-                hSizedBox2,
-
-                TextButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child: const Text('Resend OTP'),
-                )
-              ],
+                    child: const Text('Resend OTP'),
+                  )
+                ],
+              ),
             ),
           ),
         ),

@@ -5,6 +5,8 @@ import 'package:dropsride/src/features/settings_and_legals/view_models/contact_l
 import 'package:dropsride/src/utils/size_config.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
@@ -57,18 +59,26 @@ class _ContactScreenState extends State<ContactScreen>
       Tab(
         child: SizedBox(
           width: SizeConfig.screenWidth / 3,
-          child: const Text(
+          child: Text(
             'FAQs',
             textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.w900,
+                ),
           ),
         ),
       ),
       Tab(
         child: SizedBox(
           width: SizeConfig.screenWidth / 3,
-          child: const Text(
+          child: Text(
             'Contact Us',
             textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.w900,
+                ),
           ),
         ),
       )
@@ -76,6 +86,13 @@ class _ContactScreenState extends State<ContactScreen>
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
+        leading: IconButton(
+          onPressed: () => Get.back(canPop: true, closeOverlays: false),
+          icon: Icon(
+            FontAwesomeIcons.angleLeft,
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
         titleSpacing: AppSizes.padding,
         elevation: 0,
         title: const AppBarTitle(
@@ -84,6 +101,7 @@ class _ContactScreenState extends State<ContactScreen>
         bottom: TabBar(
           automaticIndicatorColorAdjustment: true,
           indicatorColor: AppColors.primaryColor,
+          dividerColor: Theme.of(context).colorScheme.onBackground,
           controller: _tabController,
           isScrollable: true,
           tabs: tabs,

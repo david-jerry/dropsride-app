@@ -1029,9 +1029,125 @@ class Assets {
   /// assets/flags/zw.png
   static const String assetsFlagsZw = "assets/flags/zw.png";
 
+  /// Assets for assetsImagesDriverAnimationEnterPinLottie
+  /// assets/images/driver/animation/enter_pin_lottie.zip
+  static const String assetsImagesDriverAnimationEnterPinLottie = "assets/images/driver/animation/enter_pin_lottie.zip";
+
+  /// Assets for assetsImagesDriverAnimationLf20Wsx5ph5mJson
+  /// assets/images/driver/animation/lf20_wsx5ph5m.json.png
+  static const String assetsImagesDriverAnimationLf20Wsx5ph5mJson = "assets/images/driver/animation/lf20_wsx5ph5m.json.png";
+
+  /// Assets for assetsImagesDriverCameraAddCardScanOverlay
+  /// assets/images/driver/camera/add_card_scan_overlay.png
+  static const String assetsImagesDriverCameraAddCardScanOverlay = "assets/images/driver/camera/add_card_scan_overlay.png";
+
+  /// Assets for assetsImagesDriverCameraImagePlaceHolder
+  /// assets/images/driver/camera/image_place_holder.png
+  static const String assetsImagesDriverCameraImagePlaceHolder = "assets/images/driver/camera/image_place_holder.png";
+
+  /// Assets for assetsImagesDriverIconAcceptanceIcon
+  /// assets/images/driver/icon/acceptance_icon.svg
+  static const String assetsImagesDriverIconAcceptanceIcon = "assets/images/driver/icon/acceptance_icon.svg";
+
+  /// Assets for assetsImagesDriverIconBarCode
+  /// assets/images/driver/icon/bar_code.svg
+  static const String assetsImagesDriverIconBarCode = "assets/images/driver/icon/bar_code.svg";
+
+  /// Assets for assetsImagesDriverIconBxsWallet
+  /// assets/images/driver/icon/bxs_wallet.svg
+  static const String assetsImagesDriverIconBxsWallet = "assets/images/driver/icon/bxs_wallet.svg";
+
+  /// Assets for assetsImagesDriverIconCancellationIcon
+  /// assets/images/driver/icon/cancellation_icon.svg
+  static const String assetsImagesDriverIconCancellationIcon = "assets/images/driver/icon/cancellation_icon.svg";
+
+  /// Assets for assetsImagesDriverIconCardScanIcon
+  /// assets/images/driver/icon/card_scan_icon.svg
+  static const String assetsImagesDriverIconCardScanIcon = "assets/images/driver/icon/card_scan_icon.svg";
+
+  /// Assets for assetsImagesDriverIconCircleDotMenuIcon
+  /// assets/images/driver/icon/circle_dot_menu_icon.svg
+  static const String assetsImagesDriverIconCircleDotMenuIcon = "assets/images/driver/icon/circle_dot_menu_icon.svg";
+
+  /// Assets for assetsImagesDriverIconCopyIcon
+  /// assets/images/driver/icon/copy_icon.svg
+  static const String assetsImagesDriverIconCopyIcon = "assets/images/driver/icon/copy_icon.svg";
+
+  /// Assets for assetsImagesDriverIconDeactivateAccountIcon
+  /// assets/images/driver/icon/deactivate_account_icon.svg
+  static const String assetsImagesDriverIconDeactivateAccountIcon = "assets/images/driver/icon/deactivate_account_icon.svg";
+
+  /// Assets for assetsImagesDriverIconDebitIcon
+  /// assets/images/driver/icon/debit_icon.svg
+  static const String assetsImagesDriverIconDebitIcon = "assets/images/driver/icon/debit_icon.svg";
+
+  /// Assets for assetsImagesDriverIconDepositIcon
+  /// assets/images/driver/icon/deposit_icon.svg
+  static const String assetsImagesDriverIconDepositIcon = "assets/images/driver/icon/deposit_icon.svg";
+
+  /// Assets for assetsImagesDriverIconDriverLicenseIcon
+  /// assets/images/driver/icon/driver_license_icon.svg
+  static const String assetsImagesDriverIconDriverLicenseIcon = "assets/images/driver/icon/driver_license_icon.svg";
+
+  /// Assets for assetsImagesDriverIconEditProfileIcon
+  /// assets/images/driver/icon/edit_profile_icon.svg
+  static const String assetsImagesDriverIconEditProfileIcon = "assets/images/driver/icon/edit_profile_icon.svg";
+
+  /// Assets for assetsImagesDriverIconLogoutIcon
+  /// assets/images/driver/icon/logout_icon.svg
+  static const String assetsImagesDriverIconLogoutIcon = "assets/images/driver/icon/logout_icon.svg";
+
+  /// Assets for assetsImagesDriverIconManageSubscriptionIcon
+  /// assets/images/driver/icon/manage_subscription_icon.svg
+  static const String assetsImagesDriverIconManageSubscriptionIcon = "assets/images/driver/icon/manage_subscription_icon.svg";
+
+  /// Assets for assetsImagesDriverIconOnlineSignalIcon
+  /// assets/images/driver/icon/online_signal_icon.svg
+  static const String assetsImagesDriverIconOnlineSignalIcon = "assets/images/driver/icon/online_signal_icon.svg";
+
+  /// Assets for assetsImagesDriverIconPassengerSwitchIcon
+  /// assets/images/driver/icon/passenger_switch_icon.svg
+  static const String assetsImagesDriverIconPassengerSwitchIcon = "assets/images/driver/icon/passenger_switch_icon.svg";
+
+  /// Assets for assetsImagesDriverIconPaymentMethodIcon
+  /// assets/images/driver/icon/payment_method_icon.svg
+  static const String assetsImagesDriverIconPaymentMethodIcon = "assets/images/driver/icon/payment_method_icon.svg";
+
+  /// Assets for assetsImagesDriverIconProfileIcon
+  /// assets/images/driver/icon/profile_icon.svg
+  static const String assetsImagesDriverIconProfileIcon = "assets/images/driver/icon/profile_icon.svg";
+
+  /// Assets for assetsImagesDriverIconRatingIcon
+  /// assets/images/driver/icon/rating_icon.svg
+  static const String assetsImagesDriverIconRatingIcon = "assets/images/driver/icon/rating_icon.svg";
+
+  /// Assets for assetsImagesDriverIconSearchIcon
+  /// assets/images/driver/icon/search_icon.svg
+  static const String assetsImagesDriverIconSearchIcon = "assets/images/driver/icon/search_icon.svg";
+
+  /// Assets for assetsImagesDriverIconSettingsIcon
+  /// assets/images/driver/icon/settings_icon.svg
+  static const String assetsImagesDriverIconSettingsIcon = "assets/images/driver/icon/settings_icon.svg";
+
+  /// Assets for assetsImagesDriverIconTransactionHistory
+  /// assets/images/driver/icon/transaction_history.svg
+  static const String assetsImagesDriverIconTransactionHistory = "assets/images/driver/icon/transaction_history.svg";
+
+  /// Assets for assetsImagesDriverIconTripHistoryClock
+  /// assets/images/driver/icon/trip_history_clock.svg
+  static const String assetsImagesDriverIconTripHistoryClock = "assets/images/driver/icon/trip_history_clock.svg";
+
+  /// Assets for assetsImagesDriverIconVerifiedIcon
+  /// assets/images/driver/icon/verified_icon.svg
+  static const String assetsImagesDriverIconVerifiedIcon = "assets/images/driver/icon/verified_icon.svg";
+
   /// Assets for assetsImagesEnableLocationIllustration
   /// assets/images/enable_location_illustration.png
   static const String assetsImagesEnableLocationIllustration = "assets/images/enable_location_illustration.png";
+
+  /// Assets for assetsImagesEnableLocationIllustrationDark
+  /// assets/images/enable_location_illustration_dark.png
+  static const String assetsImagesEnableLocationIllustrationDark = "assets/images/enable_location_illustration_dark.png";
 
   /// Assets for assetsImagesIconsApple
   /// assets/images/icons/apple.svg
@@ -1173,6 +1289,10 @@ class Assets {
   /// assets/images/icons/menu.svg
   static const String assetsImagesIconsMenu = "assets/images/icons/menu.svg";
 
+  /// Assets for assetsImagesIconsMenuIcon
+  /// assets/images/icons/menu_icon.svg
+  static const String assetsImagesIconsMenuIcon = "assets/images/icons/menu_icon.svg";
+
   /// Assets for assetsImagesIconsMicFilled
   /// assets/images/icons/mic-filled.svg
   static const String assetsImagesIconsMicFilled = "assets/images/icons/mic-filled.svg";
@@ -1184,6 +1304,10 @@ class Assets {
   /// Assets for assetsImagesIconsMore
   /// assets/images/icons/more.svg
   static const String assetsImagesIconsMore = "assets/images/icons/more.svg";
+
+  /// Assets for assetsImagesIconsNairaIcon
+  /// assets/images/icons/naira_icon.svg
+  static const String assetsImagesIconsNairaIcon = "assets/images/icons/naira_icon.svg";
 
   /// Assets for assetsImagesIconsNavClock
   /// assets/images/icons/nav-clock.svg
@@ -1253,6 +1377,10 @@ class Assets {
   /// assets/images/lighter_city_background.png
   static const String assetsImagesLighterCityBackground = "assets/images/lighter_city_background.png";
 
+  /// Assets for assetsImagesLighterCityBackgroundYellow
+  /// assets/images/lighter_city_background_yellow.png
+  static const String assetsImagesLighterCityBackgroundYellow = "assets/images/lighter_city_background_yellow.png";
+
   /// Assets for assetsImagesLogoAppIcon
   /// assets/images/logo/app_icon.png
   static const String assetsImagesLogoAppIcon = "assets/images/logo/app_icon.png";
@@ -1304,6 +1432,10 @@ class Assets {
   /// Assets for assetsImagesSvgResetPasswordSvg
   /// assets/images/svg/reset_password_svg.svg
   static const String assetsImagesSvgResetPasswordSvg = "assets/images/svg/reset_password_svg.svg";
+
+  /// Assets for assetsImagesTripHistoryAppbarIllustration
+  /// assets/images/trip_history_appbar_illustration.png
+  static const String assetsImagesTripHistoryAppbarIllustration = "assets/images/trip_history_appbar_illustration.png";
 
   /// Assets for assetsVideosCs
   /// assets/videos/cs.gif

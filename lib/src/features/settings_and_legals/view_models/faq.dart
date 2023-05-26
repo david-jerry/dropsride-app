@@ -12,7 +12,6 @@ class FaqScreen extends StatelessWidget {
     super.key,
   });
 
-  
   // ignore: prefer_final_fields
   RxString _selectedTag = 'General'.obs;
 
@@ -47,12 +46,16 @@ class FaqScreen extends StatelessWidget {
                           ),
                           foregroundColor:
                               Theme.of(context).colorScheme.background),
-                      child: Text(
-                        tag,
-                        style: const TextStyle(
+                      child: Text(tag,
+                          style: TextStyle(
                             fontWeight: FontWeight.w900,
-                            fontSize: AppSizes.p16),
-                      ),
+                            fontSize: AppSizes.p16,
+                            color: _selectedTag.value == tag
+                                ? AppColors.secondaryColor
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                          )),
                     ),
                   );
                 }).toList(),

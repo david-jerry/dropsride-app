@@ -35,11 +35,13 @@ class ContactButton extends StatelessWidget {
             fa
                 ? FaIcon(
                     icon,
-                    size: AppSizes.buttonHeight,
+                    size: AppSizes.iconSize * 1.6,
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                   )
                 : Icon(
                     icon,
-                    size: AppSizes.buttonHeight,
+                    size: AppSizes.iconSize * 1.6,
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                   ),
             wSizedBox4,
             Text(

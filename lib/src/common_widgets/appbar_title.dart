@@ -14,7 +14,7 @@ class AppBarTitle extends StatelessWidget {
     return Text(
       pageTitle,
       style: Theme.of(context).textTheme.displayMedium!.copyWith(
-            fontSize: AppSizes.p18,
+            fontSize: AppSizes.p22,
             fontWeight: FontWeight.w800,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),

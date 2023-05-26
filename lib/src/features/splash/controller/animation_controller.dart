@@ -16,28 +16,20 @@ class SplashScreenController extends GetxController {
 
   LiquidController liquidController = LiquidController();
 
-  void fireSnackbar(snackBar) => snackBar();
-
   Future startLogoAnimation() async {
     if (runAnimation.value) {
-      await Future.delayed(const Duration(milliseconds: 700));
       animateLogo.value = true;
-
-      // wait 1500 microseconds to start the animatedLogo
       await Future.delayed(const Duration(milliseconds: 5500));
       animateLogo.value = false;
       await Future.delayed(const Duration(milliseconds: 1500));
       animateHello.value = true;
-      await Future.delayed(const Duration(milliseconds: 10000));
-      goToIntro();
     }
   }
 
   void goToIntro() {
     animateLogo.value = false;
     animateHello.value = false;
-    Get.delete<SplashScreenController>();
-    Get.off(
+    Get.offAll(
       () => IntroScreen(),
       transition: Transition.upToDown,
       duration: const Duration(milliseconds: 1000),
@@ -54,19 +46,15 @@ class SplashScreenController extends GetxController {
     lastIntro.value = false;
     activeIndex.value = 0;
     liquidController.animateToPage(page: 0);
-    Get.off(
+    Get.offAll(
       () => SplashScreen(),
       transition: Transition.leftToRight,
       duration: const Duration(milliseconds: 1000),
     );
-    if (SplashScreenController.find.isClosed) {
-      SplashScreenController.find.startLogoAnimation();
-    }
   }
 
   void goToSignUp() {
-    Get.delete<SplashScreenController>();
-    Get.off(
+    Get.offAll(
       () => SignUpScreen(),
       transition: Transition.rightToLeftWithFade,
       duration: const Duration(milliseconds: 800),

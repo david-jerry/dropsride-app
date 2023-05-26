@@ -12,8 +12,10 @@ class EmailInputFields extends StatelessWidget {
     required this.controller,
     required this.inputType,
     required this.name,
+    required this.formKey,
   });
 
+  GlobalKey<FormState> formKey;
   TextInputType inputType;
   String name;
 
@@ -46,7 +48,7 @@ class EmailInputFields extends StatelessWidget {
       onChanged: (value) => aController.emailInput.value = value,
       onTapOutside: (event) {
         FocusScope.of(context).unfocus();
-        aController.validateFields();
+        aController.validateFields(formKey);
       },
       onSaved: (newValue) => aController.emailInput.value = newValue!,
       decoration: InputDecoration(

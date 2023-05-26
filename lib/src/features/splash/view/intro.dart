@@ -143,7 +143,7 @@ class IntroScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.labelMedium!.copyWith(
                             fontSize: SizeConfig.screenHeight * 0.026,
                             fontWeight: FontWeight.w900,
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: AppColors.secondaryColor,
                           ),
                     ),
                   ),

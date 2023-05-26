@@ -11,7 +11,8 @@ class DropsrideTheme {
       ThemeData.light().textTheme,
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: Colors.transparent,
+      foregroundColor: AppColors.secondaryColor,
       elevation: 0,
     ),
     textSelectionTheme: const TextSelectionThemeData(
@@ -89,7 +90,8 @@ class DropsrideTheme {
       ThemeData.dark().textTheme,
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.secondaryColor,
+      backgroundColor: Colors.transparent,
+      foregroundColor: AppColors.white300,
       elevation: 0,
     ),
     textSelectionTheme: const TextSelectionThemeData(
