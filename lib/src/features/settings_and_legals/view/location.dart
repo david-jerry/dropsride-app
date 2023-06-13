@@ -3,6 +3,7 @@ import 'package:dropsride/src/common_widgets/appbar_title.dart';
 import 'package:dropsride/src/constants/assets.dart';
 import 'package:dropsride/src/constants/gaps.dart';
 import 'package:dropsride/src/constants/size.dart';
+import 'package:dropsride/src/features/profile/controller/destination_controller.dart';
 import 'package:dropsride/src/utils/size_config.dart';
 import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,8 @@ class LocationPermissionScreen extends StatelessWidget {
                               : const Color.fromARGB(159, 245, 245, 245)),
                     ),
                     hSizedBox4,
+
+                    // ! get user's current location and set it to the variable
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.screenWidth * 1 / 4 - 8),
@@ -90,33 +93,47 @@ class LocationPermissionScreen extends StatelessWidget {
                               color: Theme.of(context).colorScheme.primary,
                               style: BorderStyle.none,
                             )),
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Use current location',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
+                            onPressed: () {
+                              DestinationController.instance
+                                  .getCurrentLocation();
+                            },
+                            child: Obx(
+                              () => Row(
+                                children: [
+                                  Text(
+                                    DestinationController
+                                            .instance.isGettingLocation.value
+                                        ? "Getting Location"
+                                        : 'Use current location',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                            fontWeight: FontWeight.bold),
+                                  ),
+                                  wSizedBox2,
+                                  DestinationController
+                                          .instance.isGettingLocation.value
+                                      ? const CircularProgressIndicator
+                                          .adaptive()
+                                      : SvgPicture.asset(
+                                          Assets.assetsImagesIconsLocation,
+                                          width: AppSizes.padding * 2,
                                           color: Theme.of(context)
                                               .colorScheme
                                               .onBackground,
-                                          fontWeight: FontWeight.bold),
-                                ),
-                                wSizedBox2,
-                                SvgPicture.asset(
-                                  Assets.assetsImagesIconsLocation,
-                                  width: AppSizes.padding * 2,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground,
-                                )
-                              ],
+                                        )
+                                ],
+                              ),
                             )),
                       ),
                     ),
                     hSizedBox2,
+
+                    // ! set the location manually
                     TextButton(
                         onPressed: () {},
                         child: const Text(

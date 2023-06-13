@@ -32,11 +32,16 @@ class LoadingScreen extends StatelessWidget {
           children: [
             // background image
             Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
               child: Image.asset(
                 controller.isDarkMode.value
                     ? Assets.assetsImagesSplashDarkBg
                     : Assets.assetsImagesSplashLightBg,
                 width: double.infinity,
+                height: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
@@ -51,10 +56,14 @@ class LoadingScreen extends StatelessWidget {
                   backgroundColor: controller.isDarkMode.value
                       ? AppColors.backgroundColorLight
                       : AppColors.backgroundColorDark,
-                  child: CircleAvatar(
-                    radius: SizeConfig.screenHeight * 0.08,
-                    backgroundImage: const AssetImage(
+                  child: ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(SizeConfig.screenHeight * 0.086),
+                    child: Image.asset(
                       Assets.assetsVideosCs,
+                      fit: BoxFit.cover,
+                      height: 70,
+                      width: 70,
                     ),
                   ),
                 ),

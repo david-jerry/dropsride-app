@@ -31,45 +31,70 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   animated_text_kit: ^4.2.2
-  cloud_firestore: ^4.7.1
+  awesome_notifications: ^0.7.4+1
+  cloud_firestore: ^4.8.0
   connectivity_plus: ^4.0.0
+  country_picker: ^2.0.20
   crypto: ^3.0.3
   cupertino_icons: ^1.0.2
   custom_clippers: ^2.0.0
+  date_field: ^3.0.3
   device_info_plus: ^9.0.0
   dotted_border: ^2.0.0+3
   firebase_auth: ^4.6.0
-  firebase_core: ^2.12.0
+  firebase_core: ^2.13.1
   firebase_dynamic_links: ^5.3.1
   firebase_storage: ^11.2.1
   flutter:
     sdk: flutter
+  flutter_background_service: ^2.4.6
+  flutter_background_service_android: ^3.0.3
+  flutter_background_service_ios: ^2.4.0
+  flutter_credit_card: ^3.0.6
   flutter_dotenv: ^5.0.2
   flutter_facebook_auth: ^5.0.11
   flutter_gen: ^5.3.1
+  flutter_geofire: ^2.0.3
+  flutter_google_places: ^0.3.0
+  flutter_isolate: ^2.0.4
   flutter_markdown: ^0.6.14
   flutter_multi_formatter: ^2.11.0
   flutter_otp_text_field: ^1.1.1
+  flutter_paystack: ^1.0.7
   flutter_pin_code_fields: ^2.2.0
+  flutter_polyline_points: ^1.0.0
   flutter_rating_bar: ^4.0.1
   flutter_riverpod: ^2.3.6
   flutter_sms: ^2.3.3
   flutter_svg: ^2.0.5
+  fluttertoast: ^8.2.2
   font_awesome_flutter: ^10.4.0
+  geocoder2: ^1.4.0
+  geolocator: ^9.0.2
   get: ^4.6.5
   get_storage: ^2.1.1
+  google_api_headers: ^1.1.1
   google_fonts: ^4.0.4
+  google_maps_flutter: ^2.2.8
+  google_maps_webservice: ^0.0.19
   google_sign_in: ^6.1.0
   http: ^0.13.6
   image_picker: ^0.8.7+5
+  intl: ^0.17.0
   intl_phone_field: ^3.1.0
   liquid_swipe: ^3.1.0
-  lottie: ^2.3.2
+  location: ^4.4.0
+  lottie: ^2.4.0
+  mailer: ^6.0.1
+  permission_handler: ^10.2.0
   shared_preferences: ^2.1.1
   sign_in_with_apple: ^4.3.0
+  sliding_up_panel2: ^3.3.0+1
   smooth_page_indicator: ^1.1.0
+  smooth_star_rating_nsafe: ^1.0.0+1
   transparent_image: ^2.0.1
   url_launcher: ^6.1.11
+  workmanager: ^0.5.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -103,6 +128,7 @@ flutter:
     - .env
     - assets/flags/
     - assets/images/driver/icon/
+    - assets/images/driver/images/
     - assets/images/driver/animation/
     - assets/images/driver/camera/
     - assets/images/icons/

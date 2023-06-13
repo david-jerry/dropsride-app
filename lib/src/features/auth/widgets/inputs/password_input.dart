@@ -4,6 +4,7 @@ import 'package:dropsride/src/utils/theme/colors.dart';
 import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
 import 'package:dropsride/src/utils/validators.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class PasswordInputFields extends StatelessWidget {
   PasswordInputFields({
@@ -24,83 +25,94 @@ class PasswordInputFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-          fontWeight: FontWeight.w600,
-          letterSpacing: 1.4,
-          color: Theme.of(context).colorScheme.onSecondaryContainer),
-      enableSuggestions: true,
-      enableIMEPersonalizedLearning: false,
-      obscureText: true,
-      obscuringCharacter: '*',
-      keyboardType: inputType,
-      autocorrect: false,
-      textCapitalization: TextCapitalization.none,
-      validator: (value) {
-        if (!validateRequired(value!)) {
-          return "This field is required!";
-        }
+    return Obx(
+      () => TextFormField(
+        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.4,
+            color: Theme.of(context).colorScheme.onSecondaryContainer),
+        enableSuggestions: true,
+        enableIMEPersonalizedLearning: false,
+        obscureText: aController.showPassword.value ? false : true,
+        keyboardType: inputType,
+        autocorrect: false,
+        textCapitalization: TextCapitalization.none,
+        validator: (value) {
+          if (!validateRequired(value!)) {
+            return "This field is required!";
+          }
 
-        if (!validateMinimumLength(value, 6)) {
-          return "Minimum allowed character is 6!";
-        }
+          if (!validateMinimumLength(value, 6)) {
+            return "Minimum allowed character is 6!";
+          }
 
-        if (!passwordHasNumber(value)) {
-          return "Your password must have at least 1 integer!";
-        }
+          if (!passwordHasNumber(value)) {
+            return "Your password must have at least 1 integer!";
+          }
 
-        if (!passwordHasSpecialCharacter(value)) {
-          return "Your password must have at least 1 special character!";
-        }
+          if (!passwordHasSpecialCharacter(value)) {
+            return "Your password must have at least 1 special character!";
+          }
 
-        if (!passwordHasUppercaseLetter(value)) {
-          return "Password must have at least 1 uppercase letter!";
-        }
+          if (!passwordHasUppercaseLetter(value)) {
+            return "Password must have at least 1 uppercase letter!";
+          }
 
-        aController.passwordInput.value = value;
-        return null;
-      },
-      onChanged: (value) {
-        aController.passwordInput.value = value;
-        aController.checkPasswordStrength(value);
-      },
-      onTapOutside: (event) {
-        FocusScope.of(context).unfocus();
-        aController.validateFields(formKey);
-      },
-      onSaved: (newValue) => aController.passwordInput.value = newValue!,
-      decoration: InputDecoration(
-        prefixIcon: const Icon(
-          Icons.key_sharp,
-          size: AppSizes.iconSize,
-        ),
-        label: Text(name),
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
-        floatingLabelAlignment: FloatingLabelAlignment.start,
-        helperText: !aController.login.value
-            ? "Your password should contain at least: \n- one UPPERCASE letter, \n- 1 integer and \n- one special character"
-            : '',
-        helperMaxLines: 4,
-        helperStyle: Theme.of(context)
-            .textTheme
-            .titleSmall!
-            .copyWith(color: AppColors.grey200),
-        filled: true,
-        fillColor: Theme.of(context).colorScheme.onSecondary,
-        isDense: true,
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppSizes.margin,
+          aController.passwordInput.value = value;
+          return null;
+        },
+        onChanged: (value) {
+          aController.passwordInput.value = value;
+          aController.checkPasswordStrength(value);
+        },
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+          aController.validateFields(formKey);
+        },
+        onSaved: (newValue) => aController.passwordInput.value = newValue!,
+        decoration: InputDecoration(
+          prefixIcon: const Icon(
+            Icons.key_sharp,
+            size: AppSizes.iconSize,
           ),
-          borderSide: const BorderSide(
-              width: AppSizes.p2, color: AppColors.primaryColor),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppSizes.margin,
+          suffixIcon: IconButton(
+            icon: Icon(
+              aController.showPassword.value
+                  ? Icons.visibility_off
+                  : Icons.visibility,
+            ),
+            onPressed: () {
+              aController.showPassword.value = !aController.showPassword.value;
+            },
           ),
-          borderSide:
-              const BorderSide(width: AppSizes.p2, color: AppColors.red),
+          label: Text(name),
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          floatingLabelAlignment: FloatingLabelAlignment.start,
+          helperText: !aController.login.value
+              ? "Your password should contain at least: \n- one UPPERCASE letter, \n- 1 integer and \n- one special character"
+              : '',
+          helperMaxLines: 4,
+          helperStyle: Theme.of(context)
+              .textTheme
+              .titleSmall!
+              .copyWith(color: AppColors.grey200),
+          filled: true,
+          fillColor: Theme.of(context).colorScheme.onSecondary,
+          isDense: true,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(
+              AppSizes.margin,
+            ),
+            borderSide: const BorderSide(
+                width: AppSizes.p2, color: AppColors.primaryColor),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(
+              AppSizes.margin,
+            ),
+            borderSide:
+                const BorderSide(width: AppSizes.p2, color: AppColors.red),
+          ),
         ),
       ),
     );

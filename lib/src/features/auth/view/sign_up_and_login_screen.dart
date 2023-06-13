@@ -13,6 +13,7 @@ import 'package:dropsride/src/features/auth/widgets/passwords/password_strength.
 import 'package:dropsride/src/features/auth/widgets/providers/apple.dart';
 import 'package:dropsride/src/features/auth/widgets/providers/facebook.dart';
 import 'package:dropsride/src/features/auth/widgets/providers/google.dart';
+import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/utils/theme/controller/theme_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,6 +28,9 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    aController.check.value = false;
+    aController.isLoading.value = false;
+    aController.phoneNumber.value = PhoneNumberMap(countryISOCode: 'NG', countryCode: '+234', number: '555 123 4567');
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(

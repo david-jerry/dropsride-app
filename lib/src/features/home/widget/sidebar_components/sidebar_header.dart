@@ -4,8 +4,12 @@ import 'package:dropsride/src/constants/placeholder.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/auth/controller/repository/authentication_repository.dart';
+import 'package:dropsride/src/features/home/controller/map_controller.dart';
+import 'package:dropsride/src/features/profile/controller/profile_controller.dart';
+import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/features/profile/view/profile_screen.dart';
 import 'package:dropsride/src/utils/size_config.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -19,6 +23,8 @@ class SideBarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(ProfileController());
+
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.symmetric(
@@ -35,7 +41,9 @@ class SideBarHeader extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        AuthController.instance.updateDriverMode(AuthenticationRepository.instance.firebaseUser.value);
+                        AuthController.instance.updateDriverMode(
+                            AuthenticationRepository
+                                .instance.firebaseUser.value);
                       },
                       child: SvgPicture.asset(
                         !AuthController.instance.isDriver.value
@@ -66,81 +74,86 @@ class SideBarHeader extends StatelessWidget {
                   onTap: () {
                     Get.to(() => const ProfileScreen());
                   },
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(70),
-                        child: AuthenticationRepository
-                                        .instance.firebaseUser.value !=
-                                    null &&
-                                AuthenticationRepository.instance.firebaseUser
-                                        .value!.photoURL !=
-                                    null
-                            ? Image.network(
-                                AuthenticationRepository
-                                    .instance.firebaseUser.value!.photoURL
-                                    .toString(),
-                                fit: BoxFit.cover,
-                                height: 70,
-                                width: 70,
-                              )
-                            : Image.network(
-                                kPlaceholder,
-                                fit: BoxFit.cover,
-                                height: 70,
-                                width: 70,
-                              ),
-                      ),
-                      wSizedBox2,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AuthenticationRepository
-                                        .instance.firebaseUser.value !=
-                                    null
-                                ? AuthenticationRepository
-                                    .instance.firebaseUser.value!.displayName
-                                    .toString()
-                                : 'John Doe',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                                    fontWeight: FontWeight.w900,
-                                    color: AppColors.whiteColor),
-                          ),
-                          Text(
-                            'Edit Profile',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    fontWeight: FontWeight.w900,
-                                    color: AppColors.whiteColor),
-                          ),
-                          const SizedBox(height: AppSizes.p4),
-                          Row(
+                  child: FutureBuilder(
+                    future: ProfileController.instance
+                        .getUserData(FirebaseAuth.instance.currentUser!.email!),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          UserModel userData = snapshot.data as UserModel;
+                          MapController.find.userPhoto.value =
+                              userData.photoUrl ?? kPlaceholder;
+                          AuthController.instance.userFullName.value =
+                              userData.displayName!;
+                          return Row(
                             children: [
-                              SvgPicture.asset(
-                                Assets.assetsImagesIconsStar,
-                                width: AppSizes.padding,
-                                color: AppColors.whiteColor,
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(70),
+                                child: Image.network(
+                                  userData.photoUrl ?? kPlaceholder,
+                                  fit: BoxFit.cover,
+                                  height: 70,
+                                  width: 70,
+                                ),
                               ),
-                              Text(
-                                ' 4.6',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.whiteColor),
+                              wSizedBox2,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    userData.displayName ?? 'John Doe',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            color: AppColors.whiteColor),
+                                  ),
+                                  Text(
+                                    'Edit Profile',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            color: AppColors.whiteColor),
+                                  ),
+                                  const SizedBox(height: AppSizes.p4),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        Assets.assetsImagesIconsStar,
+                                        width: AppSizes.padding,
+                                        color: AppColors.whiteColor,
+                                      ),
+                                      Text(
+                                        ' 4.6',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium!
+                                            .copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.whiteColor),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
-                          ),
-                        ],
-                      ),
-                    ],
+                          );
+                        }
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      }
+
+                      return Center(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    },
                   ),
                 ),
               )

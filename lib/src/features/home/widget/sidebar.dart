@@ -3,7 +3,7 @@ import 'package:dropsride/src/constants/gaps.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/home/widget/sidebar_components/sidebar_header.dart';
-import 'package:dropsride/src/features/profile/view/vehicle.dart';
+import 'package:dropsride/src/features/vehicle/view/vehicle.dart';
 import 'package:dropsride/src/features/transaction/view/earnings.dart';
 import 'package:dropsride/src/features/transaction/view/payment.dart';
 import 'package:dropsride/src/features/trips/view/driver_trip_history.dart';
@@ -151,7 +151,7 @@ class SideBar extends StatelessWidget {
                                       ),
                                 ),
                                 dense: true,
-                                onTap: () {
+                                onTap: () async {
                                   Get.back(closeOverlays: true);
                                   Get.to(() => const PaymentScreen());
                                 },

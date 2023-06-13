@@ -89,6 +89,17 @@ class DropsrideTheme {
     textTheme: GoogleFonts.urbanistTextTheme(
       ThemeData.dark().textTheme,
     ),
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: AppColors.secondaryColor,
+      modalBackgroundColor: AppColors.secondaryColor,
+      modalBarrierColor: AppColors.secondaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(AppSizes.padding * 2),
+          topRight: Radius.circular(AppSizes.padding * 2),
+        ),
+      ),
+    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       foregroundColor: AppColors.white300,

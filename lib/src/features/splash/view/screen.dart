@@ -53,22 +53,16 @@ class SplashScreen extends StatelessWidget {
             // app logo
             Obx(
               () => Positioned(
-                bottom: SizeConfig.screenHeight * 0.60,
+                bottom: SizeConfig.screenHeight * 0.50,
                 width: SizeConfig.screenWidth,
                 child: Center(
                   child: AnimatedOpacity(
                     opacity: sController.animateLogo.value ? 1 : 0,
                     duration: const Duration(milliseconds: 1500),
                     child: CircleAvatar(
-                      radius: SizeConfig.screenHeight * 0.086,
-                      backgroundColor: controller.isDarkMode.value
-                          ? AppColors.backgroundColorLight
-                          : AppColors.backgroundColorDark,
-                      child: CircleAvatar(
-                        radius: SizeConfig.screenHeight * 0.08,
-                        backgroundImage: const AssetImage(
-                          Assets.assetsVideosCs,
-                        ),
+                      radius: SizeConfig.screenHeight * 0.08,
+                      backgroundImage: const AssetImage(
+                        Assets.assetsVideosCs,
                       ),
                     ),
                   ),
@@ -79,7 +73,7 @@ class SplashScreen extends StatelessWidget {
             // animated texts
             Obx(
               () => Positioned(
-                bottom: SizeConfig.screenHeight * 0.60,
+                bottom: SizeConfig.screenHeight * 0.50,
                 width: SizeConfig.screenWidth,
                 child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 2500),
@@ -193,14 +187,12 @@ class SplashScreen extends StatelessWidget {
                         // }
                       },
                       child: Text('Get Started',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                fontSize: SizeConfig.screenHeight * 0.026,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.secondaryColor,
-                              )),
+                          style:
+                              Theme.of(context).textTheme.labelMedium!.copyWith(
+                                    fontSize: SizeConfig.screenHeight * 0.026,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.secondaryColor,
+                                  )),
                     ),
                   ),
                 ),

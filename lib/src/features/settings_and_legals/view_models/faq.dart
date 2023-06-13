@@ -27,6 +27,8 @@ class FaqScreen extends StatelessWidget {
           children: [
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
+              padding:
+                  const EdgeInsets.symmetric(vertical: AppSizes.padding * 1.4),
               child: Row(
                 children: tags.map((tag) {
                   return Padding(
@@ -36,26 +38,33 @@ class FaqScreen extends StatelessWidget {
                         _selectedTag.value = tag;
                       },
                       style: ElevatedButton.styleFrom(
+                          elevation: 0,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: AppSizes.padding),
+                              horizontal: AppSizes.padding * 2.3,
+                              vertical: AppSizes.padding),
                           backgroundColor: _selectedTag.value == tag
                               ? AppColors.primaryColor
-                              : Theme.of(context).colorScheme.onBackground,
+                              : Colors.transparent,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(
+                                color: _selectedTag.value == tag
+                                    ? Colors.transparent
+                                    : AppColors.primaryColor,
+                                width: 3,
+                              )),
                           foregroundColor:
                               Theme.of(context).colorScheme.background),
-                      child: Text(tag,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: AppSizes.p16,
-                            color: _selectedTag.value == tag
-                                ? AppColors.secondaryColor
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
-                          )),
+                      child: Text(
+                        tag,
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              fontWeight: FontWeight.w900,
+                              fontSize: AppSizes.p18,
+                              color: _selectedTag.value == tag
+                                  ? AppColors.secondaryColor
+                                  : AppColors.primaryColor,
+                            ),
+                      ),
                     ),
                   );
                 }).toList(),
@@ -74,6 +83,9 @@ class FaqScreen extends StatelessWidget {
                   if (_selectedTag.value == 'General' ||
                       tag!.contains(_selectedTag.value)) {
                     return Card(
+                      color: Get.isDarkMode
+                          ? AppColors.grey200.withOpacity(0.2)
+                          : AppColors.grey100,
                       elevation: 4,
                       margin: const EdgeInsets.only(bottom: AppSizes.p4),
                       shape: RoundedRectangleBorder(

@@ -7,6 +7,8 @@ import 'package:dropsride/src/features/auth/controller/exceptions/social_provide
 import 'package:dropsride/src/features/auth/controller/repository/authentication_repository.dart';
 import 'package:dropsride/src/features/auth/controller/repository/email_verification_repository.dart';
 import 'package:dropsride/src/features/home/view/index.dart';
+import 'package:dropsride/src/features/profile/controller/repository/user_repository.dart';
+import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +46,8 @@ class SocialProviderRepository extends AuthenticationRepository {
       showErrorMessage("Authentication Error", ex.message, Icons.lock_person);
     }
 
+    firebaseUser.value = _auth.currentUser;
+
     if (firebaseUser.value != null) {
       // check if signup screen is login
       if (!login) {
@@ -52,8 +56,31 @@ class SocialProviderRepository extends AuthenticationRepository {
           await _auth.currentUser
               ?.reauthenticateWithCredential(googleCredential);
 
-          await setRoleMode(firebaseUser.value!.uid, false, true,
-              firebaseUser.value!.displayName.toString());
+          // store the information to the userModel class
+          final modelUser = UserModel(
+            displayName: firebaseUser.value?.displayName,
+            email: firebaseUser.value?.email,
+            country: null,
+            gender: null,
+            isDriver: false,
+            isVerified: false,
+            joinedOn: DateTime.now(),
+            password: DateTime.now().millisecondsSinceEpoch.toString(),
+            phoneNumber: null,
+            acceptTermsAndCondition: true,
+            photoUrl: firebaseUser.value?.photoURL,
+          );
+
+          await AuthenticationRepository.instance
+              .createUserWithEmailAndPassword(
+            modelUser.email!,
+            modelUser.password!,
+            modelUser.displayName!,
+            modelUser.acceptTermsAndCondition,
+          );
+
+          // store the information to firebase
+          await UserRepository.instance.createFirestoreUser(modelUser);
 
           // Send a success alert
           showSuccessMessage(
@@ -110,6 +137,8 @@ class SocialProviderRepository extends AuthenticationRepository {
       showErrorMessage("Authentication Error", ex.message, Icons.lock_person);
     }
 
+    firebaseUser.value = _auth.currentUser;
+
     if (firebaseUser.value != null) {
       if (!login) {
         // link the credentials with the user
@@ -117,10 +146,31 @@ class SocialProviderRepository extends AuthenticationRepository {
           await _auth.currentUser
               ?.reauthenticateWithCredential(facebookAuthCredential);
 
-          // if the user is not null create a default user and driver roles for the user
-          await setRoleMode(firebaseUser.value!.uid, false, true,
-              firebaseUser.value!.displayName.toString());
+          // store the information to the userModel class
+          final modelUser = UserModel(
+            displayName: firebaseUser.value?.displayName,
+            email: firebaseUser.value?.email,
+            country: null,
+            gender: null,
+            isDriver: false,
+            isVerified: false,
+            joinedOn: DateTime.now(),
+            password: DateTime.now().millisecondsSinceEpoch.toString(),
+            phoneNumber: null,
+            acceptTermsAndCondition: true,
+            photoUrl: firebaseUser.value?.photoURL,
+          );
 
+          await AuthenticationRepository.instance
+              .createUserWithEmailAndPassword(
+            modelUser.email!,
+            modelUser.password!,
+            modelUser.displayName!,
+            modelUser.acceptTermsAndCondition,
+          );
+
+          // store the information to firebase
+          await UserRepository.instance.createFirestoreUser(modelUser);
           showSuccessMessage(
               'Registration',
               "You have successfully created an account with this email address: ${firebaseUser.value!.email}",
@@ -203,14 +253,40 @@ class SocialProviderRepository extends AuthenticationRepository {
       showErrorMessage("Authentication Error", ex.message, Icons.lock_person);
     }
 
+    firebaseUser.value = _auth.currentUser;
+
     if (firebaseUser.value != null) {
       if (!login) {
         // link the credentials with the user
         try {
           await _auth.currentUser
               ?.reauthenticateWithCredential(oauthCredential);
-          await setRoleMode(firebaseUser.value!.uid, false, true,
-              firebaseUser.value!.displayName.toString());
+
+          // store the information to the userModel class
+          final modelUser = UserModel(
+            displayName: firebaseUser.value?.displayName,
+            email: firebaseUser.value?.email,
+            country: null,
+            gender: null,
+            isDriver: false,
+            isVerified: false,
+            joinedOn: DateTime.now(),
+            password: DateTime.now().millisecondsSinceEpoch.toString(),
+            phoneNumber: null,
+            acceptTermsAndCondition: true,
+            photoUrl: firebaseUser.value?.photoURL,
+          );
+
+          await AuthenticationRepository.instance
+              .createUserWithEmailAndPassword(
+            modelUser.email!,
+            modelUser.password!,
+            modelUser.displayName!,
+            modelUser.acceptTermsAndCondition,
+          );
+
+          // store the information to firebase
+          await UserRepository.instance.createFirestoreUser(modelUser);
 
           showSuccessMessage(
               'Registration',

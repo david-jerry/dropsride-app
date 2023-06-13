@@ -1,5 +1,6 @@
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
+import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,11 @@ class PhoneInputField extends StatelessWidget {
           : null,
       inputFormatters: [MaskedInputFormatter('000 000 0000')],
       onChanged: (value) {
-        aController.phoneInput.value = value;
+        aController.phoneNumber.value = PhoneNumberMap(
+          countryCode: value.countryCode,
+          countryISOCode: value.countryISOCode,
+          number: value.number,
+        );
       },
       flagsButtonMargin: const EdgeInsets.all(12),
       keyboardType:

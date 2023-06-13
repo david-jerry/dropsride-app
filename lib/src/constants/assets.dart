@@ -1041,6 +1041,10 @@ class Assets {
   /// assets/images/driver/camera/add_card_scan_overlay.png
   static const String assetsImagesDriverCameraAddCardScanOverlay = "assets/images/driver/camera/add_card_scan_overlay.png";
 
+  /// Assets for assetsImagesDriverCameraCards
+  /// assets/images/driver/camera/cards.png
+  static const String assetsImagesDriverCameraCards = "assets/images/driver/camera/cards.png";
+
   /// Assets for assetsImagesDriverCameraImagePlaceHolder
   /// assets/images/driver/camera/image_place_holder.png
   static const String assetsImagesDriverCameraImagePlaceHolder = "assets/images/driver/camera/image_place_holder.png";
@@ -1060,6 +1064,10 @@ class Assets {
   /// Assets for assetsImagesDriverIconCancellationIcon
   /// assets/images/driver/icon/cancellation_icon.svg
   static const String assetsImagesDriverIconCancellationIcon = "assets/images/driver/icon/cancellation_icon.svg";
+
+  /// Assets for assetsImagesDriverIconCardGroup
+  /// assets/images/driver/icon/cardGroup.svg
+  static const String assetsImagesDriverIconCardGroup = "assets/images/driver/icon/cardGroup.svg";
 
   /// Assets for assetsImagesDriverIconCardScanIcon
   /// assets/images/driver/icon/card_scan_icon.svg
@@ -1092,6 +1100,18 @@ class Assets {
   /// Assets for assetsImagesDriverIconEditProfileIcon
   /// assets/images/driver/icon/edit_profile_icon.svg
   static const String assetsImagesDriverIconEditProfileIcon = "assets/images/driver/icon/edit_profile_icon.svg";
+
+  /// Assets for assetsImagesDriverIconFavoriteDestinationLeadingIcon
+  /// assets/images/driver/icon/favorite_destination_leading_icon.svg
+  static const String assetsImagesDriverIconFavoriteDestinationLeadingIcon = "assets/images/driver/icon/favorite_destination_leading_icon.svg";
+
+  /// Assets for assetsImagesDriverIconFavoriteDestinationLeadingIconSvg
+  /// assets/images/driver/icon/favorite_destination_leading_icon_svg.png
+  static const String assetsImagesDriverIconFavoriteDestinationLeadingIconSvg = "assets/images/driver/icon/favorite_destination_leading_icon_svg.png";
+
+  /// Assets for assetsImagesDriverIconFavoriteDestinationMarker
+  /// assets/images/driver/icon/favorite_destination_marker.svg
+  static const String assetsImagesDriverIconFavoriteDestinationMarker = "assets/images/driver/icon/favorite_destination_marker.svg";
 
   /// Assets for assetsImagesDriverIconLogoutIcon
   /// assets/images/driver/icon/logout_icon.svg
@@ -1133,6 +1153,10 @@ class Assets {
   /// assets/images/driver/icon/transaction_history.svg
   static const String assetsImagesDriverIconTransactionHistory = "assets/images/driver/icon/transaction_history.svg";
 
+  /// Assets for assetsImagesDriverIconTransactionWallet
+  /// assets/images/driver/icon/transaction_wallet.svg
+  static const String assetsImagesDriverIconTransactionWallet = "assets/images/driver/icon/transaction_wallet.svg";
+
   /// Assets for assetsImagesDriverIconTripHistoryClock
   /// assets/images/driver/icon/trip_history_clock.svg
   static const String assetsImagesDriverIconTripHistoryClock = "assets/images/driver/icon/trip_history_clock.svg";
@@ -1141,6 +1165,34 @@ class Assets {
   /// assets/images/driver/icon/verified_icon.svg
   static const String assetsImagesDriverIconVerifiedIcon = "assets/images/driver/icon/verified_icon.svg";
 
+  /// Assets for assetsImagesDriverImagesBlackCard
+  /// assets/images/driver/images/black_card.png
+  static const String assetsImagesDriverImagesBlackCard = "assets/images/driver/images/black_card.png";
+
+  /// Assets for assetsImagesDriverImagesCardGroup
+  /// assets/images/driver/images/card_group.png
+  static const String assetsImagesDriverImagesCardGroup = "assets/images/driver/images/card_group.png";
+
+  /// Assets for assetsImagesDriverImagesImageHolder
+  /// assets/images/driver/images/image_holder.png
+  static const String assetsImagesDriverImagesImageHolder = "assets/images/driver/images/image_holder.png";
+
+  /// Assets for assetsImagesDriverImagesLicenseFinished
+  /// assets/images/driver/images/license_finished.png
+  static const String assetsImagesDriverImagesLicenseFinished = "assets/images/driver/images/license_finished.png";
+
+  /// Assets for assetsImagesDriverImagesLicensePhoto
+  /// assets/images/driver/images/license_photo.png
+  static const String assetsImagesDriverImagesLicensePhoto = "assets/images/driver/images/license_photo.png";
+
+  /// Assets for assetsImagesDriverImagesLicenseSampleHolding
+  /// assets/images/driver/images/license_sample_holding.png
+  static const String assetsImagesDriverImagesLicenseSampleHolding = "assets/images/driver/images/license_sample_holding.png";
+
+  /// Assets for assetsImagesDriverImagesYellowCard
+  /// assets/images/driver/images/yellow_card.png
+  static const String assetsImagesDriverImagesYellowCard = "assets/images/driver/images/yellow_card.png";
+
   /// Assets for assetsImagesEnableLocationIllustration
   /// assets/images/enable_location_illustration.png
   static const String assetsImagesEnableLocationIllustration = "assets/images/enable_location_illustration.png";
@@ -1148,6 +1200,10 @@ class Assets {
   /// Assets for assetsImagesEnableLocationIllustrationDark
   /// assets/images/enable_location_illustration_dark.png
   static const String assetsImagesEnableLocationIllustrationDark = "assets/images/enable_location_illustration_dark.png";
+
+  /// Assets for assetsImagesIconsAngleRight
+  /// assets/images/icons/angle_right.svg
+  static const String assetsImagesIconsAngleRight = "assets/images/icons/angle_right.svg";
 
   /// Assets for assetsImagesIconsApple
   /// assets/images/icons/apple.svg
@@ -1168,6 +1224,10 @@ class Assets {
   /// Assets for assetsImagesIconsCard
   /// assets/images/icons/card.svg
   static const String assetsImagesIconsCard = "assets/images/icons/card.svg";
+
+  /// Assets for assetsImagesIconsCardPng
+  /// assets/images/icons/cardPng.png
+  static const String assetsImagesIconsCardPng = "assets/images/icons/cardPng.png";
 
   /// Assets for assetsImagesIconsCash
   /// assets/images/icons/cash.svg
@@ -1208,6 +1268,10 @@ class Assets {
   /// Assets for assetsImagesIconsDistance
   /// assets/images/icons/distance.svg
   static const String assetsImagesIconsDistance = "assets/images/icons/distance.svg";
+
+  /// Assets for assetsImagesIconsDoubleGoodMark
+  /// assets/images/icons/double_good_mark.svg
+  static const String assetsImagesIconsDoubleGoodMark = "assets/images/icons/double_good_mark.svg";
 
   /// Assets for assetsImagesIconsDriverSwitchIcon
   /// assets/images/icons/driver_switch_icon.svg
@@ -1281,6 +1345,10 @@ class Assets {
   /// assets/images/icons/mail.svg
   static const String assetsImagesIconsMail = "assets/images/icons/mail.svg";
 
+  /// Assets for assetsImagesIconsManageSubscription
+  /// assets/images/icons/manage_subscription.svg
+  static const String assetsImagesIconsManageSubscription = "assets/images/icons/manage_subscription.svg";
+
   /// Assets for assetsImagesIconsMastercard
   /// assets/images/icons/mastercard.svg
   static const String assetsImagesIconsMastercard = "assets/images/icons/mastercard.svg";
@@ -1321,6 +1389,10 @@ class Assets {
   /// assets/images/icons/outlined-wallet.svg
   static const String assetsImagesIconsOutlinedWallet = "assets/images/icons/outlined-wallet.svg";
 
+  /// Assets for assetsImagesIconsPaymentMethod
+  /// assets/images/icons/payment_method.svg
+  static const String assetsImagesIconsPaymentMethod = "assets/images/icons/payment_method.svg";
+
   /// Assets for assetsImagesIconsPrivacy
   /// assets/images/icons/privacy.svg
   static const String assetsImagesIconsPrivacy = "assets/images/icons/privacy.svg";
@@ -1329,6 +1401,10 @@ class Assets {
   /// assets/images/icons/profile.svg
   static const String assetsImagesIconsProfile = "assets/images/icons/profile.svg";
 
+  /// Assets for assetsImagesIconsReceiptBarcode
+  /// assets/images/icons/receipt_barcode.svg
+  static const String assetsImagesIconsReceiptBarcode = "assets/images/icons/receipt_barcode.svg";
+
   /// Assets for assetsImagesIconsScan
   /// assets/images/icons/scan.svg
   static const String assetsImagesIconsScan = "assets/images/icons/scan.svg";
@@ -1336,6 +1412,10 @@ class Assets {
   /// Assets for assetsImagesIconsSearch
   /// assets/images/icons/search.svg
   static const String assetsImagesIconsSearch = "assets/images/icons/search.svg";
+
+  /// Assets for assetsImagesIconsSelectedIcon
+  /// assets/images/icons/selected_icon.svg
+  static const String assetsImagesIconsSelectedIcon = "assets/images/icons/selected_icon.svg";
 
   /// Assets for assetsImagesIconsSettings
   /// assets/images/icons/settings.svg
@@ -1352,6 +1432,10 @@ class Assets {
   /// Assets for assetsImagesIconsSwitchDriver
   /// assets/images/icons/switch-driver.svg
   static const String assetsImagesIconsSwitchDriver = "assets/images/icons/switch-driver.svg";
+
+  /// Assets for assetsImagesIconsTransactionHistory
+  /// assets/images/icons/transaction_history.svg
+  static const String assetsImagesIconsTransactionHistory = "assets/images/icons/transaction_history.svg";
 
   /// Assets for assetsImagesIconsTwitter
   /// assets/images/icons/twitter.svg
@@ -1392,6 +1476,10 @@ class Assets {
   /// Assets for assetsImagesLogoLogoLight
   /// assets/images/logo/logo_light.png
   static const String assetsImagesLogoLogoLight = "assets/images/logo/logo_light.png";
+
+  /// Assets for assetsImagesLogoVerveIcon
+  /// assets/images/logo/verve_icon.png
+  static const String assetsImagesLogoVerveIcon = "assets/images/logo/verve_icon.png";
 
   /// Assets for assetsImagesOnboardOnboard1
   /// assets/images/onboard/onboard_1.png
@@ -1444,6 +1532,10 @@ class Assets {
   /// Assets for assetsVideosCsLottie
   /// assets/videos/csLottie.json
   static const String assetsVideosCsLottie = "assets/videos/csLottie.json";
+
+  /// Assets for assetsVideosPulsingAnimation
+  /// assets/videos/pulsing-animation.gif
+  static const String assetsVideosPulsingAnimation = "assets/videos/pulsing-animation.gif";
 
   /// Assets for assetsVideosSearchingForLocationsOfDrivers
   /// assets/videos/searching_for_locations_of_drivers.gif

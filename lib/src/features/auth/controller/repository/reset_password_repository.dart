@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/auth/controller/repository/authentication_repository.dart';
 import 'package:dropsride/src/features/auth/view/otp.dart';
 import 'package:dropsride/src/features/auth/view/sign_up_and_login_screen.dart';
 import 'package:dropsride/src/features/home/view/index.dart';
+import 'package:dropsride/src/features/profile/controller/destination_controller.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl_phone_field/phone_number.dart';
 
 class PasswordResetRepository extends AuthenticationRepository {
   static PasswordResetRepository get instance => Get.find();
@@ -27,14 +30,18 @@ class PasswordResetRepository extends AuthenticationRepository {
     androidMinimumVersion: '19',
   );
 
-  Future<void> resetPasswordWithPhone(String phoneNumber) async {
+  Future<void> resetPasswordWithPhone(PhoneNumber phoneNumber) async {
     Get.back(closeOverlays: true);
+
+    // the main phone number function
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
+      phoneNumber: phoneNumber.completeNumber,
       verificationCompleted: (PhoneAuthCredential credential) async {
         await _auth.signInWithCredential(credential).then(
-              (value) => value.user != null ? Get.to(() => OTPScreen()) : null,
-            );
+          (value) {
+            value.user != null ? Get.to(() => OTPScreen()) : null;
+          },
+        );
       },
       verificationFailed: (FirebaseAuthException e) {
         showErrorMessage('PHONE VERIFICATION', e.toString(),
@@ -58,6 +65,8 @@ class PasswordResetRepository extends AuthenticationRepository {
         'We have sent: **$email** a verification email. Please confirm to proceed.',
         Icons.mail_outline_rounded,
       );
+
+      AuthController.instance.login.value = true;
 
       Get.offAll(() => SignUpScreen(),
           transition: Transition.rightToLeftWithFade);
@@ -86,6 +95,7 @@ class PasswordResetRepository extends AuthenticationRepository {
                 .set({'phoneNumber': phoneNumber});
 
             refresh();
+            await DestinationController.instance.getCurrentLocation();
             Get.offAll(() => const HomeScreen());
           } catch (e) {
             showErrorMessage('Phone Verification',
