@@ -3,6 +3,7 @@ import 'package:dropsride/src/features/profile/controller/repository/places_auto
 import 'package:dropsride/src/features/profile/model/favorite_destinations_model.dart';
 import 'package:dropsride/src/features/profile/view/destinations/add_location_screen.dart';
 import 'package:dropsride/src/utils/alert.dart';
+import 'package:dropsride/src/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:get/get.dart';
@@ -29,6 +30,9 @@ class DestinationController extends GetxController {
   RxBool locationPermissionGranted = false.obs;
   RxString currentAddress = ''.obs;
   RxString title = ''.obs;
+
+  RxDouble bottomSheetHeight = (SizeConfig.screenHeight * 0.4).obs;
+  RxDouble bottomSheetDragOffset = 0.00.obs;
 
   Future<void> getCurrentLocation() async {
     serviceEnabled.value = await location.serviceEnabled();

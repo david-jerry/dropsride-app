@@ -25,6 +25,31 @@ class AssistantMethods {
       userPickupAddress.locationName = address;
       userPickupAddress.locationLatitude = position.latitude;
       userPickupAddress.locationLongitude = position.longitude;
+
+      MapController.find.updatePickupLocationAddress(userPickupAddress);
+    }
+    return address;
+  }
+
+  static Future<String> searchDropoffAddressForGeoCoordinates(
+      Position position, context) async {
+    String address = '';
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$GOOGLE_API_KEY');
+
+    final addressResponse = await http.get(url);
+
+    if (json.decode(addressResponse.body)['results'].length > 0) {
+      address = json
+          .decode(addressResponse.body)['results'][0]['formatted_address']
+          .toString();
+
+      Directions userPickupAddress = Directions();
+      userPickupAddress.locationName = address;
+      userPickupAddress.locationLatitude = position.latitude;
+      userPickupAddress.locationLongitude = position.longitude;
+
+      MapController.find.updateDropoffLocationAddress(userPickupAddress);
     }
     return address;
   }

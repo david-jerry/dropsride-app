@@ -7,6 +7,7 @@ import 'package:dropsride/src/features/auth/controller/repository/reset_password
 import 'package:dropsride/src/features/auth/view/email_verification_screen.dart';
 import 'package:dropsride/src/features/home/controller/map_controller.dart';
 import 'package:dropsride/src/features/home/view/index.dart';
+import 'package:dropsride/src/features/profile/controller/profile_controller.dart';
 import 'package:dropsride/src/features/splash/view/loading_screen.dart';
 import 'package:dropsride/src/features/splash/view/screen.dart';
 import 'package:dropsride/src/utils/notifications/controller/controller.dart';
@@ -64,6 +65,7 @@ void main() async {
   Get.put(SocialProviderRepository());
   Get.put(EmailVerificationRepository());
   Get.put(PasswordResetRepository());
+  Get.put(ProfileController());
   Get.put(UserRepository());
   Get.put(AuthController());
   Get.put(MapController());
@@ -183,7 +185,8 @@ class MyApp extends StatelessWidget {
                         AuthenticationRepository.instance.checkDriverStatus();
                         AuthenticationRepository.instance.firebaseUser.value =
                             user;
-                        AuthenticationRepository.instance.checkDriverSubscription();
+                        AuthenticationRepository.instance
+                            .checkDriverSubscription();
                         Get.offAll(() => const HomeScreen());
                       }
                     });

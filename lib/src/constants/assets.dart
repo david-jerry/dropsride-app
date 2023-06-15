@@ -1537,6 +1537,10 @@ class Assets {
   /// assets/videos/pulsing-animation.gif
   static const String assetsVideosPulsingAnimation = "assets/videos/pulsing-animation.gif";
 
+  /// Assets for assetsVideosPulsingJsonAnimation
+  /// assets/videos/PulsingJsonAnimation.json
+  static const String assetsVideosPulsingJsonAnimation = "assets/videos/PulsingJsonAnimation.json";
+
   /// Assets for assetsVideosSearchingForLocationsOfDrivers
   /// assets/videos/searching_for_locations_of_drivers.gif
   static const String assetsVideosSearchingForLocationsOfDrivers = "assets/videos/searching_for_locations_of_drivers.gif";

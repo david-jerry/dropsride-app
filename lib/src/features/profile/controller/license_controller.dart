@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:dropsride/src/features/profile/controller/repository/license_repository.dart';
-import 'package:dropsride/src/features/profile/controller/repository/user_repository.dart';
 import 'package:dropsride/src/features/profile/model/drivers_license_model.dart';
-import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:dropsride/src/utils/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';

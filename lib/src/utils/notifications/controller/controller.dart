@@ -36,22 +36,20 @@ class NotificationController {
     //     arguments: receivedAction);
 
     // Navigate to pages or perform actions based on the received action
-    if (receivedAction != null) {
-      print('Action received: ${receivedAction.groupKey}');
+    print('Action received: ${receivedAction.groupKey}');
 
-      if (receivedAction.buttonKeyPressed == 'view') {
-        // Example: Navigate to the notification page
-        print('Navigating to notification page');
-        // Navigator.of(context).pushNamed('/notification-page');
-      } else if (receivedAction.buttonKeyPressed == 'action1') {
-        // Perform action 1
-        print('Performing action 1');
-        // performAction1();
-      } else if (receivedAction.buttonKeyPressed == 'action2') {
-        // Perform action 2
-        print('Performing action 2');
-        // performAction2();
-      }
+    if (receivedAction.buttonKeyPressed == 'view') {
+      // Example: Navigate to the notification page
+      print('Navigating to notification page');
+      // Navigator.of(context).pushNamed('/notification-page');
+    } else if (receivedAction.buttonKeyPressed == 'action1') {
+      // Perform action 1
+      print('Performing action 1');
+      // performAction1();
+    } else if (receivedAction.buttonKeyPressed == 'action2') {
+      // Perform action 2
+      print('Performing action 2');
+      // performAction2();
     }
   }
 }

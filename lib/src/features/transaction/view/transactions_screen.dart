@@ -139,14 +139,12 @@ class TransactionScreen extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      Text(
-                                        "₦ ",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w900,
-                                            ),
+                                      SvgPicture.asset(
+                                        Assets.assetsImagesIconsNairaIcon,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                        height: 12,
                                       ),
                                       Text(
                                         "${transaction.amount}",

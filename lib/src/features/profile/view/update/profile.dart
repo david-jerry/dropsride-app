@@ -57,8 +57,8 @@ class ProfileUpdateScreen extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: AppSizes.padding * 1.4),
             child: InkWell(
               onTap: () {},
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Text(
                     'Delete Account',
                     style: TextStyle(

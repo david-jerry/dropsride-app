@@ -12,6 +12,8 @@ class DestinationRepository extends GetxController {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  User? user = AuthenticationRepository.instance.firebaseUser.value;
+
   User? firebaseUser = AuthenticationRepository.instance.firebaseUser.value;
 
   createFavoriteDestination(FavouriteDestination location) async {
@@ -41,14 +43,15 @@ class DestinationRepository extends GetxController {
     }
   }
 
-  Future<void> updateFavoriteDestination(FavouriteDestination location) async {
+  Future<void> updateFavoriteDestination(
+      FavouriteDestination location, String documentId) async {
     ProfileController.instance.isLoading.value = true;
     if (firebaseUser != null) {
       await _firestore
           .collection('users')
           .doc(AuthenticationRepository.instance.firebaseUser.value!.uid)
           .collection('favorite_destination')
-          .doc(AuthenticationRepository.instance.firebaseUser.value!.uid)
+          .doc(documentId)
           .update(location.toUpdateMap())
           .whenComplete(() {
         showSuccessMessage(
@@ -65,6 +68,127 @@ class DestinationRepository extends GetxController {
         },
       );
     }
+  }
+
+  Stream<FavouriteDestination> getSavedHomeDestination() {
+    final snapshot = _firestore
+        .collection('users')
+        .doc(AuthenticationRepository.instance.firebaseUser.value!.uid)
+        .collection('favorite_destination')
+        .orderBy('addedOn', descending: true)
+        .snapshots();
+
+    final destinations = snapshot.map((e) {
+      return e.docs
+          .where(
+              (doc) => doc.id.contains(FirebaseAuth.instance.currentUser!.uid))
+          .map((e) => FavouriteDestination.fromSnapshot(e))
+          .where(
+        (element) {
+          if (element.title.contains('Home')) {
+            return element.title.contains('Home');
+          } else if (element.title.contains('home')) {
+            return element.title.contains('home');
+          } else if (element.title.contains('Family')) {
+            return element.title.contains('Family');
+          } else if (element.title.contains('family')) {
+            return element.title.contains('family');
+          } else {
+            return element.title.contains('residence');
+          }
+        },
+      ).single;
+    });
+
+    final userBank = destinations;
+
+    return userBank;
+  }
+
+  Stream<FavouriteDestination> getSavedSchoolDestination() {
+    final snapshot = _firestore
+        .collection('users')
+        .doc(AuthenticationRepository.instance.firebaseUser.value!.uid)
+        .collection('favorite_destination')
+        .orderBy('addedOn', descending: true)
+        .snapshots();
+
+    final destinations = snapshot.map((e) {
+      return e.docs
+          .where(
+              (doc) => doc.id.contains(FirebaseAuth.instance.currentUser!.uid))
+          .map((e) => FavouriteDestination.fromSnapshot(e))
+          .where(
+        (element) {
+          if (element.title.contains('University')) {
+            return element.title.contains('University');
+          } else if (element.title.contains('university')) {
+            return element.title.contains('university');
+          } else if (element.title.contains('Academy')) {
+            return element.title.contains('Academy');
+          } else if (element.title.contains('academy')) {
+            return element.title.contains('academy');
+          } else if (element.title.contains('School')) {
+            return element.title.contains('School');
+          } else if (element.title.contains('school')) {
+            return element.title.contains('school');
+          } else if (element.title.contains('Montessori')) {
+            return element.title.contains('Montessori');
+          } else if (element.title.contains('montessori')) {
+            return element.title.contains('montessori');
+          } else if (element.title.contains('Primary')) {
+            return element.title.contains('Primary');
+          } else if (element.title.contains('primary')) {
+            return element.title.contains('primary');
+          } else if (element.title.contains('Day Care')) {
+            return element.title.contains('Day Care');
+          } else if (element.title.contains('day care')) {
+            return element.title.contains('day care');
+          } else {
+            return element.title.contains('college');
+          }
+        },
+      ).single;
+    });
+
+    final userBank = destinations;
+
+    return userBank;
+  }
+
+  Stream<FavouriteDestination> getSavedWorkDestination() {
+    final snapshot = _firestore
+        .collection('users')
+        .doc(AuthenticationRepository.instance.firebaseUser.value!.uid)
+        .collection('favorite_destination')
+        .orderBy('addedOn', descending: true)
+        .snapshots();
+
+    final destinations = snapshot.map((e) {
+      return e.docs
+          .where(
+              (doc) => doc.id.contains(FirebaseAuth.instance.currentUser!.uid))
+          .map((e) => FavouriteDestination.fromSnapshot(e))
+          .where(
+        (element) {
+          if (element.title.contains('Work')) {
+            return element.title.contains('Work');
+          } else if (element.title.contains('work')) {
+            return element.title.contains('work');
+          } else if (element.title.contains('Office')) {
+            return element.title.contains('Office');
+          } else if (element.title.contains('office')) {
+            return element.title.contains('office');
+          } else {
+            return element.title.contains('job');
+          }
+        },
+      ).single;
+    });
+
+    final userBank = destinations;
+
+    return userBank;
   }
 
   Stream<List<FavouriteDestination>> getAllFavoriteDestination() {

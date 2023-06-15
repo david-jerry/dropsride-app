@@ -23,8 +23,6 @@ class SideBarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ProfileController());
-
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.symmetric(
