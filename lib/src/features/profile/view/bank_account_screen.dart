@@ -1,6 +1,7 @@
 import 'package:dropsride/src/common_widgets/appbar_title.dart';
 import 'package:dropsride/src/constants/gaps.dart';
 import 'package:dropsride/src/constants/size.dart';
+import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/profile/controller/bank_controller.dart';
 import 'package:dropsride/src/features/profile/controller/repository/bank_repository.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
@@ -73,16 +74,17 @@ class AccountDetailsScreen extends StatelessWidget {
                             width: AppSizes.p2, color: AppColors.red),
                       ),
                     ),
-                    items: BankController.instance.bankList.map(
+                    value: BankController.instance.bankName.value.isEmpty
+                        ? AuthController.find.bankList.first
+                        : BankController.instance.bankName.value,
+                    items: AuthController.find.bankList.map(
                       (e) {
-                        // print(e);
                         return DropdownMenuItem<String>(
                           value: e,
-                          child: Text(e),
+                          child: e.length < 33 ? Text(e) : Text("${e.substring(0, 33)}..."),
                         );
                       },
                     ).toList(),
-                    value: BankController.instance.bankName.value,
                     onChanged: (value) {
                       BankController.instance.bankName.value = value!;
                     },

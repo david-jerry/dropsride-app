@@ -1,18 +1,24 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
+import 'package:dropsride/src/assistants/assistant_methods.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
-import 'package:dropsride/src/features/auth/controller/exceptions/social_provider_exceptions.dart';
+import 'package:dropsride/src/features/auth/controller/exceptions/signup_exceptions.dart';
 import 'package:dropsride/src/features/auth/controller/repository/authentication_repository.dart';
 import 'package:dropsride/src/features/auth/controller/repository/email_verification_repository.dart';
+import 'package:dropsride/src/features/auth/view/email_verification_screen.dart';
+import 'package:dropsride/src/features/home/controller/map_controller.dart';
 import 'package:dropsride/src/features/home/view/index.dart';
+import 'package:dropsride/src/features/profile/controller/destination_controller.dart';
 import 'package:dropsride/src/features/profile/controller/repository/user_repository.dart';
 import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -21,101 +27,73 @@ class SocialProviderRepository extends AuthenticationRepository {
   static SocialProviderRepository get instance => Get.find();
 
   final _auth = FirebaseAuth.instance;
+  final firebase = FirebaseFirestore.instance;
 
   // Google sign in button function
   Future<void> signInWithGoogle(bool login) async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
+    if (googleUser == null) return;
+
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
     // Create a new credential
     final googleCredential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
     );
 
-    // Once signed in, the binder will update the userChange state
     try {
-      await _auth.signInWithCredential(googleCredential);
-      AuthController.instance.isLoading.value = false;
-    } on FirebaseAuthException catch (e) {
-      final ex = SocialExceptions.code(e.code);
-      showErrorMessage("Authentication Error", ex.message, Icons.lock_person);
-    }
-
-    firebaseUser.value = _auth.currentUser;
-
-    if (firebaseUser.value != null) {
-      // check if signup screen is login
-      if (!login) {
-        // link the credentials with the user
-        try {
-          await _auth.currentUser
-              ?.reauthenticateWithCredential(googleCredential);
-
+      _auth.signInWithCredential(googleCredential).then((value) async {
+        final DocumentSnapshot userSnapshot =
+            await firebase.collection('users').doc(value.user!.uid).get();
+        if (!userSnapshot.exists) {
           // store the information to the userModel class
           final modelUser = UserModel(
-            displayName: firebaseUser.value?.displayName,
-            email: firebaseUser.value?.email,
+            displayName: value.user!.displayName,
+            email: value.user!.email,
             country: null,
             gender: null,
             isDriver: false,
+            isSubscribed: false,
             isVerified: false,
             joinedOn: DateTime.now(),
             password: DateTime.now().millisecondsSinceEpoch.toString(),
-            phoneNumber: null,
             acceptTermsAndCondition: true,
-            photoUrl: firebaseUser.value?.photoURL,
-          );
-
-          await AuthenticationRepository.instance
-              .createUserWithEmailAndPassword(
-            modelUser.email!,
-            modelUser.password!,
-            modelUser.displayName!,
-            modelUser.acceptTermsAndCondition,
+            photoUrl: value.user!.photoURL,
           );
 
           // store the information to firebase
           await UserRepository.instance.createFirestoreUser(modelUser);
+          await value.user?.reauthenticateWithCredential(googleCredential);
 
-          // Send a success alert
           showSuccessMessage(
-              'Registration',
-              "You have successfully created an account with this email address: ${firebaseUser.value!.email}",
-              Icons.lock_person);
-
-          // send verification email to the user if they are not null
-          await EmailVerificationRepository.instance
-              .sendVerification(firebaseUser.value!);
-
-          AuthController.instance.isLoading.value = false;
-        } on FirebaseAuthException catch (e) {
-          final ex = SocialExceptions.code(e.code);
-          showErrorMessage(
-              "Authentication Error", ex.message, Icons.lock_person);
-        } catch (_) {
-          const ex = SocialExceptions();
-          showErrorMessage(
-              "Authentication Error", ex.message, Icons.lock_person);
+              'Authenticated',
+              'You successfully logged into your account: **${value.user!.email}**',
+              Icons.face_unlock_sharp);
         }
-      }
+      }).whenComplete(() async {
+        if (!_auth.currentUser!.emailVerified) {
+          await EmailVerificationRepository.instance
+              .sendVerification(_auth.currentUser!);
+          Get.offAll(() => const EmailVerificationScreen());
+        }
 
-      // if user email is not verified
-      if (!firebaseUser.value!.emailVerified) {
-        await EmailVerificationRepository.instance
-            .sendVerification(firebaseUser.value!);
-      } else {
-        showSuccessMessage(
-            'Authenticated',
-            'You successfully logged into your account: **${firebaseUser.value!.email}**',
-            Icons.face_unlock_sharp);
+        AssistantMethods.readOnlineUserCurrentInfo();
+        AuthController.find.getNewMarkers.value = true;
+        MapController.find.onBuildCompleted();
+        await DestinationController.instance.getCurrentLocation();
 
-        Get.offAll(() => const HomeScreen(), transition: Transition.native);
-      }
+        Future.delayed(const Duration(milliseconds: 6500), () {
+          Get.offAll(() => const HomeScreen());
+        });
+      });
+    } on FirebaseAuthException catch (e) {
+      final ex = SignupWithEmailAndPasswordExceptions.code(e.code);
+      showErrorMessage("GoogleAuth Error", ex.message, FontAwesomeIcons.google);
     }
   }
 
@@ -130,76 +108,54 @@ class SocialProviderRepository extends AuthenticationRepository {
 
     // Once signed in, the binder will update the userChange state
     try {
-      _auth.signInWithCredential(facebookAuthCredential);
-      AuthController.instance.isLoading.value = false;
-    } on FirebaseAuthException catch (e) {
-      final ex = SocialExceptions.code(e.code);
-      showErrorMessage("Authentication Error", ex.message, Icons.lock_person);
-    }
-
-    firebaseUser.value = _auth.currentUser;
-
-    if (firebaseUser.value != null) {
-      if (!login) {
-        // link the credentials with the user
-        try {
-          await _auth.currentUser
-              ?.reauthenticateWithCredential(facebookAuthCredential);
-
+      _auth.signInWithCredential(facebookAuthCredential).then((value) async {
+        final DocumentSnapshot userSnapshot =
+            await firebase.collection('users').doc(value.user!.uid).get();
+        if (!userSnapshot.exists) {
           // store the information to the userModel class
           final modelUser = UserModel(
-            displayName: firebaseUser.value?.displayName,
-            email: firebaseUser.value?.email,
+            displayName: value.user!.displayName,
+            email: value.user!.email,
             country: null,
             gender: null,
             isDriver: false,
+            isSubscribed: false,
             isVerified: false,
             joinedOn: DateTime.now(),
             password: DateTime.now().millisecondsSinceEpoch.toString(),
-            phoneNumber: null,
             acceptTermsAndCondition: true,
-            photoUrl: firebaseUser.value?.photoURL,
-          );
-
-          await AuthenticationRepository.instance
-              .createUserWithEmailAndPassword(
-            modelUser.email!,
-            modelUser.password!,
-            modelUser.displayName!,
-            modelUser.acceptTermsAndCondition,
+            photoUrl: value.user!.photoURL,
           );
 
           // store the information to firebase
           await UserRepository.instance.createFirestoreUser(modelUser);
+          await value.user
+              ?.reauthenticateWithCredential(facebookAuthCredential);
+
           showSuccessMessage(
-              'Registration',
-              "You have successfully created an account with this email address: ${firebaseUser.value!.email}",
-              Icons.lock_person);
-
-          // send verification email to the user if they are not null
-          await EmailVerificationRepository.instance
-              .sendVerification(firebaseUser.value!);
-
-          AuthController.instance.isLoading.value = false;
-        } on FirebaseAuthException catch (e) {
-          final ex = SocialExceptions.code(e.code);
-          showErrorMessage(
-              "Authentication Error", ex.message, Icons.lock_person);
+              'Authenticated',
+              'You successfully logged into your account: **${value.user!.email}**',
+              Icons.face_unlock_sharp);
         }
-      }
+      }).whenComplete(() async {
+        if (!_auth.currentUser!.emailVerified) {
+          await EmailVerificationRepository.instance
+              .sendVerification(_auth.currentUser!);
+          Get.offAll(() => const EmailVerificationScreen());
+        }
 
-      // if user email is not verified
-      if (!firebaseUser.value!.emailVerified) {
-        await EmailVerificationRepository.instance
-            .sendVerification(firebaseUser.value!);
-      } else {
-        showSuccessMessage(
-            'Authenticated',
-            'You successfully logged into your account: **${firebaseUser.value!.email}**',
-            Icons.face_unlock_sharp);
+        AssistantMethods.readOnlineUserCurrentInfo();
+        AuthController.find.getNewMarkers.value = true;
+        MapController.find.onBuildCompleted();
+        await DestinationController.instance.getCurrentLocation();
 
-        Get.offAll(() => const HomeScreen(), transition: Transition.native);
-      }
+        Future.delayed(const Duration(milliseconds: 6500), () {
+          Get.offAll(() => const HomeScreen());
+        });
+      });
+    } on FirebaseAuthException catch (e) {
+      final ex = SignupWithEmailAndPasswordExceptions.code(e.code);
+      showErrorMessage("GoogleAuth Error", ex.message, FontAwesomeIcons.google);
     }
   }
 
@@ -246,77 +202,53 @@ class SocialProviderRepository extends AuthenticationRepository {
     // Sign in the user with Firebase. If the nonce we generated earlier does
     // not match the nonce in `appleCredential.identityToken`, sign in will fail.
     try {
-      await _auth.signInWithCredential(oauthCredential);
-      AuthController.instance.isLoading.value = false;
-    } on FirebaseAuthException catch (e) {
-      final ex = SocialExceptions.code(e.code);
-      showErrorMessage("Authentication Error", ex.message, Icons.lock_person);
-    }
-
-    firebaseUser.value = _auth.currentUser;
-
-    if (firebaseUser.value != null) {
-      if (!login) {
-        // link the credentials with the user
-        try {
-          await _auth.currentUser
-              ?.reauthenticateWithCredential(oauthCredential);
-
+      _auth.signInWithCredential(oauthCredential).then((value) async {
+        final DocumentSnapshot userSnapshot =
+            await firebase.collection('users').doc(value.user!.uid).get();
+        if (!userSnapshot.exists) {
           // store the information to the userModel class
           final modelUser = UserModel(
-            displayName: firebaseUser.value?.displayName,
-            email: firebaseUser.value?.email,
+            displayName: value.user!.displayName,
+            email: value.user!.email,
             country: null,
             gender: null,
             isDriver: false,
+            isSubscribed: false,
             isVerified: false,
             joinedOn: DateTime.now(),
             password: DateTime.now().millisecondsSinceEpoch.toString(),
-            phoneNumber: null,
             acceptTermsAndCondition: true,
-            photoUrl: firebaseUser.value?.photoURL,
-          );
-
-          await AuthenticationRepository.instance
-              .createUserWithEmailAndPassword(
-            modelUser.email!,
-            modelUser.password!,
-            modelUser.displayName!,
-            modelUser.acceptTermsAndCondition,
+            photoUrl: value.user!.photoURL,
           );
 
           // store the information to firebase
           await UserRepository.instance.createFirestoreUser(modelUser);
+          await value.user?.reauthenticateWithCredential(oauthCredential);
 
           showSuccessMessage(
-              'Registration',
-              "You have successfully created an account with this email address: ${firebaseUser.value!.email}",
-              Icons.lock_person);
-
-          // send verification email to the user if they are not null
-          await EmailVerificationRepository.instance
-              .sendVerification(firebaseUser.value!);
-
-          AuthController.instance.isLoading.value = false;
-        } on FirebaseAuthException catch (e) {
-          final ex = SocialExceptions.code(e.code);
-          showErrorMessage(
-              "Authentication Error", ex.message, Icons.lock_person);
+              'Authenticated',
+              'You successfully logged into your account: **${value.user!.email}**',
+              Icons.face_unlock_sharp);
         }
-      }
+      }).whenComplete(() async {
+        if (!_auth.currentUser!.emailVerified) {
+          await EmailVerificationRepository.instance
+              .sendVerification(_auth.currentUser!);
+          Get.offAll(() => const EmailVerificationScreen());
+        }
 
-      // if user email is not verified
-      if (!firebaseUser.value!.emailVerified) {
-        await EmailVerificationRepository.instance
-            .sendVerification(firebaseUser.value!);
-      } else {
-        showSuccessMessage(
-            'Authenticated',
-            'You successfully logged into your account: **${firebaseUser.value!.email}**',
-            Icons.face_unlock_sharp);
+        AssistantMethods.readOnlineUserCurrentInfo();
+        AuthController.find.getNewMarkers.value = true;
+        MapController.find.onBuildCompleted();
+        await DestinationController.instance.getCurrentLocation();
 
-        Get.offAll(() => const HomeScreen(), transition: Transition.native);
-      }
+        Future.delayed(const Duration(milliseconds: 6500), () {
+          Get.offAll(() => const HomeScreen());
+        });
+      });
+    } on FirebaseAuthException catch (e) {
+      final ex = SignupWithEmailAndPasswordExceptions.code(e.code);
+      showErrorMessage("GoogleAuth Error", ex.message, FontAwesomeIcons.google);
     }
   }
 }

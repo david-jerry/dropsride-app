@@ -19,7 +19,7 @@ class VehicleScreen extends StatelessWidget {
         appBar: AppBar(
           automaticallyImplyLeading: true,
           leading: IconButton(
-            onPressed: () => Get.offAll(() => const HomeScreen()),
+            onPressed: () => Get.offAll(() => HomeScreen()),
             icon: Icon(
               FontAwesomeIcons.angleLeft,
               color: Theme.of(context).colorScheme.onBackground,

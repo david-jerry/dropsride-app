@@ -46,7 +46,7 @@ class ForgotPasswordBottomSheet extends StatelessWidget {
             // email button
             CustomButtons(
                 ontap: () {
-                  AuthController.instance.forgotPasswordEmail.value = true;
+                  AuthController.find.forgotPasswordEmail.value = true;
                   Get.to(() => ForgetPasswordScreen());
                 },
                 icon: Icons.email_rounded,
@@ -57,7 +57,7 @@ class ForgotPasswordBottomSheet extends StatelessWidget {
             // otp button
             CustomButtons(
                 ontap: () {
-                  AuthController.instance.forgotPasswordEmail.value = false;
+                  AuthController.find.forgotPasswordEmail.value = false;
                   Get.to(() => ForgetPasswordScreen());
                 },
                 icon: Icons.mobile_friendly_rounded,

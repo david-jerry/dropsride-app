@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dropsride/src/assistants/assistant_methods.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/auth/controller/repository/authentication_repository.dart';
 import 'package:dropsride/src/features/auth/controller/repository/reset_password_repository.dart';
@@ -58,10 +59,10 @@ void main() async {
   await GetStorage.init();
 
   // initialize the themeController
+  Get.put(ThemeModeController());
   Get.put(
     AuthenticationRepository(),
   );
-  Get.put(ThemeModeController());
   Get.put(SocialProviderRepository());
   Get.put(EmailVerificationRepository());
   Get.put(PasswordResetRepository());
@@ -143,6 +144,7 @@ class MyApp extends StatelessWidget {
     themeController.isDarkMode.value =
         SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
     themeController.toggleMode();
+
     return GetMaterialApp(
       title: 'Dropsride',
       locale: Get.deviceLocale,
@@ -157,69 +159,67 @@ class MyApp extends StatelessWidget {
       transitionDuration: const Duration(milliseconds: 700),
       debugShowCheckedModeBanner: false,
       home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          // initialData: FirebaseAuth.instance.currentUser,
-          builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-            SizeConfig.init(context);
+        stream: FirebaseAuth.instance.authStateChanges(),
+        // initialData: FirebaseAuth.instance.currentUser,
+        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+          SizeConfig.init(context);
 
-            if (snapshot.connectionState == ConnectionState.active) {
-              final User? user = snapshot.data;
+          Timer? timer;
 
-              Timer? timer;
+          if (timer != null) {
+            timer.isActive ? timer.cancel() : null;
+          }
 
-              if (timer != null) {
-                timer.isActive ? timer.cancel() : null;
-              }
+          if (snapshot.connectionState == ConnectionState.active) {
+            final User? user = snapshot.data;
 
-              if (user == null) {
-                return SplashScreen();
-              } else {
-                try {
-                  if (!user.emailVerified) {
-                    user.sendEmailVerification();
-                    timer = Timer.periodic(const Duration(seconds: 5),
-                        (Timer timer) {
+            if (user == null) {
+              return SplashScreen();
+            } else {
+              AssistantMethods.checkUserExist(user.uid);
+
+              try {
+                themeController.hasLoaded.value = true;
+                if (!user.emailVerified) {
+                  user.sendEmailVerification();
+                  timer = Timer.periodic(
+                    const Duration(seconds: 5),
+                    (Timer timer) {
                       user.reload();
                       if (user.emailVerified) {
                         timer.isActive ? timer.cancel() : null;
-                        AuthenticationRepository.instance.checkDriverStatus();
-                        AuthenticationRepository.instance.firebaseUser.value =
-                            user;
-                        AuthenticationRepository.instance
-                            .checkDriverSubscription();
+                        // Get.to(() => LoadingScreen());
                         Get.offAll(() => const HomeScreen());
                       }
-                    });
-                    return const EmailVerificationScreen();
-                  } else {
-                    if (timer != null) {
-                      timer.isActive ? timer.cancel() : null;
-                    }
-                    AuthenticationRepository.instance.checkDriverStatus();
-                    AuthenticationRepository.instance.firebaseUser.value = user;
-                    return const HomeScreen();
+                    },
+                  );
+                  return const EmailVerificationScreen();
+                } else {
+                  timer!.isActive ? timer.cancel() : null;
+                  return LoadingScreen();
+                }
+              } catch (e) {
+                if (e is FirebaseAuthException) {
+                  if (timer != null) {
+                    timer.isActive ? timer.cancel() : null;
                   }
-                } catch (e) {
-                  if (e is FirebaseAuthException) {
-                    if (timer != null) {
-                      timer.isActive ? timer.cancel() : null;
-                    }
-                    if (e.code == "user-not-found") {
-                      AuthController.instance.login.value = false;
-                      AuthenticationRepository.instance.signOutUser();
-                    }
+                  if (e.code == "user-not-found") {
+                    AuthController.find.login.value = false;
+                    FirebaseAuth.instance.signOut();
                   }
                 }
               }
-            } else {
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator.adaptive(),
-                ),
-              );
             }
-            return LoadingScreen();
-          }),
+          } else {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+            );
+          }
+          return LoadingScreen();
+        },
+      ),
     );
   }
 }

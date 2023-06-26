@@ -13,7 +13,7 @@ import 'package:get/get.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
   ForgetPasswordScreen({super.key});
-  final AuthController aController = AuthController.instance;
+  final AuthController aController = AuthController.find;
   final ThemeModeController controller = Get.find<ThemeModeController>();
   final TextEditingController tController = TextEditingController();
   final _formKey = GlobalKey<FormState>();

@@ -38,8 +38,6 @@ class PlacesAutocompleteRepository extends GetxController {
 
       jsonPredictions.value = RxList<AutoCompletePredictions>(result.predictions!);
       if (kDebugMode) {
-        print(
-            jsonPredictions.value.map((e) => e.structuredFormatting!.mainText));
       }
     } catch (e) {
       showErrorMessage(
@@ -56,7 +54,6 @@ class PlacesAutocompleteRepository extends GetxController {
   //     language: 'en',
   //   );
 
-  //   debugPrint(prediction.toString());
 
   //   if (prediction != null) {
   //     PlacesDetailsResponse details = await GoogleMapsPlaces(

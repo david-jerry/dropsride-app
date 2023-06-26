@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropsride/src/assistants/assistant_methods.dart';
 import 'package:dropsride/src/features/transaction/model/wallet_model.dart';
 import 'package:dropsride/src/features/transaction/controller/card_controller.dart';
 import 'package:dropsride/src/features/transaction/model/card_model.dart';
@@ -62,20 +63,19 @@ class CardRepository extends GetxController {
         return;
       },
     );
+
+    AssistantMethods.readOnlineUserCurrentInfo();
   }
 
-  Stream<List<CardModel>> getUserCards() {
-    final snapshot = _firestore
+  Future<List<CardModel>> getUserCards() async {
+    final snapshot = await _firestore
         .collection('users')
         .doc(firebaseUser.uid)
         .collection('cards')
-        .snapshots();
+        .get();
 
-    final userData = snapshot.map((e) => e.docs
-        .where((element) => element.id.contains(firebaseUser.uid))
-        .map((e) => CardModel.fromSnapshot(e))
-        .toList());
-    return userData;
+    final cards = snapshot.docs.map((e) => CardModel.fromSnapshot(e)).toList();
+    return cards;
   }
 
   Future<bool> cardExists(String number) async {
@@ -95,7 +95,7 @@ class CardRepository extends GetxController {
   }
 
   Future<void> deleteExistingCard(String uid) async {
-    final snapshot = await _firestore
+    await _firestore
         .collection('users')
         .doc(firebaseUser.uid)
         .collection('cards')

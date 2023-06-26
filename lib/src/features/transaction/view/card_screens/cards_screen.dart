@@ -4,7 +4,6 @@ import 'package:dropsride/src/constants/gaps.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/transaction/controller/card_controller.dart';
 import 'package:dropsride/src/features/transaction/controller/repository/card_repository.dart';
-import 'package:dropsride/src/features/transaction/model/card_model.dart';
 import 'package:dropsride/src/features/transaction/view/card_screens/add_card_screen.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
@@ -37,228 +36,174 @@ class CardScreen extends StatelessWidget {
       // body
       body: Container(
         padding: const EdgeInsets.all(AppSizes.padding * 1.4),
-        width: double.infinity,
-        height: double.infinity,
-        child: StreamBuilder<List<CardModel>>(
-          stream: CardRepository.instance.getUserCards(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator.adaptive(),
-              );
-            } else if (snapshot.hasError) {
-              return const Center(
-                child: Text('There is error'),
-              );
-            } else {
-              if (snapshot.hasData) {
-                final data = snapshot.data!;
-                if (data.isNotEmpty) {
-                  return Column(
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          final cardData = snapshot.data![index];
-                          return Dismissible(
-                            key: Key(cardData.uid!),
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                              alignment: Alignment.centerRight,
-                              color: AppColors.red,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSizes.padding * 2.6),
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
+        width: double.maxFinite,
+        height: double.maxFinite,
+        child: CardController.instance.debitCards.isNotEmpty
+            ? Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: CardController.instance.debitCards.length,
+                    itemBuilder: (context, index) {
+                      final cardData =
+                          CardController.instance.debitCards[index];
+                      return Dismissible(
+                        key: Key(cardData.uid!),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          color: AppColors.red,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.padding * 2.6),
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        onDismissed: (direction) => CardRepository.instance
+                            .deleteExistingCard(cardData.uid!),
+                        child: InkWell(
+                          onTap: () async {
+                            CardController.instance.savePaymentType(
+                                true,
+                                cardData.authorizationCode,
+                                cardData.creditCardNumber);
+                          },
+                          child: Card(
+                            elevation: 2,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 0, vertical: AppSizes.p6),
+                            semanticContainer: true,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.padding,
                               ),
                             ),
-                            onDismissed: (direction) => CardRepository.instance
-                                .deleteExistingCard(cardData.uid!),
-                            child: InkWell(
-                              onTap: () async {
-                                CardController.instance.savePaymentType(
-                                    true, cardData.authorizationCode);
-                              },
-                              child: Card(
-                                elevation: 2,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: AppSizes.p6),
-                                semanticContainer: true,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    AppSizes.padding,
-                                  ),
-                                ),
-                                color: AppColors.cardDark,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(
-                                      AppSizes.padding * 1.4),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: Column(
+                            color: AppColors.cardDark,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.all(AppSizes.padding * 1.4),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'CARD NUMBER',
+                                          style: TextStyle(
+                                              color: AppColors.grey300,
+                                              fontSize: 10),
+                                        ),
+                                        Text(
+                                          '${cardData.creditCardNumber.substring(0, 5)} xxxx xxxx xxxx',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            letterSpacing: 1.8,
+                                          ),
+                                        ),
+                                        hSizedBox2,
+                                        Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            const Text(
-                                              'CARD NUMBER',
-                                              style: TextStyle(
-                                                  color: AppColors.grey300,
-                                                  fontSize: 10),
-                                            ),
-                                            Text(
-                                              '${cardData.creditCardNumber.substring(0, 5)} xxxx xxxx xxxx',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                letterSpacing: 1.8,
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'month/year'.toUpperCase(),
+                                                    style: const TextStyle(
+                                                        color:
+                                                            AppColors.grey300,
+                                                        fontSize: 10),
+                                                  ),
+                                                  Text(
+                                                    cardData.creditCardExpDate,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18,
+                                                      letterSpacing: 1.8,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            hSizedBox2,
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        'month/year'
-                                                            .toUpperCase(),
-                                                        style: const TextStyle(
-                                                            color: AppColors
-                                                                .grey300,
-                                                            fontSize: 10),
-                                                      ),
-                                                      Text(
-                                                        cardData
-                                                            .creditCardExpDate,
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 18,
-                                                          letterSpacing: 1.8,
-                                                        ),
-                                                      ),
-                                                    ],
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'cvv'.toUpperCase(),
+                                                    style: const TextStyle(
+                                                        color:
+                                                            AppColors.grey300,
+                                                        fontSize: 10),
                                                   ),
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        'cvv'.toUpperCase(),
-                                                        style: const TextStyle(
-                                                            color: AppColors
-                                                                .grey300,
-                                                            fontSize: 10),
-                                                      ),
-                                                      const Text(
-                                                        'xxx',
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 18,
-                                                          letterSpacing: 1.8,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                  const Text(
+                                                    'xxx',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18,
+                                                      letterSpacing: 1.8,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            hSizedBox2,
-                                            Text(
-                                              'Name'.toUpperCase(),
-                                              style: const TextStyle(
-                                                  color: AppColors.grey300,
-                                                  fontSize: 10),
-                                            ),
-                                            Text(
-                                              cardData.creditCardName
-                                                  .toUpperCase(),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                letterSpacing: 1.8,
+                                                ],
                                               ),
                                             ),
-                                            hSizedBox2,
                                           ],
                                         ),
-                                      ),
-                                      Obx(
-                                        () => Radio(
-                                          value: cardData.authorizationCode,
-                                          groupValue: CardController.instance
-                                              .selectedCardForPayment.value,
-                                          onChanged: (value) {
-                                            // if (value != null) {
-                                            //   CardController
-                                            //       .instance
-                                            //       .selectedCardForPayment
-                                            //       .value = value;
-                                            // }
-                                          },
-                                          activeColor: AppColors.primaryColor,
+                                        hSizedBox2,
+                                        Text(
+                                          'Name'.toUpperCase(),
+                                          style: const TextStyle(
+                                              color: AppColors.grey300,
+                                              fontSize: 10),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      hSizedBox2,
-                      data.length < 2
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSizes.padding),
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: InkWell(
-                                      radius: AppSizes.p4,
-                                      onTap: () {
-                                        Get.to(() => const AddCardScreen());
-                                      },
-                                      child: Text(
-                                        'Add Another Card +',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w900,
-                                            ),
-                                      ),
+                                        Text(
+                                          cardData.creditCardName.toUpperCase(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            letterSpacing: 1.8,
+                                          ),
+                                        ),
+                                        hSizedBox2,
+                                      ],
                                     ),
                                   ),
-                                  hSizedBox2,
+                                  Obx(
+                                    () => Radio(
+                                      value: cardData.authorizationCode,
+                                      groupValue: CardController.instance
+                                          .selectedCardForPayment.value,
+                                      onChanged: (value) {
+                                        // if (value != null) {
+                                        //   CardController
+                                        //       .instance
+                                        //       .selectedCardForPayment
+                                        //       .value = value;
+                                        // }
+                                      },
+                                      activeColor: AppColors.primaryColor,
+                                    ),
+                                  )
                                 ],
                               ),
-                            )
-                          : hSizedBox2,
-                    ],
-                  );
-                } else {
-                  return SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Image.asset(Assets.assetsImagesDriverImagesCardGroup),
-                        hSizedBox2,
-                        Padding(
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  hSizedBox2,
+                  CardController.instance.debitCards.length < 2
+                      ? Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppSizes.padding),
                           child: Column(
@@ -271,7 +216,7 @@ class CardScreen extends StatelessWidget {
                                     Get.to(() => const AddCardScreen());
                                   },
                                   child: Text(
-                                    'Add New Card +',
+                                    'Add Another Card +',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
@@ -284,55 +229,46 @@ class CardScreen extends StatelessWidget {
                               hSizedBox2,
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              } else if (snapshot.hasError) {
-                return const Center(
-                  child: Text('There is error'),
-                );
-              }
-            }
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Image.asset(Assets.assetsImagesDriverImagesCardGroup),
-                  hSizedBox2,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizes.padding),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: InkWell(
-                            radius: AppSizes.p4,
-                            onTap: () {
-                              Get.to(() => const AddCardScreen());
-                            },
-                            child: Text(
-                              'Add New Card +',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w900,
-                                  ),
+                        )
+                      : hSizedBox2,
+                ],
+              )
+            : SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Image.asset(Assets.assetsImagesDriverImagesCardGroup),
+                    hSizedBox2,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppSizes.padding),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: InkWell(
+                              radius: AppSizes.p4,
+                              onTap: () {
+                                Get.to(() => const AddCardScreen());
+                              },
+                              child: Text(
+                                'Add New Card +',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                              ),
                             ),
                           ),
-                        ),
-                        hSizedBox2,
-                      ],
+                          hSizedBox2,
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            );
-          },
-        ),
       ),
     );
   }

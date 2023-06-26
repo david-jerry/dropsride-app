@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/profile/model/bank_model.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,13 +44,11 @@ class BankRepository extends GetxController {
           .doc(user!.uid)
           .set(bank.toMap())
           .whenComplete(() {
-        print('Creating bank account Successful');
         showSuccessMessage(
             'Bank Account Created',
             'You have successfully added your bank account',
             FontAwesomeIcons.userInjured);
       }).catchError((error, stackTrace) {
-        print('Creating bank account unSuccessful');
         showErrorMessage('Bank Account Error', error.toString(),
             FontAwesomeIcons.userInjured);
       });
@@ -57,21 +56,24 @@ class BankRepository extends GetxController {
   }
 
   Future<Bank?> userBankDetails() async {
-    try {
-      final snapshot = await _firestore
-          .collection('users')
-          .doc(user!.uid)
-          .collection('bank')
-          .where(FieldPath.documentId, isEqualTo: user!.uid)
-          .get();
+    if (AuthController.find.userModel.value!.isDriver) {
+      try {
+        final snapshot = await _firestore
+            .collection('users')
+            .doc(user!.uid)
+            .collection('bank')
+            .where(FieldPath.documentId, isEqualTo: user!.uid)
+            .get();
 
-      final userBank = snapshot.docs.map((e) => Bank.fromSnapshot(e)).single;
+        final userBank = snapshot.docs.map((e) => Bank.fromSnapshot(e)).single;
 
-      return userBank;
-    } catch (e) {
-      showInfoMessage("Bank Details", "Please add your bank details",
-          FontAwesomeIcons.bank);
-      return null;
+        return userBank;
+      } catch (e) {
+        showInfoMessage("Bank Details", "Please add your bank details",
+            FontAwesomeIcons.bank);
+        return null;
+      }
     }
+    return null;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/profile/controller/repository/bank_repository.dart';
 import 'package:dropsride/src/features/profile/model/bank_model.dart';
 import 'package:dropsride/src/utils/alert.dart';
@@ -12,10 +13,10 @@ class BankController extends GetxController {
   RxBool submitting = false.obs;
   RxString bankAccountNumber = ''.obs;
 
-  List<dynamic> bankList = [];
-
-  Future<void> fetchBanks() async {
-    bankList = await BankRepository.instance.fetchNigerianBanks();
+  @override
+  void onInit() {
+    super.onInit();
+    print(AuthController.find.bankList[0]);
   }
 
   Future<void> fetchBankAccount() async {

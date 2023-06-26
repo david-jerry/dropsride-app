@@ -3,14 +3,11 @@ import 'package:dropsride/src/constants/gaps.dart';
 import 'package:dropsride/src/constants/placeholder.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
-import 'package:dropsride/src/features/profile/controller/profile_controller.dart';
-import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/features/transaction/view/transactions_screen.dart';
 import 'package:dropsride/src/features/transaction/view/subscription_screen.dart';
 import 'package:dropsride/src/features/transaction/view/card_screens/cards_screen.dart';
 import 'package:dropsride/src/utils/size_config.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,7 +18,6 @@ class EarningScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthController.instance.getUserBalance();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
@@ -140,9 +136,8 @@ class EarningScreen extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          AuthController
-                                              .instance.userBalance.value
-                                              .toString(),
+                                          AuthController.find.userModel.value!
+                                              .totalEarnings!,
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge!
@@ -203,37 +198,16 @@ class EarningScreen extends StatelessWidget {
                               ),
                             ),
                             wSizedBox6,
-                            FutureBuilder(
-                              future: ProfileController.instance.getUserData(
-                                  FirebaseAuth.instance.currentUser!.email!),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  if (snapshot.hasData) {
-                                    UserModel userData =
-                                        snapshot.data as UserModel;
-                                    AuthController.instance.userFullName.value =
-                                        userData.displayName!;
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.circular(138),
-                                      child: Image.network(
-                                        userData.photoUrl ?? kPlaceholder,
-                                        fit: BoxFit.cover,
-                                        height: 138,
-                                        width: 138,
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  return const Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  );
-                                }
-
-                                return Center(
-                                  child: Text(snapshot.error.toString()),
-                                );
-                              },
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(138),
+                              child: Image.network(
+                                AuthController
+                                        .instance.userModel.value!.photoUrl ??
+                                    kPlaceholder,
+                                fit: BoxFit.cover,
+                                height: 138,
+                                width: 138,
+                              ),
                             ),
                             wSizedBox6,
                             Padding(

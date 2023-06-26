@@ -1445,6 +1445,10 @@ class Assets {
   /// assets/images/icons/userMarker.svg
   static const String assetsImagesIconsUserMarker = "assets/images/icons/userMarker.svg";
 
+  /// Assets for assetsImagesIconsUserMarkerFrame
+  /// assets/images/icons/userMarkerFrame.svg
+  static const String assetsImagesIconsUserMarkerFrame = "assets/images/icons/userMarkerFrame.svg";
+
   /// Assets for assetsImagesIconsWallet
   /// assets/images/icons/wallet.svg
   static const String assetsImagesIconsWallet = "assets/images/icons/wallet.svg";
@@ -1492,6 +1496,14 @@ class Assets {
   /// Assets for assetsImagesOnboardOnboard3
   /// assets/images/onboard/onboard_3.png
   static const String assetsImagesOnboardOnboard3 = "assets/images/onboard/onboard_3.png";
+
+  /// Assets for assetsImagesPrivateRide
+  /// assets/images/privateRide.png
+  static const String assetsImagesPrivateRide = "assets/images/privateRide.png";
+
+  /// Assets for assetsImagesShareRide
+  /// assets/images/shareRide.png
+  static const String assetsImagesShareRide = "assets/images/shareRide.png";
 
   /// Assets for assetsImagesSplashDarkBg
   /// assets/images/splash/dark_bg.png

@@ -10,7 +10,7 @@ enum TripStatus {
   cancelled,
 }
 
-class Trips {
+class TripsHistoryModel {
   final String uid;
   final UserModel rider;
   final UserModel driver;
@@ -28,7 +28,7 @@ class Trips {
   final UserRating rating;
   final TripStatus status;
 
-  Trips({
+  TripsHistoryModel({
     required this.uid,
     required this.rider,
     required this.driver,
@@ -68,8 +68,8 @@ class Trips {
     };
   }
 
-  factory Trips.fromMap(Map<String, dynamic> map) {
-    return Trips(
+  factory TripsHistoryModel.fromMap(Map<String, dynamic> map) {
+    return TripsHistoryModel(
       uid: map['uid'] as String,
       rider: UserModel.fromMap(map['rider'] as Map<String, dynamic>),
       driver: UserModel.fromMap(map['driver'] as Map<String, dynamic>),
@@ -89,9 +89,9 @@ class Trips {
     );
   }
 
-  factory Trips.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+  factory TripsHistoryModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
-    return Trips(
+    return TripsHistoryModel(
       uid: document.id,
       amount: data['amount'],
       rider: data['rider'],
@@ -111,93 +111,4 @@ class Trips {
     );
   }
 
-  toJson() => json.encode(toMap());
-
-  factory Trips.fromJson(String source) =>
-      Trips.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'Trips(uid: $uid, rider: $rider, driver: $driver, carName: $carName, plateNumber: $plateNumber, duration: $duration, distance: $distance, amount: $amount, pickup: $pickup, pickUpLat: $pickUpLat, pickUpLon: $pickUpLon, dropOff: $dropOff, dropOffLat: $dropOffLat, dropOffLon: $dropOffLon, rating: $rating, status: $status)';
-  }
-
-  Trips copyWith({
-    String? uid,
-    UserModel? rider,
-    UserModel? driver,
-    String? carName,
-    String? plateNumber,
-    Duration? duration,
-    double? distance,
-    double? amount,
-    String? pickup,
-    double? pickUpLat,
-    double? pickUpLon,
-    String? dropOff,
-    double? dropOffLat,
-    double? dropOffLon,
-    UserRating? rating,
-    TripStatus? status,
-  }) {
-    return Trips(
-      uid: uid ?? this.uid,
-      rider: rider ?? this.rider,
-      driver: driver ?? this.driver,
-      carName: carName ?? this.carName,
-      plateNumber: plateNumber ?? this.plateNumber,
-      duration: duration ?? this.duration,
-      distance: distance ?? this.distance,
-      amount: amount ?? this.amount,
-      pickup: pickup ?? this.pickup,
-      pickUpLat: pickUpLat ?? this.pickUpLat,
-      pickUpLon: pickUpLon ?? this.pickUpLon,
-      dropOff: dropOff ?? this.dropOff,
-      dropOffLat: dropOffLat ?? this.dropOffLat,
-      dropOffLon: dropOffLon ?? this.dropOffLon,
-      rating: rating ?? this.rating,
-      status: status ?? this.status,
-    );
-  }
-
-  @override
-  bool operator ==(covariant Trips other) {
-    if (identical(this, other)) return true;
-
-    return other.uid == uid &&
-        other.rider == rider &&
-        other.driver == driver &&
-        other.carName == carName &&
-        other.plateNumber == plateNumber &&
-        other.duration == duration &&
-        other.distance == distance &&
-        other.amount == amount &&
-        other.pickup == pickup &&
-        other.pickUpLat == pickUpLat &&
-        other.pickUpLon == pickUpLon &&
-        other.dropOff == dropOff &&
-        other.dropOffLat == dropOffLat &&
-        other.dropOffLon == dropOffLon &&
-        other.rating == rating &&
-        other.status == status;
-  }
-
-  @override
-  int get hashCode {
-    return uid.hashCode ^
-        rider.hashCode ^
-        driver.hashCode ^
-        carName.hashCode ^
-        plateNumber.hashCode ^
-        duration.hashCode ^
-        distance.hashCode ^
-        amount.hashCode ^
-        pickup.hashCode ^
-        pickUpLat.hashCode ^
-        pickUpLon.hashCode ^
-        dropOff.hashCode ^
-        dropOffLat.hashCode ^
-        dropOffLon.hashCode ^
-        rating.hashCode ^
-        status.hashCode;
-  }
 }

@@ -19,8 +19,6 @@ class PaymentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthController.instance.getUserBalance();
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -69,7 +67,7 @@ class PaymentScreen extends StatelessWidget {
                                 SizedBox(
                                   width: double.maxFinite,
                                   child: Text(
-                                    '₦ ${AuthController.instance.userBalance.value}',
+                                    '₦ ${AuthController.find.userModel.value!.totalEarnings!}',
                                     style: GoogleFonts.inter(
                                       textStyle: Theme.of(context)
                                           .textTheme
@@ -146,7 +144,7 @@ class PaymentScreen extends StatelessWidget {
                           () => InkWell(
                             onTap: () {
                               CardController.instance
-                                  .savePaymentType(false, '');
+                                  .savePaymentType(false, '', '');
                             },
                             child: Row(
                               children: [

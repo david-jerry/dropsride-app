@@ -22,4 +22,24 @@ class TransactionRepository extends GetxController {
         .toList());
     return userData;
   }
+
+  Future<List<TransactionHistory>> getAllTransactions(String uid) async {
+    final snapshot = await _firestore
+        .collection('transactions')
+        .doc(uid)
+        .collection('history')
+        .where('status', isNull: false)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      return <TransactionHistory>[];
+    }
+
+    final transactions = snapshot.docs
+        .map(
+          (e) => TransactionHistory.fromSnapshot(e),
+        )
+        .toList();
+    return transactions;
+  }
 }

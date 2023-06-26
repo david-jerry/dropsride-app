@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 void showInfoMessage(String title, String message, IconData icon) {
   if (Get.isSnackbarOpen) {
-    Get.back(closeOverlays: false, canPop: true);
+    Get.back(closeOverlays: true, canPop: false);
   }
   Get.snackbar(
     title,
@@ -35,7 +35,7 @@ void showInfoMessage(String title, String message, IconData icon) {
 
 void showSuccessMessage(String title, String message, IconData icon) {
   if (Get.isSnackbarOpen) {
-    Get.back(closeOverlays: false, canPop: true);
+    Get.back(closeOverlays: true, canPop: false);
   }
   Get.snackbar(
     isDismissible: true,
@@ -65,7 +65,7 @@ void showSuccessMessage(String title, String message, IconData icon) {
 
 void showWarningMessage(String title, String message, IconData icon) {
   if (Get.isSnackbarOpen) {
-    Get.back(closeOverlays: false, canPop: true);
+    Get.back(closeOverlays: true, canPop: false);
   }
   Get.snackbar(
     isDismissible: true,
@@ -95,7 +95,7 @@ void showWarningMessage(String title, String message, IconData icon) {
 
 void showErrorMessage(String title, String message, IconData icon) {
   if (Get.isSnackbarOpen) {
-    Get.back(closeOverlays: false, canPop: true);
+    Get.back(closeOverlays: true, canPop: false);
   }
   Get.snackbar(
     icon: Padding(

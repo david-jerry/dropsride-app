@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropsride/src/assistants/assistant_methods.dart';
 import 'package:dropsride/src/features/auth/controller/repository/authentication_repository.dart';
+import 'package:dropsride/src/features/auth/controller/repository/email_verification_repository.dart';
 import 'package:dropsride/src/features/auth/controller/repository/provider_repository.dart';
 import 'package:dropsride/src/features/auth/controller/repository/reset_password_repository.dart';
 import 'package:dropsride/src/features/auth/view/email_verification_screen.dart';
@@ -9,9 +11,10 @@ import 'package:dropsride/src/features/auth/view/sign_up_and_login_screen.dart';
 import 'package:dropsride/src/features/home/view/index.dart';
 import 'package:dropsride/src/features/profile/controller/destination_controller.dart';
 import 'package:dropsride/src/features/profile/controller/repository/user_repository.dart';
+import 'package:dropsride/src/features/profile/model/bank_model.dart';
 import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/features/settings_and_legals/view/legal_page.dart';
-import 'package:dropsride/src/features/transaction/controller/repository/card_repository.dart';
+import 'package:dropsride/src/features/trips/model/location_model.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:dropsride/src/utils/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,17 +22,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  static AuthController get find => Get.find();
   static AuthController get instance => Get.put(
-      AuthController()); // to be used like this AuthController.instance.functionOrVariable
-
-  final userRepo = UserRepository.instance;
+      AuthController()); // to be used like this AuthController.find.functionOrVariable
+  static AuthController get find => Get.find<AuthController>();
 
   final _auth = FirebaseAuth.instance;
 
   // form input fields
   // ? form input variables only
   RxBool check = false.obs;
+  RxBool getNewMarkers = true.obs;
   RxString confirmPasswordInput = ''.obs;
   RxString userFullName = ''.obs;
   RxString emailInput = ''.obs;
@@ -43,11 +45,17 @@ class AuthController extends GetxController {
 
   // ! important variables to check the state of a user if they are driver or rider
   // user states
-  RxBool isDriver = false.obs;
-  RxBool isSubscribed = false.obs;
-  RxDouble userBalance = 0.00.obs;
   RxBool isLoading = false.obs;
   RxBool login = false.obs;
+  Rx<User?> user = Rx<User?>(null);
+  Rx<UserModel?> userModel = Rx<UserModel?>(null);
+  RxList<dynamic> bankList = RxList<dynamic>([]);
+  Rx<Bank?> userBank = Rx<Bank?>(null);
+  RxList<UserModel> driversList = RxList<UserModel>([]);
+  RxInt userRating = 0.obs;
+
+  // ! Users current state
+  Rx<Location?> userCurrentState = Rx<Location?>(null);
 
   // ! import variable for the user to display their registered phone number
   // firebase user phone number detail
@@ -121,13 +129,6 @@ class AuthController extends GetxController {
     }
   }
 
-  // ? User balance
-  void getUserBalance() async {
-    userBalance.value =
-        await CardRepository.instance.getUserBalance(_auth.currentUser!);
-    return;
-  }
-
   // ? reset password functions either otp or email reset links
   Future<void> resetPasswordWithPhone() async {
     isLoading.value = true;
@@ -139,7 +140,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> resendVerificationEmail() async {
-    await FirebaseAuth.instance.currentUser!
+    await _auth.currentUser!
         .sendEmailVerification()
         .then(
           (value) => showSuccessMessage('Email Verification',
@@ -169,46 +170,43 @@ class AuthController extends GetxController {
   }
 
   Future<void> completePasswordReset() async {}
+  // ? end password reset functions
 
   // ! driver specific function to switch modes
   Future<void> updateDriverMode(User? user) async {
-    isLoading.value = true;
-    isDriver.value = !isDriver.value;
-
+    userModel.value!.isDriver = !userModel.value!.isDriver;
     try {
       await _firestore
           .collection('users')
           .doc(user!.uid)
-          .update({'isDriver': isDriver.value});
-      isLoading.value = false;
-      await refreshUser();
+          .update({'isDriver': userModel.value!.isDriver});
+      AssistantMethods.readOnlineUserCurrentInfo();
     } catch (e) {
       showErrorMessage('Driver Role Error',
           "Error updating your mode as a rider: $e", Icons.lock_person);
       rethrow;
     }
-    isLoading.value = false;
     update();
+    return;
   }
 
   // ! driver specific function to switch modes
   Future<void> updateSubscriptionStatus(User? user, bool value) async {
-    isLoading.value = true;
-
+    userModel.value!.isSubscribed = value;
     try {
       await _firestore
           .collection('users')
           .doc(user!.uid)
           .update({'isSubscribed': value});
-      isLoading.value = false;
+      AuthController.find.getNewMarkers.value = true;
     } catch (e) {
-      isSubscribed.value = !value;
+      userModel.value!.isSubscribed = !value;
       showErrorMessage('Subscription Status Error',
           "Error updating your subscription status: $e", Icons.lock_person);
-      isLoading.value = false;
       return;
     }
     update();
+    return;
   }
 
   // ? Signup, SignIn and Sign out functions !!
@@ -231,13 +229,13 @@ class AuthController extends GetxController {
     formKey.currentState?.reset();
     passwordScore.value = 0;
 
-    AuthenticationRepository.instance
+    await AuthenticationRepository.instance
         .loginUserWithEmailAndPassword(emailInput.value, passwordInput.value);
   }
 
   Future<void> signOutUser() async {
     _auth.signOut();
-    Get.offAll(() => SignUpScreen());
+    main();
   }
 
   Future<void> createNewUser(GlobalKey<FormState> formKey) async {
@@ -290,28 +288,33 @@ class AuthController extends GetxController {
       modelUser.acceptTermsAndCondition,
     );
 
-    await userRepo.createFirestoreUser(modelUser);
+    if (modelUser.displayName != null) {
+      await UserRepository.instance.createFirestoreUser(modelUser);
+    } else {
+      _auth.currentUser!.delete();
+      _auth.currentUser!.reload();
+    }
 
     isLoading.value = false;
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      FirebaseAuth.instance.currentUser!.reload();
+    if (_auth.currentUser != null) {
+      _auth.currentUser!.reload();
+
+      // send verification email to the user if they are not null
+      if (!_auth.currentUser!.emailVerified) {
+        await EmailVerificationRepository.instance
+            .sendVerification(_auth.currentUser!);
+        Get.offAll(() => const EmailVerificationScreen());
+      }
 
       timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
-        FirebaseAuth.instance.currentUser!.reload();
-        if (FirebaseAuth.instance.currentUser!.emailVerified) {
+        _auth.currentUser!.reload();
+        if (_auth.currentUser!.emailVerified) {
           timer.isActive ? timer.cancel() : null;
-          await AuthenticationRepository.instance.checkDriverStatus();
-          AuthenticationRepository.instance.firebaseUser.value =
-              FirebaseAuth.instance.currentUser;
           await DestinationController.instance.getCurrentLocation();
           Get.offAll(() => const HomeScreen());
         }
       });
-
-      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-        Get.to(() => const EmailVerificationScreen());
-      }
     }
   }
 
@@ -324,24 +327,24 @@ class AuthController extends GetxController {
 
     isLoading.value = false;
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      FirebaseAuth.instance.currentUser!.reload();
+    // if (_auth.currentUser != null) {
+    //   _auth.currentUser!.reload();
 
-      timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-        FirebaseAuth.instance.currentUser!.reload();
-        if (FirebaseAuth.instance.currentUser!.emailVerified) {
-          timer.isActive ? timer.cancel() : null;
-          AuthenticationRepository.instance.checkDriverStatus();
-          AuthenticationRepository.instance.firebaseUser.value =
-              FirebaseAuth.instance.currentUser;
-          Get.offAll(() => const HomeScreen());
-        }
-      });
+    //   Timer.periodic(
+    //     const Duration(seconds: 5),
+    //     (Timer timer) {
+    //       _auth.currentUser!.reload();
+    //       if (_auth.currentUser!.emailVerified) {
+    //         timer.isActive ? timer.cancel() : null;
+    //         Get.offAll(() => const HomeScreen());
+    //       }
+    //     },
+    //   );
 
-      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-        Get.to(() => const EmailVerificationScreen());
-      }
-    }
+    //   if (!_auth.currentUser!.emailVerified) {
+    //     Get.to(() => const EmailVerificationScreen());
+    //   }
+    // }
   }
 
   // Facebook sign in button function
@@ -352,24 +355,21 @@ class AuthController extends GetxController {
 
     isLoading.value = false;
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      FirebaseAuth.instance.currentUser!.reload();
+    // if (_auth.currentUser != null) {
+    //   _auth.currentUser!.reload();
 
-      timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-        FirebaseAuth.instance.currentUser!.reload();
-        if (FirebaseAuth.instance.currentUser!.emailVerified) {
-          timer.isActive ? timer.cancel() : null;
-          AuthenticationRepository.instance.checkDriverStatus();
-          AuthenticationRepository.instance.firebaseUser.value =
-              FirebaseAuth.instance.currentUser;
-          Get.offAll(() => const HomeScreen());
-        }
-      });
+    //   timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+    //     _auth.currentUser!.reload();
+    //     if (_auth.currentUser!.emailVerified) {
+    //       timer.isActive ? timer.cancel() : null;
+    //       Get.offAll(() => const HomeScreen());
+    //     }
+    //   });
 
-      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-        Get.to(() => const EmailVerificationScreen());
-      }
-    }
+    //   if (!_auth.currentUser!.emailVerified) {
+    //     Get.to(() => const EmailVerificationScreen());
+    //   }
+    // }
   }
 
   // Apple sign in button function
@@ -380,23 +380,57 @@ class AuthController extends GetxController {
 
     isLoading.value = false;
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      FirebaseAuth.instance.currentUser!.reload();
+    // if (_auth.currentUser != null) {
+    //   _auth.currentUser!.reload();
 
-      timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-        FirebaseAuth.instance.currentUser!.reload();
-        if (FirebaseAuth.instance.currentUser!.emailVerified) {
-          timer.isActive ? timer.cancel() : null;
-          AuthenticationRepository.instance.checkDriverStatus();
-          AuthenticationRepository.instance.firebaseUser.value =
-              FirebaseAuth.instance.currentUser;
-          Get.offAll(() => const HomeScreen());
-        }
-      });
+    //   timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+    //     _auth.currentUser!.reload();
+    //     if (_auth.currentUser!.emailVerified) {
+    //       timer.isActive ? timer.cancel() : null;
+    //       Get.offAll(() => const HomeScreen());
+    //     }
+    //   });
 
-      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-        Get.to(() => const EmailVerificationScreen());
-      }
-    }
+    //   if (!_auth.currentUser!.emailVerified) {
+    //     Get.to(() => const EmailVerificationScreen());
+    //   }
+    // }
+  }
+
+  void main() async {
+    check.value = false;
+    getNewMarkers.value = true;
+    confirmPasswordInput.value = '';
+    userFullName.value = '';
+    emailInput.value = '';
+    forgotPasswordEmail.value = false;
+    nameInput.value = '';
+    passwordInput.value = '';
+    passwordScore.value = 0;
+    showPassword.value = false;
+    isLoading.value = false;
+    login.value = false;
+    user.value = null;
+    userModel.value = null;
+    bankList.value = [];
+    userBank.value = null;
+    driversList.value = [];
+    userRating.value = 0;
+    userCurrentState.value = null;
+    phoneNumber.value = PhoneNumberMap(
+        countryISOCode: 'NG', countryCode: '+234', number: '555 123 4567');
+    verificationTimer.value = null;
+    isEmailVerified.value = false;
+    otp.value = '';
+
+    AuthController.find.login.value = true;
+
+    Future.delayed(
+      const Duration(milliseconds: 3500),
+      () {
+        Get.offAll(() => SignUpScreen());
+      },
+    );
+    // run the main app here
   }
 }

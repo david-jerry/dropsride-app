@@ -66,7 +66,7 @@ class PasswordResetRepository extends AuthenticationRepository {
         Icons.mail_outline_rounded,
       );
 
-      AuthController.instance.login.value = true;
+      AuthController.find.login.value = true;
 
       Get.offAll(() => SignUpScreen(),
           transition: Transition.rightToLeftWithFade);
@@ -96,7 +96,7 @@ class PasswordResetRepository extends AuthenticationRepository {
 
             refresh();
             await DestinationController.instance.getCurrentLocation();
-            Get.offAll(() => const HomeScreen());
+            Get.offAll(() => HomeScreen());
           } catch (e) {
             showErrorMessage('Phone Verification',
                 "Failed to add your number: $e", Icons.lock_person);

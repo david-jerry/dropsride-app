@@ -1,4 +1,5 @@
 import 'package:dropsride/main.dart';
+import 'package:dropsride/src/assistants/assistant_methods.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/transaction/model/wallet_model.dart';
 import 'package:dropsride/src/features/transaction/controller/repository/card_repository.dart';
@@ -14,7 +15,11 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class CardController extends GetxController {
+  static CardController get instance => Get.put(CardController());
+
   RxBool cardPayment = false.obs;
+  RxString selectedCardNumber = ''.obs;
+  RxString paymentMethod = 'cash'.obs;
   RxString selectedCardForPayment = ''.obs;
 
   RxString brandName = ''.obs;
@@ -25,21 +30,25 @@ class CardController extends GetxController {
   RxString creditCardNumber = ''.obs;
   RxBool isCvvFocused = false.obs;
   RxBool isLoading = false.obs;
-  User? user = FirebaseAuth.instance.currentUser;
 
-  static CardController get instance => Get.put(CardController());
+  RxList<CardModel> debitCards = RxList<CardModel>([]);
 
   final _box = GetStorage();
+
+  // ? remember to add a means to store the selected card value number
 
   @override
   void onReady() {
     super.onReady();
     selectedCardForPayment.value = _box.read('selectedCardForPayment') ?? '';
     cardPayment.value = _box.read('cardPayment') ?? false;
+    selectedCardNumber.value = _box.read('selectedCardNumber') ?? '';
   }
 
-  void savePaymentType(bool cardPaymentValue, String authorizationCode) async {
+  void savePaymentType(bool cardPaymentValue, String authorizationCode,
+      String cardNumber) async {
     await _box.write('cardPayment', cardPaymentValue);
+    await _box.write('selectedCardNumber', cardNumber);
     if (cardPaymentValue) {
       CardController.instance.cardPayment.value = cardPaymentValue;
       CardController.instance.selectedCardForPayment.value = authorizationCode;
@@ -52,6 +61,7 @@ class CardController extends GetxController {
   }
 
   void submitCard(GlobalKey<FormState> formKey) async {
+    User user = AuthController.find.user.value!;
     PaystackPlugin paystackPlugin = PaystackPlugin();
     await paystackPlugin.initialize(publicKey: PAYSTACK_PK_API);
 
@@ -104,17 +114,17 @@ class CardController extends GetxController {
     formKey.currentState!.save();
     formKey.currentState!.reset();
 
-    // if (!card.isValid()) {
-    //   showErrorMessage("Invalid Card", "Please add only valid cards",
-    //       FontAwesomeIcons.creditCard);
-    //   isLoading.value = false;
-    //   return;
-    // }
+    if (!card.isValid()) {
+      showErrorMessage("Invalid Card", "Please add only valid cards",
+          FontAwesomeIcons.creditCard);
+      isLoading.value = false;
+      return;
+    }
 
     Charge charge = Charge()
       ..amount = (50 * 100).toInt()
       ..reference = "DROPSCARD-${FirebaseAuth.instance.currentUser!.uid}"
-      ..email = user!.email
+      ..email = user.email
       ..card = card;
 
     try {
@@ -130,12 +140,11 @@ class CardController extends GetxController {
       }
 
       if (response.status == true) {
-        if (kDebugMode) {
-          print(response);
-        }
+        if (kDebugMode) {}
         String authorizationCode = response.reference!;
 
-        AuthController.instance.userBalance.value += 50.00;
+        double balance = await CardRepository.instance.getUserBalance(user);
+        balance = balance + 50.00;
 
         CardModel cardModel = CardModel(
           authorizationCode: authorizationCode,
@@ -156,11 +165,13 @@ class CardController extends GetxController {
         );
 
         WalletBal walletBal = WalletBal(
-          balance: AuthController.instance.userBalance.value,
+          balance: balance,
         );
 
         await CardRepository.instance.submitCardToFirebase(
             user, cardModel, transactionHistory, walletBal);
+
+        AssistantMethods.readOnlineUserCurrentInfo();
       } else {
         showWarningMessage("Transaction Failed",
             "Payment failed: ${response.message}", FontAwesomeIcons.creditCard);

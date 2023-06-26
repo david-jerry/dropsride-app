@@ -30,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(ProfileController());
 
-    if (AuthController.instance.isDriver.value) {
+    if (AuthController.find.userModel.value!.isDriver) {
       BankController.instance.fetchBankAccount();
     }
 
@@ -39,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         leading: IconButton(
-          onPressed: () => Get.offAll(() => const HomeScreen()),
+          onPressed: () => Get.offAll(() => HomeScreen()),
           icon: Icon(
             FontAwesomeIcons.angleLeft,
             color: Theme.of(context).colorScheme.onBackground,
@@ -49,7 +49,7 @@ class ProfileScreen extends StatelessWidget {
         primary: true,
         scrolledUnderElevation: AppSizes.p4,
         title: AppBarTitle(
-          pageTitle: AuthController.instance.isDriver.value
+          pageTitle: AuthController.find.userModel.value!.isDriver
               ? 'Driver Profile'
               : 'Profile',
         ),
@@ -89,29 +89,7 @@ class ProfileScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               hSizedBox2,
-              FutureBuilder(
-                future: ProfileController.instance
-                    .getUserData(FirebaseAuth.instance.currentUser!.email!),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      UserModel userData = snapshot.data as UserModel;
-                      return ProfilePhoto(userData: userData);
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text(snapshot.error.toString()),
-                      );
-                    }
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  }
-                  return Center(
-                    child: Text(snapshot.error.toString()),
-                  );
-                },
-              ),
+              const ProfilePhoto(),
               hSizedBox2,
 
               // Profile Information
@@ -119,31 +97,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     // ! ----------------------------------------------------------------------------------------------
-                    FutureBuilder(
-                      future: ProfileController.instance.getUserData(
-                          FirebaseAuth.instance.currentUser!.email!),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.hasData) {
-                            // ! initialize the data here
-                            // todo: use the information here to initialize each form field initial value
-                            UserModel userData = snapshot.data as UserModel;
-                            return ProfileNameAndEmail(userData: userData);
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text(snapshot.error.toString()),
-                            );
-                          }
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          );
-                        }
-                        return Center(
-                          child: Text(snapshot.error.toString()),
-                        );
-                      },
-                    ),
+                    const ProfileNameAndEmail(),
 
                     // ! ----------------------------------------------------------------------------------------------
                     hSizedBox2,
@@ -184,7 +138,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
 
                     Obx(
-                      () => AuthController.instance.isDriver.value
+                      () => AuthController.find.userModel.value!.isDriver
                           ? const DriverMenuItems()
                           : ListTile(
                               onTap: () {
@@ -250,7 +204,7 @@ class ProfileScreen extends StatelessWidget {
                     // ! ----------------------------------------------------------------------------------------------
                     ListTile(
                       onTap: () {
-                        AuthController.instance.signOutUser();
+                        AuthController.find.signOutUser();
                       },
                       dense: true,
                       leading: SvgPicture.asset(

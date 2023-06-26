@@ -54,7 +54,7 @@ class SideBar extends StatelessWidget {
                     thickness: 2,
                   ),
                   hSizedBox4,
-                  AuthController.instance.isDriver.value
+                  AuthController.find.userModel.value!.isDriver
                       ? Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppSizes.padding),

@@ -3,7 +3,6 @@ import 'package:dropsride/src/constants/placeholder.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/profile/controller/profile_controller.dart';
-import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/utils/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,10 +11,7 @@ import 'package:get/get.dart';
 class ProfilePhoto extends StatelessWidget {
   const ProfilePhoto({
     super.key,
-    required this.userData,
   });
-
-  final UserModel userData;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +45,9 @@ class ProfilePhoto extends StatelessWidget {
                         child: ProfileController.instance.imagePreview.value ==
                                 null
                             ? Image.network(
-                                userData.photoUrl ?? kPlaceholder,
+                                AuthController
+                                        .instance.userModel.value!.photoUrl ??
+                                    kPlaceholder,
                                 fit: BoxFit.cover,
                               )
                             : Image.file(
@@ -76,8 +74,8 @@ class ProfilePhoto extends StatelessWidget {
                 top: 0,
                 right: 0,
                 child: Visibility(
-                  visible: AuthController.instance.isDriver.value &&
-                      userData.isVerified,
+                  visible: AuthController.find.userModel.value!.isDriver &&
+                      AuthController.find.userModel.value!.isVerified,
                   child: SvgPicture.asset(
                     Assets.assetsImagesDriverIconVerifiedIcon,
                     height: AppSizes.iconSize * 2,

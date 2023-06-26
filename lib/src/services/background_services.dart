@@ -53,9 +53,6 @@ onStart(ServiceInstance service) async {
     }
 
     // perform operation in the background which is not noticeable to the user
-    if (kDebugMode) {
-      print('background service running');
-    }
     service.invoke("update");
   });
 }

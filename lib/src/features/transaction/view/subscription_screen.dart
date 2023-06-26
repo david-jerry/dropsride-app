@@ -177,9 +177,9 @@ class SubscriptionScreen extends StatelessWidget {
                         ),
                       ),
                       Switch.adaptive(
-                        value: AuthController.instance.isSubscribed.value,
+                        value: AuthController
+                            .instance.userModel.value!.isSubscribed,
                         onChanged: (value) async {
-                          print(value);
                           SubscriptionController.instance
                               .startPaymentAndTimer(value);
                         },

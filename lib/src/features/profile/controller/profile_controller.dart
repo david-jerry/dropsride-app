@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dropsride/src/features/auth/controller/repository/authentication_repository.dart';
+import 'package:dropsride/src/assistants/assistant_methods.dart';
 import 'package:dropsride/src/features/profile/controller/repository/user_repository.dart';
 import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/features/profile/view/profile_screen.dart';
@@ -40,22 +40,6 @@ class ProfileController extends GetxController {
       return;
     }
     formKey.currentState!.validate();
-  }
-
-  getUserData(String email) {
-    if (email.isEmail) {
-      return UserRepository.instance.getUserDetails(email);
-    } else {
-      if (AuthenticationRepository.instance.firebaseUser.value != null) {
-        showErrorMessage(
-            'Internal Server Error',
-            'We were unable to fetch the user data. Please check your connection and retry again. However if the error persists, please contact support@dropsride.com',
-            FontAwesomeIcons.server);
-      }
-
-      print('Error showing the user detail');
-      return;
-    }
   }
 
   takePicture() async {
@@ -107,7 +91,7 @@ class ProfileController extends GetxController {
         'Successfully added a new collection to the user database.',
         FontAwesomeIcons.userPlus);
     Get.to(() => const ProfileScreen());
-
+    AssistantMethods.readOnlineUserCurrentInfo();
     isLoading.value = false;
     return;
   }
@@ -142,12 +126,9 @@ class ProfileController extends GetxController {
     );
 
     await UserRepository.instance.updateUserPhoto(user);
-
+    AssistantMethods.readOnlineUserCurrentInfo();
     isLoading.value = false;
     return;
   }
 
-  Future<List<UserModel>> getAllActiveDrivers() async {
-    return await UserRepository.instance.getAllDrivers();
-  }
 }

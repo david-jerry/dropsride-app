@@ -25,6 +25,7 @@ class ThemeModeController extends GetxController {
   static ThemeModeController get instance => Get.find<ThemeModeController>();
 
   RxBool isDarkMode = true.obs;
+  RxBool hasLoaded = false.obs;
 
   void toggleMode() {
     if (isDarkMode.value) {

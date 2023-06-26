@@ -17,7 +17,7 @@ class WalletBal {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'balance': balance,
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
+      'updatedAt': updatedAt!.millisecondsSinceEpoch,
     };
   }
 

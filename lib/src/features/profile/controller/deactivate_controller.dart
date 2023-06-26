@@ -113,7 +113,6 @@ class DeactivateController extends GetxController {
       try {
         AuthCredential credential = EmailAuthProvider.credential(
             email: user.email!, password: password.value);
-        print(credential);
         try {
           await user.reauthenticateWithCredential(credential);
           showSuccessMessage(
