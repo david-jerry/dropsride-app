@@ -3,6 +3,7 @@ import 'package:dropsride/src/constants/assets.dart';
 import 'package:dropsride/src/constants/gaps.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/home/controller/map_controller.dart';
+import 'package:dropsride/src/features/home/view/index.dart';
 import 'package:dropsride/src/features/profile/controller/destination_controller.dart';
 import 'package:dropsride/src/features/profile/controller/repository/places_autocomplete_repository.dart';
 import 'package:dropsride/src/utils/size_config.dart';
@@ -34,10 +35,10 @@ class SearchLocationScreen extends StatelessWidget {
                     backgroundColor: Theme.of(context).colorScheme.background,
                     leading: IconButton(
                       onPressed: () async {
-                        Get.back(canPop: true, closeOverlays: false);
-                        map.openedAddressSearch.value = false;
-                        map.openedSelectCar.value = false;
-                        map.bottomSheetHeight.value = 220;
+                        Get.offAll(const HomeScreen());
+                        // map.openedAddressSearch.value = false;
+                        // map.openedSelectCar.value = false;
+                        // map.bottomSheetHeight.value = 220;
                       },
                       icon: Icon(
                         FontAwesomeIcons.close,
@@ -102,15 +103,17 @@ class SearchLocationScreen extends StatelessWidget {
                                 ),
                                 width: double.maxFinite,
                                 child: TextField(
-                                  // onTap: () {
-                                  //   map.bottomSheetHeight.value =
-                                  //       SizeConfig.screenHeight;
-                                  // },
+                                  onTap: () {
+                                    map.searchingDropoff.value = false;
+                                  },
                                   onTapOutside: (event) {
                                     FocusScope.of(context).unfocus();
                                   },
+                                  onChanged: (value) {
+                                    DestinationController.instance
+                                        .searchPlaces(value);
+                                  },
                                   enableSuggestions: true,
-                                  onChanged: (value) {},
                                   controller: MapController
                                       .find.pickUpFieldEditingController,
                                   keyboardType: TextInputType.streetAddress,
@@ -155,6 +158,9 @@ class SearchLocationScreen extends StatelessWidget {
                                       BorderRadius.circular(AppSizes.padding),
                                 ),
                                 child: TextField(
+                                  onTap: () {
+                                    map.searchingDropoff.value = true;
+                                  },
                                   onChanged: (value) {
                                     DestinationController.instance
                                         .searchPlaces(value);
@@ -205,108 +211,19 @@ class SearchLocationScreen extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            // ? saved locationes
-                            if (map.home.value != null)
-                              Column(
-                                children: [
-                                  ListTile(
-                                    leading: Icon(
-                                      FontAwesomeIcons.homeAlt,
-                                      size: 18,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground,
-                                    ),
-                                    dense: true,
-                                    titleAlignment:
-                                        ListTileTitleAlignment.center,
-                                    title: Text(
-                                      map.home.value!.title,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16,
-                                          ),
-                                    ),
-                                  ),
-                                  const Divider(
-                                    color: AppColors.grey300,
-                                    thickness: 2,
-                                  ),
-                                ],
-                              ),
-                            if (map.school.value != null)
-                              Column(
-                                children: [
-                                  ListTile(
-                                    leading: Icon(
-                                      FontAwesomeIcons.homeAlt,
-                                      size: 18,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground,
-                                    ),
-                                    dense: true,
-                                    titleAlignment:
-                                        ListTileTitleAlignment.center,
-                                    title: Text(
-                                      map.school.value!.title,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16,
-                                          ),
-                                    ),
-                                  ),
-                                  const Divider(
-                                    color: AppColors.grey300,
-                                    thickness: 2,
-                                  ),
-                                ],
-                              ),
-                            if (map.work.value != null)
-                              Column(
-                                children: [
-                                  ListTile(
-                                    leading: Icon(
-                                      FontAwesomeIcons.homeAlt,
-                                      size: 18,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground,
-                                    ),
-                                    dense: true,
-                                    titleAlignment:
-                                        ListTileTitleAlignment.center,
-                                    title: Text(
-                                      map.work.value!.title,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16,
-                                          ),
-                                    ),
-                                  ),
-                                  const Divider(
-                                    color: AppColors.grey300,
-                                    thickness: 2,
-                                  ),
-                                ],
-                              ),
-
                             // ? places auto complete
                             PlacesAutocompleteRepository
                                         .instance.jsonPredictions.length >
                                     1
                                 ? SizedBox(
                                     width: double.maxFinite,
-                                    height: SizeConfig.screenHeight * 0.5,
+                                    height: PlacesAutocompleteRepository
+                                                .instance
+                                                .jsonPredictions
+                                                .length >
+                                            2
+                                        ? SizeConfig.screenHeight * 0.5
+                                        : SizeConfig.screenHeight * 0.2,
                                     child: ListView.builder(
                                       itemCount: PlacesAutocompleteRepository
                                           .instance.jsonPredictions.length,
@@ -319,19 +236,46 @@ class SearchLocationScreen extends StatelessWidget {
                                               onTap: () async {
                                                 FocusScope.of(context)
                                                     .unfocus();
-                                                map.dropOffFieldEditingController
-                                                        .text =
-                                                    PlacesAutocompleteRepository
-                                                        .instance
-                                                        .jsonPredictions[index]
-                                                        .description
-                                                        .toString();
 
-                                                await map.getDropoffAddressFromText(
-                                                    MapController
-                                                        .find
-                                                        .dropOffFieldEditingController
-                                                        .text);
+                                                if (map
+                                                    .searchingDropoff.value) {
+                                                  map.dropOffFieldEditingController
+                                                          .text =
+                                                      PlacesAutocompleteRepository
+                                                          .instance
+                                                          .jsonPredictions[
+                                                              index]
+                                                          .description
+                                                          .toString();
+
+                                                  await map
+                                                      .getDropoffAddressFromText(
+                                                          MapController
+                                                              .find
+                                                              .dropOffFieldEditingController
+                                                              .text);
+                                                } else {
+                                                  map.pickUpFieldEditingController
+                                                          .text =
+                                                      PlacesAutocompleteRepository
+                                                          .instance
+                                                          .jsonPredictions[
+                                                              index]
+                                                          .description
+                                                          .toString();
+
+                                                  await map
+                                                      .getPickupAddressFromText(
+                                                          MapController
+                                                              .find
+                                                              .pickUpFieldEditingController
+                                                              .text);
+                                                }
+
+                                                if (map.confirmTrip.value) {
+                                                  map.locationChanged.value =
+                                                      true;
+                                                }
 
                                                 map.dropOffSelected.value =
                                                     true;
@@ -348,7 +292,7 @@ class SearchLocationScreen extends StatelessWidget {
                                                     map.userDropOffLocation
                                                         .value!);
 
-                                                Get.back(canPop: true);
+                                                Get.offAll(const HomeScreen());
                                               },
                                               dense: true,
                                               leading: const Icon(
@@ -377,6 +321,104 @@ class SearchLocationScreen extends StatelessWidget {
                                     ),
                                   )
                                 : Visibility(visible: false, child: hSizedBox2),
+
+                            // ? saved locations
+                            if (map.home.value != null)
+                              Column(
+                                children: [
+                                  ListTile(
+                                    leading: Icon(
+                                      FontAwesomeIcons.homeAlt,
+                                      size: 18,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                    ),
+                                    dense: true,
+                                    titleAlignment:
+                                        ListTileTitleAlignment.center,
+                                    title: Text(
+                                      map.home.value!.title ??
+                                          "Add Home Address",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 16,
+                                          ),
+                                    ),
+                                  ),
+                                  const Divider(
+                                    color: AppColors.grey300,
+                                    thickness: 2,
+                                  ),
+                                ],
+                              ),
+                            if (map.school.value != null)
+                              Column(
+                                children: [
+                                  ListTile(
+                                    leading: Icon(
+                                      FontAwesomeIcons.school,
+                                      size: 18,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                    ),
+                                    dense: true,
+                                    titleAlignment:
+                                        ListTileTitleAlignment.center,
+                                    title: Text(
+                                      map.school.value!.title ??
+                                          "Add School Address",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 16,
+                                          ),
+                                    ),
+                                  ),
+                                  const Divider(
+                                    color: AppColors.grey300,
+                                    thickness: 2,
+                                  ),
+                                ],
+                              ),
+                            if (map.work.value != null)
+                              Column(
+                                children: [
+                                  ListTile(
+                                    leading: Icon(
+                                      FontAwesomeIcons.briefcase,
+                                      size: 18,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                    ),
+                                    dense: true,
+                                    titleAlignment:
+                                        ListTileTitleAlignment.center,
+                                    title: Text(
+                                      map.work.value!.title ??
+                                          "Add Work Address",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 16,
+                                          ),
+                                    ),
+                                  ),
+                                  const Divider(
+                                    color: AppColors.grey300,
+                                    thickness: 2,
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
                       ),

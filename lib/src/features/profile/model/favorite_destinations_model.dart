@@ -5,19 +5,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FavouriteDestination {
   final String? uid;
-  final String title;
-  final String address;
-  final double latitude;
-  final double longitude;
+  final String? title;
+  final String? address;
+  final double? latitude;
+  final double? longitude;
   final DateTime addedOn;
 
   FavouriteDestination({
     DateTime? addedOn,
     this.uid,
-    required this.title,
-    required this.address,
-    required this.latitude,
-    required this.longitude,
+    this.title,
+    this.address,
+    this.latitude,
+    this.longitude,
   }) : addedOn = addedOn ?? DateTime.now();
 
   Map<String, dynamic> toMap() {

@@ -4,6 +4,7 @@ class RideRequestInformation{
 
   String? rideRequestId;
   String? userName;
+  String? userPhoto;
   String? userPhone;
   LatLng? sourceLatLng;
   LatLng? destinationLatLng;

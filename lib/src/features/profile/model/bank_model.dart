@@ -5,14 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Bank {
   String? uid;
-  String name;
-  String accountNumber;
-  String accountName;
+  String? name;
+  String? accountNumber;
+  String? accountName;
   Bank({
     this.uid,
-    required this.name,
-    required this.accountNumber,
-    required this.accountName,
+    this.name,
+    this.accountNumber,
+    this.accountName,
   });
 
   Map<String, dynamic> toMap() {

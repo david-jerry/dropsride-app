@@ -78,12 +78,13 @@ class FavoriteScreen extends StatelessWidget {
                         Card(
                           child: ListTile(
                             leading: Image.asset(
-                              Assets.assetsImagesDriverIconFavoriteDestinationLeadingIconSvg,
+                              Assets
+                                  .assetsImagesDriverIconFavoriteDestinationLeadingIconSvg,
                               width: AppSizes.iconSize * 1.4,
                               // color: AppColors.primaryColor,
                             ),
                             title: Text(
-                              locationData.title,
+                              locationData.title!,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!
@@ -92,7 +93,7 @@ class FavoriteScreen extends StatelessWidget {
                                     fontSize: 22,
                                   ),
                             ),
-                            subtitle: Text(locationData.address),
+                            subtitle: Text(locationData.address!),
                           ),
                         ),
                       ],
@@ -125,12 +126,13 @@ class FavoriteScreen extends StatelessWidget {
                         Card(
                           child: ListTile(
                             leading: SvgPicture.asset(
-                              Assets.assetsImagesDriverIconFavoriteDestinationLeadingIcon,
+                              Assets
+                                  .assetsImagesDriverIconFavoriteDestinationLeadingIcon,
                               width: AppSizes.iconSize * 2,
                               // color: AppColors.primaryColor,
                             ),
                             title: Text(
-                              locationData.title,
+                              locationData.title!,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!
@@ -139,7 +141,7 @@ class FavoriteScreen extends StatelessWidget {
                                     fontSize: 22,
                                   ),
                             ),
-                            subtitle: Text(locationData.address),
+                            subtitle: Text(locationData.address!),
                           ),
                         ),
                       ],

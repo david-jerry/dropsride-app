@@ -30,9 +30,9 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(ProfileController());
 
-    if (AuthController.find.userModel.value!.isDriver) {
-      BankController.instance.fetchBankAccount();
-    }
+    // if (AuthController.find.userModel.value!.isDriver) {
+    //   BankController.instance.fetchBankAccount();
+    // }
 
     // ? the entire profile place
     return Scaffold(

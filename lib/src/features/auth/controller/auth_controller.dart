@@ -8,6 +8,10 @@ import 'package:dropsride/src/features/auth/controller/repository/provider_repos
 import 'package:dropsride/src/features/auth/controller/repository/reset_password_repository.dart';
 import 'package:dropsride/src/features/auth/view/email_verification_screen.dart';
 import 'package:dropsride/src/features/auth/view/sign_up_and_login_screen.dart';
+import 'package:dropsride/src/features/home/controller/map_controller.dart';
+import 'package:dropsride/src/features/home/model/direction_details_info_model.dart';
+import 'package:dropsride/src/features/home/model/directions_model.dart';
+import 'package:dropsride/src/features/home/model/driver_data.dart';
 import 'package:dropsride/src/features/home/view/index.dart';
 import 'package:dropsride/src/features/profile/controller/destination_controller.dart';
 import 'package:dropsride/src/features/profile/controller/repository/user_repository.dart';
@@ -15,11 +19,15 @@ import 'package:dropsride/src/features/profile/model/bank_model.dart';
 import 'package:dropsride/src/features/profile/model/user_model.dart';
 import 'package:dropsride/src/features/settings_and_legals/view/legal_page.dart';
 import 'package:dropsride/src/features/trips/model/location_model.dart';
+import 'package:dropsride/src/features/trips/model/trip_model.dart';
+import 'package:dropsride/src/features/vehicle/model/vehicle_model.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:dropsride/src/utils/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AuthController extends GetxController {
   static AuthController get instance => Get.put(
@@ -48,14 +56,19 @@ class AuthController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool login = false.obs;
   Rx<User?> user = Rx<User?>(null);
-  Rx<UserModel?> userModel = Rx<UserModel?>(null);
-  RxList<dynamic> bankList = RxList<dynamic>([]);
-  Rx<Bank?> userBank = Rx<Bank?>(null);
-  RxList<UserModel> driversList = RxList<UserModel>([]);
+  Rx<UserModel?> userModel = UserModel().obs;
+  Rx<DriverData?> driverData = DriverData().obs;
+  RxList<UserModel> driversList = <UserModel>[].obs;
+  Rx<VehicleModel?> driverVehicleModel = VehicleModel().obs;
+  RxList<dynamic> bankList = [].obs;
+  Rx<Bank?> userBank = Bank().obs;
+  RxList<TripsHistoryModel> userTrips = <TripsHistoryModel>[].obs;
   RxInt userRating = 0.obs;
+  RxDouble driverAcceptanceRate = 0.0.obs;
+  RxDouble driverCancellationRate = 0.0.obs;
 
   // ! Users current state
-  Rx<Location?> userCurrentState = Rx<Location?>(null);
+  Rx<Location?> userCurrentState = Location().obs;
 
   // ! import variable for the user to display their registered phone number
   // firebase user phone number detail
@@ -175,12 +188,28 @@ class AuthController extends GetxController {
   // ! driver specific function to switch modes
   Future<void> updateDriverMode(User? user) async {
     userModel.value!.isDriver = !userModel.value!.isDriver;
+    if (!userModel.value!.isDriver) {
+      MapController.find.locateUserPosition();
+      driverData.value = DriverData();
+    } else {
+      driverData.value = DriverData(
+        carColor: driverVehicleModel.value!.carColor,
+        carModel: driverVehicleModel.value!.carModel,
+        carNumber: driverVehicleModel.value!.carPlateNumber,
+        carType: userModel.value!.carType!.name,
+        email: userModel.value!.email,
+        id: userModel.value!.uid,
+        name: userModel.value!.displayName,
+        phone: userModel.value!.phoneNumber!.number,
+        totalEarnings: userModel.value!.totalEarnings,
+      );
+    }
     try {
       await _firestore
           .collection('users')
           .doc(user!.uid)
           .update({'isDriver': userModel.value!.isDriver});
-      AssistantMethods.readOnlineUserCurrentInfo();
+      AssistantMethods.refreshUserInfo();
     } catch (e) {
       showErrorMessage('Driver Role Error',
           "Error updating your mode as a rider: $e", Icons.lock_person);
@@ -190,7 +219,72 @@ class AuthController extends GetxController {
     return;
   }
 
-  // ! driver specific function to switch modes
+  // ! driver specific function to come online
+  Future<void> comeOnline(User? user) async {
+    MapController.find.markers.clear();
+    userModel.value!.isOnline = true;
+    MapController.find.locateUserPosition();
+    try {
+      await _firestore.collection('users').doc(user!.uid).update({
+        'isOnline': true,
+        'latitude': MapController.find.pickLocation.value.latitude,
+        'longitude': MapController.find.pickLocation.value.longitude,
+      });
+      AssistantMethods.refreshUserInfo();
+
+      // DatabaseReference ref = FirebaseDatabase.instance
+      //     .ref()
+      //     .child('drivers')
+      //     .child(userModel.value!.uid!)
+      //     .child('newRideStatus');
+      // ref.set('idle');
+      // ref.onValue.listen((event) {});
+
+      // initialize active drivers this creates a new collection in the firestore database
+      await Geofire.initialize('activeDrivers');
+      await Geofire.setLocation(
+        userModel.value!.uid!,
+        MapController.find.pickLocation.value.latitude,
+        MapController.find.pickLocation.value.longitude,
+      );
+
+      await UserRepository.instance.getUserRideStatus(RideStatus.idle);
+
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .snapshots()
+          .listen((DocumentSnapshot snapshot) {});
+    } catch (e) {
+      showErrorMessage('Driver Role Error',
+          "Error updating your mode as a rider: $e", Icons.lock_person);
+      rethrow;
+    }
+    // update();
+  }
+
+  Future<void> driverGoOffline(User? user) async {
+    userModel.value!.isOnline = false;
+    try {
+      await _firestore.collection('users').doc(user!.uid).update({
+        'isOnline': false,
+        'latitude': null,
+        'longitude': null,
+      });
+      AssistantMethods.refreshUserInfo();
+      await Geofire.removeLocation(userModel.value!.uid!);
+      MapController.find.locateUserPosition();
+
+      await UserRepository.instance.getUserRideStatus(RideStatus.idle);
+      update();
+    } catch (e) {
+      showErrorMessage('Driver Role Error',
+          "Error updating your mode as a rider: $e", Icons.lock_person);
+      rethrow;
+    }
+  }
+
+  // ! subscribe to take rides
   Future<void> updateSubscriptionStatus(User? user, bool value) async {
     userModel.value!.isSubscribed = value;
     try {
@@ -198,7 +292,7 @@ class AuthController extends GetxController {
           .collection('users')
           .doc(user!.uid)
           .update({'isSubscribed': value});
-      AuthController.find.getNewMarkers.value = true;
+      AssistantMethods.refreshUserInfo();
     } catch (e) {
       userModel.value!.isSubscribed = !value;
       showErrorMessage('Subscription Status Error',
@@ -398,6 +492,25 @@ class AuthController extends GetxController {
   }
 
   void main() async {
+    MapController.find.active.value = false;
+    MapController.find.rideAccepted.value = false;
+    MapController.find.searchingDropoff.value = true;
+    MapController.find.locationChanged.value = false;
+    MapController.find.isDriverActive.value = false;
+    MapController.find.locationInitialized.value = false;
+    MapController.find.openedAddressSearch.value = false;
+    MapController.find.openedSelectCar.value = false;
+    MapController.find.confirmTrip.value = false;
+    MapController.find.hasLoadedMarker.value = false;
+    MapController.find.dropOffSelected.value = false;
+    MapController.find.pickupSelected.value = false;
+    MapController.find.userDropOffLocation.value = Directions();
+    MapController.find.userPickupLocation.value = Directions();
+    MapController.find.tripInfo.value = DirectionDetailsInfo();
+    MapController.find.pLineCoordinatedList.value = <LatLng>[];
+    MapController.find.listCordinates.value = <LatLng>[];
+    MapController.find.markers.clear();
+    MapController.find.circles.clear();
     check.value = false;
     getNewMarkers.value = true;
     confirmPasswordInput.value = '';
@@ -411,12 +524,12 @@ class AuthController extends GetxController {
     isLoading.value = false;
     login.value = false;
     user.value = null;
-    userModel.value = null;
+    userModel.value = UserModel();
     bankList.value = [];
-    userBank.value = null;
+    userBank.value = Bank();
     driversList.value = [];
     userRating.value = 0;
-    userCurrentState.value = null;
+    userCurrentState.value = Location();
     phoneNumber.value = PhoneNumberMap(
         countryISOCode: 'NG', countryCode: '+234', number: '555 123 4567');
     verificationTimer.value = null;
@@ -426,7 +539,7 @@ class AuthController extends GetxController {
     AuthController.find.login.value = true;
 
     Future.delayed(
-      const Duration(milliseconds: 3500),
+      const Duration(milliseconds: 1500),
       () {
         Get.offAll(() => SignUpScreen());
       },

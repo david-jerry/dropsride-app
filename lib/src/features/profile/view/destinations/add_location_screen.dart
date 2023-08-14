@@ -25,6 +25,9 @@ class AddFavoriteScreen extends StatelessWidget {
       // ! app bar section
       appBar: AppBar(
         automaticallyImplyLeading: true,
+        backgroundColor: Get.isDarkMode
+            ? AppColors.backgroundColorDark
+            : AppColors.backgroundColorLight,
         leading: IconButton(
           onPressed: () => Get.back(canPop: true, closeOverlays: false),
           icon: Icon(
@@ -49,6 +52,9 @@ class AddFavoriteScreen extends StatelessWidget {
                   height: SizeConfig.screenHeight * 0.9,
                   width: SizeConfig.screenWidth,
                   child: GoogleMap(
+                    padding: EdgeInsets.only(
+                        bottom: DestinationController
+                            .instance.bottomSheetHeight.value * 0.7),
                     onTap: (value) {
                       FocusScope.of(context).unfocus();
                       DestinationController.instance.bottomSheetHeight.value =
@@ -59,7 +65,17 @@ class AddFavoriteScreen extends StatelessWidget {
                       target: map.pickLocation.value,
                       zoom: 14.4746,
                     ),
-                    myLocationEnabled: true,
+                    myLocationEnabled: false,
+                    markers: {
+                      Marker(
+                        markerId: const MarkerId('currentLocation'),
+                        position: map.pickLocation.value,
+                        icon: map.userIcon.value,
+                        draggable: true,
+                        anchor: const Offset(0.5, 0.5),
+                        onDragEnd: (value) async {},
+                      ),
+                    },
                     zoomGesturesEnabled: true,
                     zoomControlsEnabled: true,
                   ),

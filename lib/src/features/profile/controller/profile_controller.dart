@@ -85,14 +85,17 @@ class ProfileController extends GetxController {
     );
 
     await UserRepository.instance.updateUserDetails(user);
+    AssistantMethods.refreshUserInfo();
 
     showSuccessMessage(
         'User Firestore',
         'Successfully added a new collection to the user database.',
         FontAwesomeIcons.userPlus);
-    Get.to(() => const ProfileScreen());
-    AssistantMethods.readOnlineUserCurrentInfo();
+
     isLoading.value = false;
+
+    Get.to(() => const ProfileScreen());
+
     return;
   }
 
@@ -130,5 +133,4 @@ class ProfileController extends GetxController {
     isLoading.value = false;
     return;
   }
-
 }

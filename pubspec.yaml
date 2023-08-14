@@ -44,6 +44,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   firebase_auth: ^4.6.0
   firebase_core: ^2.13.1
+  firebase_database: ^10.2.3
   firebase_dynamic_links: ^5.3.1
   firebase_messaging: ^14.6.3
   firebase_storage: ^11.2.1
@@ -95,6 +96,7 @@ dependencies:
   sliding_up_panel2: ^3.3.0+1
   smooth_page_indicator: ^1.1.0
   smooth_star_rating_nsafe: ^1.0.0+1
+  stream_transform: ^2.1.0
   transparent_image: ^2.0.1
   url_launcher: ^6.1.11
   workmanager: ^0.5.1

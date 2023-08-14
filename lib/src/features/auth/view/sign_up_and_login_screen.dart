@@ -283,6 +283,30 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ),
 
+                      RepaintBoundary(
+                        key: map.driverMarkerMaoKey,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border.all(
+                              color: Colors.transparent,
+                              width: 4,
+                            ),
+                            borderRadius: BorderRadius.circular(70),
+                          ),
+                          padding: const EdgeInsets.all(4),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(70),
+                            child: Image.asset(
+                              Assets.assetsImagesDriverIconCarTop,
+                              fit: BoxFit.contain,
+                              height: 28,
+                              width: 28,
+                            ),
+                          ),
+                        ),
+                      ),
+
                       // pickup marker
                       RepaintBoundary(
                         key: map.pickupKey,

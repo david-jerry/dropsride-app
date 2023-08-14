@@ -113,7 +113,7 @@ class SideBarHeader extends StatelessWidget {
                               ),
                               Text(
                                 AuthController
-                                    .find.userModel.value!.totalEarnings
+                                    .find.userRating.value
                                     .toString(),
                                 style: Theme.of(context)
                                     .textTheme

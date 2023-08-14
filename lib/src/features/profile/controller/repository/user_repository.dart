@@ -75,6 +75,24 @@ class UserRepository extends GetxController {
     }
   }
 
+  Future<dynamic> getUserRideStatus(RideStatus status) async {
+    // Reference to the Firestore collection "users"
+    CollectionReference usersCollection =
+        FirebaseFirestore.instance.collection('users');
+
+    // Reference to the specific document identified by UID in the "users" collection
+    DocumentReference userDocRef =
+        usersCollection.doc(AuthController.find.userModel.value!.uid);
+
+    // Set the "newrideStatus" field to "idle" in the document
+    await userDocRef.update({'rideStatus': status.name});
+
+    // Listening to changes on the document (You can attach a snapshot listener)
+    userDocRef.snapshots().listen((snapshot) {
+      // Handle changes here, if necessary
+    });
+  }
+
   Future<void> updateUserDetails(UserModel user) async {
     ProfileController.instance.isLoading.value = true;
     if (AuthController.find.user.value != null) {
@@ -151,7 +169,7 @@ class UserRepository extends GetxController {
         .collection('ratings')
         .get();
 
-    if (snapshot.docs.isNotEmpty) {
+    if (snapshot.docs.isEmpty) {
       return 5;
     }
 
@@ -193,10 +211,17 @@ class UserRepository extends GetxController {
     final snapshot = await _firestore
         .collection('users')
         .where('isDriver', isEqualTo: true)
+        .where('isSubscribed', isEqualTo: true)
+        .where('isOnline', isEqualTo: true)
+        .where('rideStatus', isEqualTo: RideStatus.idle.name)
+        .where('longitude', isNotEqualTo: null)
+        .where('latitude', isNotEqualTo: null)
         .get();
 
+    // ? when the driver is picked make a request to get the drivers car detail to show the rider
+
     if (snapshot.docs.isEmpty) {
-      FirebaseAuth.instance.signOut();
+      return <UserModel>[];
     }
 
     final userData = snapshot.docs

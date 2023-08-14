@@ -32,6 +32,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'src/features/auth/controller/repository/email_verification_repository.dart';
 import 'src/features/auth/controller/repository/provider_repository.dart';
+import 'src/features/vehicle/controller/repository/vehicle_repository.dart';
 
 final PAYSTACK_SK_API = dotenv.env['PAYSTACK_TEST_SK']!;
 final PAYSTACK_PK_API = dotenv.env['PAYSTACK_TEST_PK']!;
@@ -68,8 +69,10 @@ void main() async {
   Get.put(PasswordResetRepository());
   Get.put(ProfileController());
   Get.put(UserRepository());
+  // Get.put(DestinationController());
   Get.put(AuthController());
   Get.put(MapController());
+  Get.put(VehicleRepository());
 
   await Permission.notification.isDenied.then(
     (value) {

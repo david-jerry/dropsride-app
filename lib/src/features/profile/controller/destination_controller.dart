@@ -63,6 +63,7 @@ class DestinationController extends GetxController {
     }
 
     isGettingLocation.value = false;
+    
   }
 
   void openAddDestination() async {

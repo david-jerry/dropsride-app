@@ -5,20 +5,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VehicleModel {
   final String? uid;
-  final List<String> imageUrls;
-  final String carModel;
-  final String carColor;
-  final String carPlateNumber;
-  final bool verified;
+  final List<String>? imageUrls;
+  final String? carModel;
+  final String? carColor;
+  final String? carPlateNumber;
+  final bool? verified;
   final DateTime submittedOn;
 
   VehicleModel({
     DateTime? submittedOn,
     this.uid,
-    required this.carModel,
-    required this.carColor,
-    required this.carPlateNumber,
-    required this.imageUrls,
+    this.carModel,
+    this.carColor,
+    this.carPlateNumber,
+    this.imageUrls,
     this.verified = false,
   }) : submittedOn = submittedOn ?? DateTime.now();
 

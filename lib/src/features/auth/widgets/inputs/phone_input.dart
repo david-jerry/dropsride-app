@@ -38,11 +38,11 @@ class PhoneInputField extends StatelessWidget {
           letterSpacing: 1.4,
           color: Theme.of(context).colorScheme.onSecondaryContainer),
       initialCountryCode: "NG",
-      countries: const [
-        'NG',
-        'GH',
-        'US',
-      ],
+      // countries: const [
+      //   'NG',
+      //   'GH',
+      //   'US',
+      // ],
       decoration: InputDecoration(
         labelText: 'Phone',
         filled: true,

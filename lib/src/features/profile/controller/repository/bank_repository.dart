@@ -71,9 +71,9 @@ class BankRepository extends GetxController {
       } catch (e) {
         showInfoMessage("Bank Details", "Please add your bank details",
             FontAwesomeIcons.bank);
-        return null;
+        return Bank();
       }
     }
-    return null;
+    return Bank();
   }
 }

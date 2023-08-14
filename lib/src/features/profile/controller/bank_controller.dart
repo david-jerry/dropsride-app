@@ -13,12 +13,6 @@ class BankController extends GetxController {
   RxBool submitting = false.obs;
   RxString bankAccountNumber = ''.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    print(AuthController.find.bankList[0]);
-  }
-
   Future<void> fetchBankAccount() async {
     final userData = await BankRepository.instance.userBankDetails();
 
@@ -26,9 +20,11 @@ class BankController extends GetxController {
       return;
     }
 
-    bankName.value = userData.name;
-    bankAccountName.value = userData.accountName;
-    bankAccountNumber.value = userData.accountNumber;
+    bankName.value = userData.name!.isNotEmpty ? userData.name! : '';
+    bankAccountName.value =
+        userData.accountName!.isNotEmpty ? userData.accountName! : '';
+    bankAccountNumber.value =
+        userData.accountNumber!.isNotEmpty ? userData.accountNumber! : '';
   }
 
   Future<void> submitBank(GlobalKey<FormState> formKey) async {

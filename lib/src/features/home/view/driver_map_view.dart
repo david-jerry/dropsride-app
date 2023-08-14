@@ -3,9 +3,7 @@ import 'package:dropsride/src/constants/assets.dart';
 import 'package:dropsride/src/constants/size.dart';
 import 'package:dropsride/src/features/auth/controller/auth_controller.dart';
 import 'package:dropsride/src/features/home/controller/map_controller.dart';
-import 'package:dropsride/src/features/home/widget/bottom_sheets/rider/driver.dart';
-import 'package:dropsride/src/features/home/widget/bottom_sheets/rider/rider.dart';
-import 'package:dropsride/src/features/home/widget/map/google_map.dart';
+import 'package:dropsride/src/features/home/view/index.dart';
 import 'package:dropsride/src/features/home/widget/sidebar.dart';
 import 'package:dropsride/src/features/transaction/view/subscription_screen.dart';
 import 'package:dropsride/src/utils/size_config.dart';
@@ -14,19 +12,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class DriverAcceptedRideScreen extends StatelessWidget {
+  const DriverAcceptedRideScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // size config initialization
-    SizeConfig.init(context);
-
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     MapController map = Get.find<MapController>();
-    AuthController auth = Get.find<AuthController>();
 
     void openDrawer() {
       scaffoldKey.currentState?.openDrawer();
@@ -82,13 +77,9 @@ class HomeScreen extends StatelessWidget {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  child: !auth.userModel.value!.isDriver
-                      ? SearchLocationBottomSheet(
-                          map: map,
-                        )
-                      : DriverBottomSheet(
-                          map: map,
-                        ), //map.dropOffSelected.value
+                  child: const Center(
+                      child: Text(
+                          "Bottom Sheet Center")), //map.dropOffSelected.value
                 ),
 
                 // ? Driver needs to come online first
@@ -185,3 +176,76 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+class GoogleMapWidget extends StatefulWidget {
+  const GoogleMapWidget({
+    super.key,
+    required this.map,
+  });
+
+  final MapController map;
+
+  @override
+  State<GoogleMapWidget> createState() => _GoogleMapWidgetState();
+}
+
+class _GoogleMapWidgetState extends State<GoogleMapWidget>
+    with
+        AutomaticKeepAliveClientMixin<GoogleMapWidget>,
+        SingleTickerProviderStateMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return Obx(
+      () => Stack(
+        children: [
+          GoogleMap(
+            padding:
+                EdgeInsets.only(bottom: widget.map.bottomSheetHeight.value),
+            buildingsEnabled: false,
+            onMapCreated: (GoogleMapController controller) async {
+              if (!widget.map.controllerGoogleMap.value.isCompleted) {
+                widget.map.controllerGoogleMap.value.complete(controller);
+              }
+              widget.map.newGoogleMapController.value = controller;
+              if (!widget.map.pickupSelected.value) {
+                widget.map.locateUserPosition();
+              }
+            },
+            onTap: (LatLng latlng) {
+              widget.map.bottomSheetHeight.value = 220;
+              widget.map.pickLocation.value = latlng;
+              widget.map.cameraPositionDefault.value = CameraPosition(
+                target: latlng,
+                zoom: 17.765,
+                tilt: 0.3,
+              );
+              widget.map.newGoogleMapController.value!.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                      widget.map.cameraPositionDefault.value));
+            },
+            initialCameraPosition: widget.map.cameraPositionDefault.value,
+            polylines: {
+              Polyline(
+                polylineId: const PolylineId('route'),
+                points: widget.map.pLineCoordinatedList.toList(),
+                color: AppColors.secondaryColor,
+                width: 6,
+              ),
+            }, // Set<Polyline>.of(widget.map.polylineSet),
+            markers: Set<Marker>.of(widget.map.markers),
+            circles: Set<Circle>.of(widget.map.circles),
+            myLocationEnabled: false,
+            myLocationButtonEnabled: false,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: true,
+            mapType: MapType.normal,
+          ),
+        ],
+      ),
+    );
+  }
+}

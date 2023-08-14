@@ -18,6 +18,7 @@ import 'package:dropsride/src/features/transaction/controller/transaction_contro
 import 'package:dropsride/src/features/trips/controller/repository/location_repository.dart';
 import 'package:dropsride/src/features/trips/model/car_types.dart';
 import 'package:dropsride/src/features/trips/model/trip_model.dart';
+import 'package:dropsride/src/features/vehicle/controller/repository/vehicle_repository.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,7 @@ final _box = GetStorage();
 const String _timerKey = 'countdown_timer';
 
 AuthController auth = Get.find<AuthController>();
+MapController map = Get.find<MapController>();
 
 class AssistantMethods {
   // ?INFO: get geoCoded address
@@ -65,7 +67,7 @@ class AssistantMethods {
       userPickupAddress.locationLatitude = position.latitude;
       userPickupAddress.locationLongitude = position.longitude;
 
-      MapController.find.updatePickupLocationAddress(userPickupAddress);
+      map.updatePickupLocationAddress(userPickupAddress);
     }
     return address;
   }
@@ -88,7 +90,7 @@ class AssistantMethods {
       userPickupAddress.locationLatitude = position.latitude;
       userPickupAddress.locationLongitude = position.longitude;
 
-      MapController.find.updateDropoffLocationAddress(userPickupAddress);
+      map.updateDropoffLocationAddress(userPickupAddress);
     }
     return address;
   }
@@ -103,6 +105,14 @@ class AssistantMethods {
         .asUint8List();
   }
 
+  static void refreshUserInfo() async {
+    user = auth.user.value = firebaseAuth.currentUser;
+    userModel = auth.userModel.value =
+        await UserRepository.instance.getCurrentUser(user!.uid);
+
+    _box.write('userPhotoUrl', userModel!.photoUrl);
+  }
+
   static void readOnlineUserCurrentInfo() async {
     user = auth.user.value = firebaseAuth.currentUser;
     userModel = auth.userModel.value =
@@ -111,14 +121,66 @@ class AssistantMethods {
     _box.write('userPhotoUrl', userModel!.photoUrl);
 
     // ? get users details
-    readRatingInfo();
     getTransactions();
-    checkSubscriptionStatus();
     getUserBalance();
     getUserCards();
     getUserBankList();
-    getUserBankDetails();
     getCarTypes();
+    getActiveOnlineDrivers();
+    getUserTrips();
+    if (userModel!.isDriver) {
+      readRatingInfo();
+      checkSubscriptionStatus();
+      getUserBankDetails();
+      getVehicleDetail();
+    }
+  }
+
+  static Future<List<TripsHistoryModel>> getUserTrips() async {
+    List<TripsHistoryModel> tripHistory =
+        await LocationRepository.instance.getAllTrips();
+    auth.userTrips.value = tripHistory;
+
+    List<TripsHistoryModel> cancelledTrips = [];
+    List<TripsHistoryModel> acceptedTrips = [];
+
+    for (final trip in auth.userTrips) {
+      if (trip.status == TripStatus.cancelled) {
+        cancelledTrips.add(trip);
+      }
+
+      if (trip.status != TripStatus.cancelled) {
+        acceptedTrips.add(trip);
+      }
+    }
+
+    if (auth.userTrips.length > 1) {
+      auth.driverAcceptanceRate.value =
+          acceptedTrips.length / auth.userTrips.length * 100;
+      auth.driverCancellationRate.value =
+          cancelledTrips.length / auth.userTrips.length * 100;
+    } else {
+      auth.driverAcceptanceRate.value = 100.0;
+      auth.driverCancellationRate.value = 0.0;
+    }
+
+    return tripHistory;
+  }
+
+  static Future<TripsHistoryModel?> getCurrentTrip() async {
+    final currentTrip =
+        await LocationRepository.instance.getCurrentTripDetail();
+    if (currentTrip != null) {
+      return currentTrip;
+    }
+    return null;
+  }
+
+  static Future<List<UserModel>> getActiveOnlineDrivers() async {
+    List<UserModel> onlineDrivers =
+        await UserRepository.instance.getAllDrivers();
+    auth.driversList.value = onlineDrivers;
+    return onlineDrivers;
   }
 
   static void checkUserExist(String uid) async {
@@ -139,9 +201,13 @@ class AssistantMethods {
     auth.userBank.value = await BankRepository.instance.userBankDetails();
   }
 
+  static void getVehicleDetail() async {
+    auth.driverVehicleModel.value =
+        await VehicleRepository.instance.getDriverVehicle(user!.uid);
+  }
+
   static void getCarTypes() async {
-    MapController.find.carTypes.value =
-        await LocationRepository.instance.getCarTypes();
+    map.carTypes.value = await LocationRepository.instance.getCarTypes();
   }
 
   static void getUserBalance() async {
@@ -222,6 +288,27 @@ class AssistantMethods {
     return directionDetailsInfo;
   }
 
+  static void updateUserLocationRealTime() {
+    map.streamSubscriptionPosition =
+        Geolocator.getPositionStream().listen((Position position) {
+      map.pickLocation.value = LatLng(position.latitude, position.longitude);
+
+      Geofire.setLocation(
+        auth.userModel.value!.uid!,
+        map.pickLocation.value.latitude,
+        map.pickLocation.value.longitude,
+      );
+
+      LatLng latlng = LatLng(
+        map.pickLocation.value.latitude,
+        map.pickLocation.value.longitude,
+      );
+
+      map.newGoogleMapController.value!
+          .animateCamera(CameraUpdate.newLatLng(latlng));
+    });
+  }
+
   Future<int> getElapsedTimeFromTimeInMinutes(
       DateTime currentTime, DateTime previousTime) async {
     int diff = currentTime.difference(previousTime).inMinutes;
@@ -229,16 +316,14 @@ class AssistantMethods {
   }
 
   static pauseLiveLocationUpdates() {
-    MapController.find.streamSubscriptionPosition.value!.pause();
+    map.streamSubscriptionPosition!.pause();
     Geofire.removeLocation(user!.uid);
   }
 
   static resumeLiveLocationUpdates() {
-    MapController.find.streamSubscriptionPosition.value!.resume();
-    Geofire.setLocation(
-        user!.uid,
-        MapController.find.driverCurrentPosition.value!.latitude,
-        MapController.find.driverCurrentPosition.value!.longitude);
+    map.streamSubscriptionPosition!.resume();
+    Geofire.setLocation(user!.uid, map.driverCurrentPosition.value!.latitude,
+        map.driverCurrentPosition.value!.longitude);
   }
 
   static int calculateFareAmountFromSourceToDestination(
@@ -262,6 +347,40 @@ class AssistantMethods {
     return totalFareAmount;
   }
 
+  static sendNotificationToDriverNow(
+      String deviceRegistrationToken, String userRideRequestId, context) async {
+    String destinationAddress = map.userDropOffLocation.value!.locationName!;
+    String pickupAddress = map.userPickupLocation.value!.locationName!;
+
+    Map<String, String> headerNotification = {
+      "Content-Type": "application/json",
+      "Authorization": map.cms.value,
+    };
+
+    Map bodyNotification = {
+      "notification": {
+        "body":
+            "You have a new ride request! \n Pickup: $pickupAddress \n Destination: $destinationAddress",
+        "title": "New Ride Request"
+      },
+      "priority": "high",
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        "id": "1",
+        "status": "done",
+        "rideRequestId": userRideRequestId
+      },
+      "to": deviceRegistrationToken
+    };
+
+    // Work of postman to send notification
+    var responseNotification = http.post(
+      Uri.parse("https://fcm.googleapis.com/fcm/send"),
+      headers: headerNotification,
+      body: jsonEncode(bodyNotification),
+    );
+  }
+
   // For Trip history
   static void readRideRequestKeys(context) async {
     final snapshot = await firestore
@@ -270,7 +389,7 @@ class AssistantMethods {
         .get();
 
     if (snapshot.docs.isEmpty) {
-      FirebaseAuth.instance.signOut();
+      return;
     }
 
     for (var element in snapshot.docs) {
@@ -278,7 +397,7 @@ class AssistantMethods {
       int totalTripsCount = data.length;
 
       // Updating total trips taken by this user
-      MapController.find.updateTotalTrips(totalTripsCount);
+      map.updateTotalTrips(totalTripsCount);
 
       // Store all the rideRequest key/id in this list
       List<String> allRideRequestKeyList = [];
@@ -287,14 +406,14 @@ class AssistantMethods {
       });
 
       // Storing the total trips taken list in provider
-      MapController.find.updateTotalTripsList(allRideRequestKeyList);
+      map.updateTotalTripsList(allRideRequestKeyList);
 
       readTripHistoryInformation(context);
     }
   }
 
   static void readTripHistoryInformation(context) {
-    var historyTripsKeyList = MapController.find.historyTripsKeyList;
+    var historyTripsKeyList = map.historyTripsKeyList;
     for (String eachKey in historyTripsKeyList) {
       firestore
           .collection("ride_requests")
@@ -307,8 +426,7 @@ class AssistantMethods {
 
         if (eachTripHistoryInformation.status == TripStatus.completed) {
           // Add each TripHistoryModel to a  historyInformationList in AppInfo class
-          MapController.find
-              .updateTotalHistoryInformation(eachTripHistoryInformation);
+          map.updateTotalHistoryInformation(eachTripHistoryInformation);
         }
       });
     }
@@ -335,7 +453,7 @@ class AssistantMethods {
   //       var lastTripDirectionDetailsInfo =
   //           await getOriginToDestinationDirectionDetails(
   //               lastTripSourceLatLng, lastTripDestinationLatLng);
-  //       MapController.find.updateLastHistoryInformation(
+  //       map.updateLastHistoryInformation(
   //           lastTripHistoryInformation, lastTripDirectionDetailsInfo!);
   //     }
   //   });
@@ -352,7 +470,7 @@ class AssistantMethods {
   //     DataSnapshot snapshot = snapData.snapshot;
   //     if (snapshot.exists) {
   //       String driverRating = snapshot.value.toString();
-  //       MapController.find.updateDriverRating(driverRating);
+  //       map.updateDriverRating(driverRating);
   //     }
   //   });
   // }
