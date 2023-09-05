@@ -91,40 +91,6 @@ class HomeScreen extends StatelessWidget {
                         ), //map.dropOffSelected.value
                 ),
 
-                // ? Driver needs to come online first
-                if (AuthController.find.userModel.value!.isDriver &&
-                    !AuthController.find.userModel.value!.isOnline)
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenHeight,
-                    color: AppColors.backgroundColorDark.withOpacity(0.8),
-                    padding: const EdgeInsets.all(AppSizes.padding * 1.4),
-                    child: Center(
-                        child: SizedBox(
-                      width: double.maxFinite,
-                      child: ElevatedButton(
-                        child: Text(
-                          AuthController.find.userModel.value!.isSubscribed
-                              ? 'GO ONLINE'
-                              : "SUBSCRIBE TO DRIVE",
-                          style:
-                              Theme.of(context).textTheme.labelLarge!.copyWith(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 16,
-                                  ),
-                        ),
-                        onPressed: () {
-                          AuthController.find.userModel.value!.isSubscribed
-                              ? AuthController.find
-                                  .comeOnline(AuthController.find.user.value)
-                                  .then((value) => AssistantMethods
-                                      .updateUserLocationRealTime())
-                              : Get.to(() => const SubscriptionScreen());
-                        },
-                      ),
-                    )),
-                  ),
-
                 // ? Menu Drawer Button
                 Positioned(
                   top: AppSizes.padding * 3,
@@ -176,6 +142,64 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                // ? Driver needs to come online first
+                if (AuthController.find.userModel.value!.isDriver &&
+                    !AuthController.find.userModel.value!.isOnline)
+                  Positioned(
+                    top: SizeConfig.screenHeight -
+                        map.bottomSheetHeight.value +
+                        10,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                        child: SizedBox(
+                      width: double.maxFinite,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0)),
+                          ),
+                          elevation: MaterialStateProperty.all(0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Row(
+                            children: [
+                              Image.asset(Assets.assetsImagesIconsAnimationRight, height: AppSizes.iconSize * 3.5),
+                              Expanded(
+                                child: Text(
+                                  AuthController
+                                          .find.userModel.value!.isSubscribed
+                                      ? 'GO ONLINE'
+                                      : "SUBSCRIBE TO DRIVE",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge!
+                                      .copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 16,
+                                        color: Theme.of(context).colorScheme.onPrimary
+                                      ),
+                                ),
+                              ),
+                              Image.asset(Assets.assetsImagesIconsAnimationRight, height: AppSizes.iconSize * 3.5),
+                            ],
+                          ),
+                        ),
+                        onPressed: () {
+                          AuthController.find.userModel.value!.isSubscribed
+                              ? AuthController.find
+                                  .comeOnline(AuthController.find.user.value)
+                                  .then((value) => AssistantMethods
+                                      .updateUserLocationRealTime())
+                              : Get.to(() => const SubscriptionScreen());
+                        },
+                      ),
+                    )),
+                  ),
               ],
             ),
           ),
@@ -184,4 +208,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-

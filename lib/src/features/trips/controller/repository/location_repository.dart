@@ -14,6 +14,7 @@ import 'package:dropsride/src/features/trips/model/trip_model.dart';
 import 'package:dropsride/src/utils/alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -103,7 +104,9 @@ class LocationRepository extends GetxController {
         "ref for ride request key stored in getStorage: ${_box.read('referenceRideRequest')}");
 
     await map.referenceRideRequest!.set(data.toMap());
-    print("Submitted Ride Request to the database");
+    if (kDebugMode) {
+      print("Submitted Ride Request to the database");
+    }
 
     map.tripRideRequestSnapshotInfo =
         map.referenceRideRequest!.onValue.listen((eventSnapshot) async {

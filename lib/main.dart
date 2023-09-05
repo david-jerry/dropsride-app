@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -198,7 +200,9 @@ class MyApp extends StatelessWidget {
                   );
                   return const EmailVerificationScreen();
                 } else {
-                  timer!.isActive ? timer.cancel() : null;
+                  if (timer != null) {
+                    timer.isActive ? timer.cancel() : null;
+                  }
                   return LoadingScreen();
                 }
               } catch (e) {

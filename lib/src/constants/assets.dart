@@ -1225,6 +1225,10 @@ class Assets {
   /// assets/images/icons/angle_right.svg
   static const String assetsImagesIconsAngleRight = "assets/images/icons/angle_right.svg";
 
+  /// Assets for assetsImagesIconsAnimationRight
+  /// assets/images/icons/animation_right.gif
+  static const String assetsImagesIconsAnimationRight = "assets/images/icons/animation_right.gif";
+
   /// Assets for assetsImagesIconsApple
   /// assets/images/icons/apple.svg
   static const String assetsImagesIconsApple = "assets/images/icons/apple.svg";

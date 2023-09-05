@@ -124,7 +124,7 @@ class AssistantMethods {
     getTransactions();
     getUserBalance();
     getUserCards();
-    getUserBankList();
+    // getUserBankList();
     getCarTypes();
     getActiveOnlineDrivers();
     getUserTrips();
